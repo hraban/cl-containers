@@ -1,0 +1,142 @@
+;;; -*- Mode: Lisp; package: CL-USER; Syntax: Common-lisp; Base: 10 -*-
+
+#|
+
+$Id: cl-containers.system,v 1.23 2005/07/29 20:34:02 gwking Exp $
+
+Author: Gary King, et. al.  
+most recent working over by Andrew Hannon, David Westbrook, Gary King, 
+Brent Heeringa, Louis Theran)
+
+|#
+
+(in-package :COMMON-LISP-USER)
+
+(glu-define-logical-pathname-translations (cl-containers)
+  (source)
+  (utils (:back :back "utils" "dev"))
+  (moptilities (:back :back "moptilities" "dev"))
+  (metatilities (:back :back "metatilities" "dev"))
+  (cl-variates (:back :back "cl-variates" "dev"))
+  (lift  (:back :back "lift" "dev")))
+
+;;; ---------------------------------------------------------------------------
+
+(setf (glu-system-source-file 'lift)
+      "cl-containers:lift;lift.system"
+      (glu-system-source-file :cl-variates)
+      "cl-containers:cl-variates;cl-variates.system"
+      (glu-system-source-file :moptilities)
+      "cl-containers:moptilities;moptilities.system"
+      (glu-system-source-file :metatilities-base)
+      "cl-containers:metatilities;metatilities.system")
+
+
+;;; ---------------------------------------------------------------------------
+;;; system definition 
+;;; ---------------------------------------------------------------------------
+
+(define-glu-system :cl-containers 
+  ((("package"
+     "container-api"))
+   
+   (("containers"
+     "basic-operations"
+     "queues"
+     "stacks"
+     "trees"
+     "lists"
+     "bags-and-sets"
+     "ring-buffers"
+     "miscellaneous"
+     "associative"
+     "compatibility"
+     "vectors"
+     "quad-tree"
+     "heaps"
+     "containers-readtable"
+     "container-mixins"
+     "union-find-container"
+     "package-container"))
+      
+   (("notes") 
+    :associates? t))
+  :base-dir "cl-containers:source;"
+  :bin-identifiers (:platform :vendor)
+  :include-in-menu nil
+  :top-level t
+  :depends-on (moptilities metatilities-base)
+  :test-system :test-containers)
+
+;;; ---------------------------------------------------------------------------
+
+(define-glu-module :container-immutable 
+  ("immutable-containers")
+  :system cl-containers)
+
+;;; ---------------------------------------------------------------------------
+
+(defsystem-connection containers-and-utilities
+  ((("iterators"
+     "file-iterators"))
+   
+   (("utilities-integration"
+     #+Ignore "glu-priority-queue")))
+  :bin-identifiers (:platform :vendor)
+  :depends-on (metabang.dynamic-classes)
+  :requires (cl-containers :metatilities-base))
+
+;;; ---------------------------------------------------------------------------
+
+(defsystem-connection containers-and-copying
+  ("container-copying")
+
+  :bin-identifiers (:platform :vendor)
+  :requires (cl-containers cl-copy))
+
+;;; ---------------------------------------------------------------------------
+
+(defsystem-connection containers-and-variates
+  ("container-sampling"
+   "weighted-sampling")
+
+  :bin-identifiers (:platform :vendor)
+  :requires (cl-containers cl-variates))
+
+;;; ---------------------------------------------------------------------------
+
+(define-glu-module :container-tables 
+  ((("table-container"
+     "file-backed-table-container")))
+  :system cl-containers
+  :depends-on (cl-containers moptilities))
+
+;;; ---------------------------------------------------------------------------
+
+(define-glu-module :r-tree
+  ("r-tree")
+  :system :cl-containers)
+
+;;; ---------------------------------------------------------------------------
+
+(define-glu-module :container-thread-safe 
+  ((("container-thread-safe")))
+  :system cl-containers
+  :depends-on (cl-containers))
+
+;;; ---------------------------------------------------------------------------
+
+(define-glu-system :test-containers
+  ((("test-*"
+     
+     ) :load-only? t))
+  
+  :bin-identifiers (:platform :vendor)
+  :depends-on (lift cl-containers)
+  :nice-name "Containers Test Suite")
+
+
+
+;;; ***************************************************************************
+;;; *                              End of File                                *
+;;; ***************************************************************************
