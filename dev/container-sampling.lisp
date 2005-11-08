@@ -64,11 +64,11 @@
   (sample-unique-elements
    container (variates:random-number-generator generator) count))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod sample-unique-elements ((container iteratable-container-mixin) 
                                    (generator variates:basic-random-number-generator)
                                    (count integer))
+  (%sample-unique-elements container generator count)
+  #+Old
   (loop for bit across (variates:select-sample generator count (size container))
         for index = 0 then (1+ index) 
         unless (zerop bit) collect
@@ -79,6 +79,8 @@
 (defmethod sample-unique-elements ((container list) 
                                    (generator variates:basic-random-number-generator)
                                    (count integer))
+  (%sample-unique-elements container generator count)
+  #+Old
   (loop for bit across (variates:select-sample generator count (size container))
         for index = 0 then (1+ index) 
         unless (zerop bit) collect
@@ -89,10 +91,43 @@
 (defmethod sample-unique-elements ((container array) 
                                    (generator variates:basic-random-number-generator)
                                    (count integer))
+  (%sample-unique-elements container generator count)
+  #+Old
   (loop for bit across (variates:select-sample generator count (size container))
         for index = 0 then (1+ index) 
         unless (zerop bit) collect
         (nth-element container index)))
+
+;;; ---------------------------------------------------------------------------
+
+#+SLOWER
+;;?? Gary King 2005-11-04: intuitively, this should win because it bails out 
+;; early. However, loop must be doing something clever and so it doesn't.
+(defun %sample-unique-elements (container generator count)
+  (let ((result nil))
+    (loop for bit across (variates:select-sample generator count (size container))
+          for index = 0 then (1+ index) 
+          unless (zerop bit) do
+          (decf count)
+          (push (nth-element container index) result)
+          when (zerop count) do
+          (return))
+    (nreverse result)))
+
+(defun %sample-unique-elements (container generator count)
+  (let ((result nil))
+    (loop for bit across (variates:select-sample generator count (size container))
+          for index = 0 then (1+ index) 
+          unless (zerop bit) do
+          (push (nth-element container index) result)
+          (return))
+    (nreverse result)))
+
+#+Test
+(let ((l (collect-elements (make-generator :start 0 :end 1000))))
+  (timeit (:report t)
+          (loop repeat 1000 do
+                (sample-unique-elements l *random-generator* 10))))
 
 ;;; ---------------------------------------------------------------------------
 
