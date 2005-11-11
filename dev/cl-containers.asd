@@ -25,26 +25,44 @@ Brent Heeringa, Louis Theran)
   :licence "MIT Style License"
   :description "A generic container library for Common Lisp"
   :components ((:file "package")
-               (:file "container-api" :depends-on ("package"))
-               (:file "containers" :depends-on ("package"))
-               (:file "basic-operations" :depends-on ("package" "containers"))
-               (:file "queues" :depends-on ("package" "basic-operations"))
-               (:file "stacks" :depends-on ("package" "basic-operations"))
-               (:file "trees" :depends-on ("package" "basic-operations"))
-               (:file "lists" :depends-on ("package" "basic-operations"))
-               (:file "bags-and-sets" :depends-on ("package" "basic-operations"))
-               (:file "ring-buffers" :depends-on ("package" "basic-operations"))
-               (:file "miscellaneous" :depends-on ("package" "basic-operations"))
-               (:file "associative" :depends-on ("package" "basic-operations"))
+               (:file "container-api" 
+                      :depends-on ("package"))
+               (:file "containers"
+                      :depends-on ("package"))
+               (:file "basic-operations"
+                      :depends-on ("package" "containers"))
+               (:file "queues"
+                      :depends-on ("package" "basic-operations"))
+               (:file "stacks"
+                      :depends-on ("package" "basic-operations"))
+               (:file "trees"
+                      :depends-on ("package" "basic-operations"))
+               (:file "lists"
+                      :depends-on ("package" "basic-operations"))
+               (:file "bags-and-sets"
+                      :depends-on ("package" "basic-operations"))
+               (:file "ring-buffers"
+                      :depends-on ("package" "basic-operations"))
+               (:file "miscellaneous"
+                      :depends-on ("package" "basic-operations"))
+               (:file "associative"
+                      :depends-on ("package" "basic-operations"))
                (:file "compatibility" 
                       :depends-on ("package" "basic-operations" "associative"))
-               (:file "vectors" :depends-on ("package" "basic-operations"))
-               (:file "quad-tree" :depends-on ("package" "basic-operations"))
-               (:file "heaps" :depends-on ("package" "basic-operations"))
-               (:file "container-mixins" :depends-on ("package" "basic-operations"))
-               (:file "union-find-container" :depends-on ("package" "basic-operations"))
-               (:file "package-container" :depends-on ("package" "basic-operations"))
-               (:file "containers-readtable" :depends-on ("containers")))
+               (:file "vectors"
+                      :depends-on ("package" "basic-operations"))
+               (:file "quad-tree"
+                      :depends-on ("package" "basic-operations"))
+               (:file "heaps"
+                      :depends-on ("package" "basic-operations"))
+               (:file "container-mixins"
+                      :depends-on ("package" "basic-operations"))
+               (:file "union-find-container"
+                      :depends-on ("package" "basic-operations"))
+               (:file "package-container"
+                      :depends-on ("package" "basic-operations"))
+               (:file "containers-readtable"
+                      :depends-on ("containers")))
   :depends-on (MOPTILITIES
                METATILITIES-BASE))
 
