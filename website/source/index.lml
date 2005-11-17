@@ -33,17 +33,22 @@
 other than announcements."))
     
     (:H3 "Where is it")
-    (:P "A Darcs repository is available (note that you'll also need to get Metatilities and Moptilities to get CL-Containers to work). The commands are listed below:")
+    (:P "A " (rw:link :darcs) " repository is available (note that you'll also need to get "
+(rw:link :metatilities) " and " (rw:link :moptilities) " to get CL-Containers to work). The darcs commands are listed below:")
     (:UL
      (:LI "darcs get http://common-lisp.net/project/cl-containers/darcs/cl-containers")
-     (:LI "darcs get http://common-lisp.net/project/cl-containers/darcs/metatilities")
-     (:LI "darcs get http://common-lisp.net/project/cl-containers/darcs/moptilities"))
-    (:P "CL-Containers (and friends) should also be ASDF installable.")
-    
+     (:LI "darcs get http://common-lisp.net/project/cl-containers/metatilities/darcs/metatilities")
+     (:LI "darcs get http://common-lisp.net/project/cl-containers/moptilities/darcs/moptilities"))
+    (:P "CL-Containers (and friends) should also be " (rw:link :asdf-install :title "ASDF installable") ". Its CLiki home is right " (rw:link :cl-containers-cliki :title "where") " you'd expect.")
+    (:P "There's also a handy " (rw:link :cl-containers-package :title "gzipped tar file") ".")
     
     (:H3 "What is happening")
     (:P)
     ((:TABLE :BORDER "0") 
+     ((:TR :ALIGN "left" :VALIGN "top")
+      ((:TD :WIDTH "100px") "14 Nov 2005")
+      (:TD "Added links, tarball, etc."))
+     
      ((:TR :ALIGN "left" :VALIGN "top")
       ((:TD :WIDTH "100px") "10 Nov 2005")
       (:TD "Small patches and corrections; links to the mailing list. Nothing exciting"))
