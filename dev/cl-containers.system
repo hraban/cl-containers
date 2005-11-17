@@ -59,7 +59,8 @@ Brent Heeringa, Louis Theran)
      "union-find-container"
      "package-container"))
       
-   (("notes") 
+   (("notes.text"
+     "flagged-issues.text") 
     :associates? t))
   :base-dir "cl-containers:source;"
   :bin-identifiers (:platform :vendor)

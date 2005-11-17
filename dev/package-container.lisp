@@ -16,11 +16,6 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod (setf package) ((value symbol) (container package-container))
-  (setf (packages container) (list value)))
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod (setf packages) ((value symbol) (container package-container))
   (setf (packages container) (list value)))
 

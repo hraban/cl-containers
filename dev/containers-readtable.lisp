@@ -44,6 +44,8 @@ BB on DB with strong ontology
 
 ;;; ---------------------------------------------------------------------------
 
+#+MCL
+;;?? Gary King 2005-11-17: need to port
 (defun read-container (stream &optional (termch #\]))
   (let* ((head (cons nil nil))
          (tail head))
@@ -58,6 +60,8 @@ BB on DB with strong ontology
 
 ;;; ---------------------------------------------------------------------------
 
+#+MCL
+;;?? Gary King 2005-11-17: need to port
 (defun read-container-element (stream &optional (termch #\]))
   (let* ((head (cons nil nil))
          (tail head))
@@ -72,6 +76,8 @@ BB on DB with strong ontology
 
 ;;; ---------------------------------------------------------------------------
 
+#+MCL
+;;?? Gary King 2005-11-17: need to port
 (set-dispatch-macro-character
  #\#
  #\[
@@ -83,6 +89,8 @@ BB on DB with strong ontology
 
 ;;; ---------------------------------------------------------------------------
 
+#+MCL
+;;?? Gary King 2005-11-17: need to port
 (defmethod print-object ((container abstract-container) stream)
   (ecase *container-print-representation*
     (:contents
