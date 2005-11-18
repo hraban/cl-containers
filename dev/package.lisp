@@ -26,8 +26,11 @@
 
                 #:*samep-test*
                 #:parent
-                #:element)
-  
+                #:element
+                #:argmax
+                #:argmin
+                #:best-item)
+
   (:export #:basic-queue
            #:ring-buffer
            #:vector-container
