@@ -29,7 +29,9 @@
                 #:element
                 #:argmax
                 #:argmin
-                #:best-item)
+                #:best-item
+                
+                #:size)
 
   (:export #:basic-queue
            #:ring-buffer
