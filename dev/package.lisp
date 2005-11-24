@@ -31,7 +31,8 @@
                 #:argmin
                 #:best-item
                 
-                #:size)
+                #:size
+                #:root)
 
   (:export #:basic-queue
            #:ring-buffer

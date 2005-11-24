@@ -61,19 +61,18 @@ Brent Heeringa, Louis Theran)
                                             :depends-on ("package" "basic-operations"))
                                      (:file "package-container"
                                             :depends-on ("package" "basic-operations"))
+                                     (:file "iterators"
+                                            :depends-on ("package" "basic-operations"))
                                      (:file "containers-readtable"
                                             :depends-on ("containers")))))
-  :depends-on (metatilities-base))
+  :depends-on (metatilities-base metabang-dynamic-classes))
 
 ;;; ---------------------------------------------------------------------------
 
-#+IGnore
 (asdf:defsystem-connection containers-and-utilities
   :requires (cl-containers metatilities-base)
-  :depends-on (metabang-dynamic-classes)
   :components ((:module "dev"
-                        :components ((:file "iterators")
-                                     (:file "utilities-integration")))))
+                        :components ((:file "utilities-integration")))))
 
 
 ;;; ---------------------------------------------------------------------------
