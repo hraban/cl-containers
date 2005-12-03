@@ -71,12 +71,6 @@ Brent Heeringa, Louis Theran)
 
 ;;; ---------------------------------------------------------------------------
 
-(define-glu-module :container-immutable 
-  ("immutable-containers")
-  :system cl-containers)
-
-;;; ---------------------------------------------------------------------------
-
 (defsystem-connection containers-and-utilities
   ((("iterators"
      "file-iterators"))
@@ -103,27 +97,6 @@ Brent Heeringa, Louis Theran)
 
   :bin-identifiers (:platform :vendor)
   :requires (cl-containers cl-variates))
-
-;;; ---------------------------------------------------------------------------
-
-(define-glu-module :container-tables 
-  ((("table-container"
-     "file-backed-table-container")))
-  :system cl-containers
-  :depends-on (cl-containers moptilities))
-
-;;; ---------------------------------------------------------------------------
-
-(define-glu-module :r-tree
-  ("r-tree")
-  :system :cl-containers)
-
-;;; ---------------------------------------------------------------------------
-
-(define-glu-module :container-thread-safe 
-  ((("container-thread-safe")))
-  :system cl-containers
-  :depends-on (cl-containers))
 
 ;;; ---------------------------------------------------------------------------
 
