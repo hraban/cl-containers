@@ -46,6 +46,12 @@ other than announcements."))
     (:P)
     ((:TABLE :BORDER "0") 
      ((:TR :ALIGN "left" :VALIGN "top")
+      ((:TD :WIDTH "100px") "25 Nov 2005")
+      (:TD "Wrote a mini tutorial and published it on "
+           ((:a :href "http://www.metabang.com/unclog/publisha/atinybit.html") "unCLog")
+           "."))
+     
+     ((:TR :ALIGN "left" :VALIGN "top")
       ((:TD :WIDTH "100px") "14 Nov 2005")
       (:TD "Added links, tarball, etc."))
      
