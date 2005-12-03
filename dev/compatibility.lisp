@@ -479,3 +479,10 @@
            (ignore filter transform))
   (apply #'%collect-key-value container args))
 
+;;; ---------------------------------------------------------------------------
+
+(defmethod delete-item-at ((container list) &rest indexes)
+  (when (assoc (first indexes) container)
+    (setf (cdr (assoc (first indexes) container)) nil)))
+
+
