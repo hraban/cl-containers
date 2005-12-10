@@ -6,8 +6,8 @@ Brent Heeringa, Louis Theran)
 
 |#
 
-(defpackage :containers-system (:use #:cl #:asdf))
-(in-package :containers-system)
+(defpackage "CONTAINERS-SYSTEM" (:use #:cl #:asdf))
+(in-package "CONTAINERS-SYSTEM")
 
 ;;; ---------------------------------------------------------------------------
 ;;; system definitions
