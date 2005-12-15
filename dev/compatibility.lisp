@@ -457,7 +457,12 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((container list) &rest indexes)
-  (cadr (assoc (first indexes) container)))
+  (cdr (assoc (first indexes) container)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod item-at-1 ((container list) index)
+  (cdr (assoc index container)))
 
 ;;; ---------------------------------------------------------------------------
 

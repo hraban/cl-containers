@@ -93,6 +93,7 @@ element returns current-element and allows for side-effects
 (defgeneric print-iterator (iterator stream)
   (:documentation "")
   (:method ((iterator abstract-generator) stream)
+           (declare (ignore stream))
            (values)))
 
 ;;; ---------------------------------------------------------------------------
@@ -105,6 +106,7 @@ element returns current-element and allows for side-effects
 (defgeneric move-p (iterator direction)
   (:documentation "")
   (:method ((iterator abstract-generator) direction)
+           (declare (ignore direction))
            (values nil)))
 
 ;;; ---------------------------------------------------------------------------
