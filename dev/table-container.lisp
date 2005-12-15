@@ -270,7 +270,7 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod column-names ((container table-container))
-  (mopu:mopu-class-slot-names (prototype container)))
+  (mopu:slot-names (prototype container)))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -336,7 +336,7 @@
    (database-tables database)
    (lambda (table)
      (unless (member 'filtered-container-mixin 
-                     (mopu:mopu-class-precedence-list table)
+                     (mopu:superclasses table)
                      :key #'class-name)
        (change-class 
         table 
