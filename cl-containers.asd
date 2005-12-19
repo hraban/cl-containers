@@ -22,6 +22,7 @@ Brent Heeringa, Louis Theran)
   (error "The CL-Containers system requires ASDF-SYSTEM-CONNECTIONS. See 
 http://www.cliki.net/asdf-system-connections for details and download
 instructions."))
+(operate 'load-op 'asdf-system-connections)
 
 ;;; ---------------------------------------------------------------------------
 
