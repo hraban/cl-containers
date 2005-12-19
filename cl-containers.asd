@@ -13,7 +13,15 @@ Brent Heeringa, Louis Theran)
 ;;; system definitions
 ;;; ---------------------------------------------------------------------------
 
-(asdf:operate 'asdf:load-op 'asdf-system-connections)
+;; try hard
+(unless (find-system 'asdf-system-connections nil)
+ (when (find-package 'asdf-install)
+   (funcall (intern "INSTALL" "ASDF-INSTALL") 'asdf-system-connections)))
+;; give up with a useful (?) error message
+(unless (find-system 'asdf-system-connections nil)
+  (error "The CL-Containers system requires ASDF-SYSTEM-CONNECTIONS. See 
+http://www.cliki.net/asdf-system-connections for details and download
+instructions."))
 
 ;;; ---------------------------------------------------------------------------
 
