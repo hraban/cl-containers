@@ -1021,6 +1021,14 @@ containers too."
 (defmethod samep ((l1 list) (l2 list))
   (set-equal l1 l2))
 
+;;; ---------------------------------------------------------------------------
+
+(defmethod reverse-container ((container ordered-container-mixin))
+  ;; expensive generic method
+  (let ((reversed (nreverse (collect-elements container))))
+    (empty! container)
+    (iterate-elements reversed (lambda (e) (insert-item container e)))
+    container))
 
 
 ;;; ***************************************************************************

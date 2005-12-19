@@ -271,3 +271,9 @@ key to match. Key defaults to identity and test defaults to eq."))
 (defgeneric delete-item (ordered-container-mixin item))
 (defgeneric delete-item-if (ordered-container-mixin test))
 
+;;; ---------------------------------------------------------------------------
+
+(defgeneric reverse-container (ordered-container-mixin)
+  (:documentation "Destructively alters the elements/nodes of an ordered container so that they are reversed."))
+  
+  

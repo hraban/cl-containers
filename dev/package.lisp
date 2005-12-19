@@ -293,4 +293,5 @@
            #:forward-iterator
            #:unique-value-iterator-mixin
            #:filtered-iterator-mixin
-           #:filter))
+           #:filter
+           #:reverse-container))

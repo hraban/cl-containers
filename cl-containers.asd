@@ -19,7 +19,7 @@ Brent Heeringa, Louis Theran)
 
 (defsystem cl-containers
   :version "0.8"
-  :author "Gary King <gwking@cs.umass.edu>"
+  :author "Gary King <gwking@metabang.com>"
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
   :description "A generic container library for Common Lisp"
@@ -65,7 +65,8 @@ Brent Heeringa, Louis Theran)
                                             :depends-on ("package" "basic-operations"))
                                      (:file "containers-readtable"
                                             :depends-on ("containers")))))
-  :depends-on (metatilities-base metabang-dynamic-classes))
+  :depends-on (asdf-system-connections
+               metatilities-base metabang-dynamic-classes))
 
 ;;; ---------------------------------------------------------------------------
 
