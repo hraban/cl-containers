@@ -219,7 +219,7 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
-(add-parameter->dynamic-class :iterator :transform nil 'transforming-iterator-mixin)
+(add-parameter->dynamic-class :iterator :transform 'transforming-iterator-mixin)
 
 ;;; ---------------------------------------------------------------------------
 
@@ -257,7 +257,7 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
-(add-parameter->dynamic-class :iterator :filter nil 'filtered-iterator-mixin)
+(add-parameter->dynamic-class :iterator :filter 'filtered-iterator-mixin)
 
 ;;; ---------------------------------------------------------------------------
 
@@ -290,7 +290,7 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
-(add-parameter->dynamic-class :iterator :unique nil 'unique-value-iterator-mixin)
+(add-parameter->dynamic-class :iterator :unique 'unique-value-iterator-mixin)
 
 ;;; ---------------------------------------------------------------------------
 
@@ -345,7 +345,7 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
-(add-parameter->dynamic-class :iterator :circular nil 'circular-iterator-mixin)
+(add-parameter->dynamic-class :iterator :circular 'circular-iterator-mixin)
 
 #+Test
 (let ((i (make-iterator '(1 2 3) :circular t)))
@@ -556,12 +556,12 @@ element returns current-element and allows for side-effects
 (add-dynamic-class-for-parameters :generator 'arithmetic-sequence-generator
                                     nil '(:start :by))
 
-(add-parameter->dynamic-class :generator :start nil 'arithmetic-sequence-generator)
-(add-parameter->dynamic-class :generator :by nil 'arithmetic-sequence-generator)
+(add-parameter->dynamic-class :generator :start 'arithmetic-sequence-generator)
+(add-parameter->dynamic-class :generator :by 'arithmetic-sequence-generator)
 
-(add-parameter->dynamic-class :generator :transform nil 'transforming-iterator-mixin)
-(add-parameter->dynamic-class :generator :filter nil 'filtered-iterator-mixin)
-(add-parameter->dynamic-class :generator :unique nil 'unique-value-iterator-mixin)
+(add-parameter->dynamic-class :generator :transform 'transforming-iterator-mixin)
+(add-parameter->dynamic-class :generator :filter 'filtered-iterator-mixin)
+(add-parameter->dynamic-class :generator :unique 'unique-value-iterator-mixin)
 
 ;;; ---------------------------------------------------------------------------
 
@@ -583,7 +583,7 @@ element returns current-element and allows for side-effects
 (defclass* finite-arithmetic-sequence-generator (arithmetic-sequence-generator)
   ((end 0 ir)))
 
-(add-parameter->dynamic-class :generator :end nil 'finite-arithmetic-sequence-generator)
+(add-parameter->dynamic-class :generator :end 'finite-arithmetic-sequence-generator)
 
 ;;; ---------------------------------------------------------------------------
 
