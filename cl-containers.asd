@@ -73,7 +73,10 @@ instructions."))
                                      (:file "iterators"
                                             :depends-on ("package" "basic-operations"))
                                      (:file "containers-readtable"
-                                            :depends-on ("containers")))))
+                                            :depends-on ("containers"))))
+               (:module "website"
+                        :components ((:module "source"
+                                              :components ((:static-file "index.lml"))))))
   :depends-on (asdf-system-connections
                metatilities-base metabang-dynamic-classes))
 
