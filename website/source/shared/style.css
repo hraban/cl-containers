@@ -100,3 +100,14 @@
 	background: #f6ead6;
 
 }
+
+pre {
+	font: 90% Courier New, Courier, mono;
+	color: #000000;
+	background: #f6ead6;
+	width: 400px;
+	overflow: auto;
+	border: 1px solid #995f04;
+	padding: 0.25em 0.5em;
+	margin-left: 2em;
+}
