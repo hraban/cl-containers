@@ -1,6 +1,11 @@
 
 (in-package containers)
 
+(use-package (find-package "CL-VARIATES") 
+             (find-package "CL-CONTAINERS"))
+
+;;; ---------------------------------------------------------------------------
+
 (defmethod sample-item ((container t) 
                         (generator variates:random-number-generation-mixin))
   (sample-item container (variates:random-number-generator generator)))

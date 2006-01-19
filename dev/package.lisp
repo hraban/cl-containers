@@ -32,7 +32,9 @@
                 #:best-item
                 
                 #:size
-                #:root)
+                #:root
+                #:next-element
+                #:total-size)
 
   (:export #:basic-queue
            #:ring-buffer
@@ -294,4 +296,6 @@
            #:unique-value-iterator-mixin
            #:filtered-iterator-mixin
            #:filter
-           #:reverse-container))
+           #:reverse-container
+
+           #:weight))

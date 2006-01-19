@@ -132,10 +132,11 @@ stemming
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod class-for-contents-as ((contents string) (as (eql :file-lines)))
+(defmethod class-for-contents-as ((contents pathname) (as (eql :lines)))
   'file-line-iterator)
 
 
+#|
 ;;; ---------------------------------------------------------------------------
 ;;; word-iterator
 ;;; ---------------------------------------------------------------------------
@@ -199,9 +200,117 @@ stemming
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod class-for-contents-as ((contents string) (as (eql :words)))
+(defmethod class-for-contents-as ((contents t) (as (eql :words)))
   'word-iterator)
 
 
+
+
+|#
+
+;;; ---------------------------------------------------------------------------
+;;; delimited-iterator
+;;; ---------------------------------------------------------------------------
+
+(defclass* delimited-iterator (forward-iterator)
+  ((cache (make-array 20 :element-type 'character :fill-pointer 0 :adjustable t) r)
+   (current-chunk nil r)
+   (internal-iterator nil r)
+   (delimiterp 'metatilities:whitespacep ia)
+   (skip-empty-chunks? t ia)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod initialize-instance :after ((object delimited-iterator) &key container)
+  (setf (slot-value object 'internal-iterator) 
+        (make-iterator container))
+  (when (move-forward-p (internal-iterator object))
+    (move-forward (internal-iterator object)))
+  (advance object))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod check-delimiter ((iterator delimited-iterator) (thing t))
+  (funcall (delimiterp iterator) thing))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod move ((iterator delimited-iterator) (direction (eql :forward)))
+  (advance iterator))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod advance ((iterator delimited-iterator))
+  (let ((internal (internal-iterator iterator)))
+    (setf (fill-pointer (cache iterator)) 0) 
+    (loop while (move-forward-p internal) do
+          (when (check-delimiter iterator (current-element internal))
+            (if (skip-empty-chunks? iterator)
+              (loop while (and (move-forward-p internal)
+                               (check-delimiter iterator (current-element internal))) do
+                    (move-forward internal))
+              
+              (move-forward internal))
+            (return))
+          (vector-push-extend (current-element internal) (cache iterator))
+          (move-forward internal))
+    (setf (slot-value iterator 'current-chunk)
+          (coerce (cache iterator) 'string))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod current-element ((iterator delimited-iterator))
+  (current-chunk iterator))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod current-element-p ((iterator delimited-iterator))
+  (and (call-next-method)
+       (or (not (skip-empty-chunks? iterator))
+           (plusp (fill-pointer (cache iterator))))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod move-p ((iterator delimited-iterator) (direction (eql :forward)))
+  (or (move-p (internal-iterator iterator) direction)
+      (plusp (size (cache iterator)))))
+
+;;; ---------------------------------------------------------------------------
+
+(defclass* word-iterator (delimited-iterator)
+  ()
+  (:default-initargs
+    :delimiterp 'metatilities:whitespacep))
+
+;;; ---------------------------------------------------------------------------
+
+(defclass* line-iterator (delimited-iterator)
+  ()
+  (:default-initargs
+    :delimiterp (lambda (ch) (or (eq ch #\linefeed)
+                                 (eq ch #\newline)))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod class-for-contents-as ((contents t) (as (eql :lines)))
+  'line-iterator)
+
+
+#|
+(collect-elements (make-iterator "this is
+paragraph number one.
+
+this is paragraph number two.
+
+
+
+
+and this
+is
+paragraph number
+three." :treat-contents-as :lines))
+
+(collect-elements (make-iterator #P"user-home:qt.lisp" :treat-contents-as :lines))
+|#
 
 

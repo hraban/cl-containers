@@ -22,7 +22,7 @@ using for multi-container transforms, etc.
 I'm confused about how to integrate starting off the end with filters, etc.
   if I call move-forward-p, then I have to check that the next-element passes.
   I could save the current element (side effects?) and move to the next with move-forward-p
-  and then really move when we call move... Sounds tricky and like a lot of 
+  and then really move when we call move... Sounds tricky and  ke a lot of 
   bookkeeping.
 
   Suppose I start at the first element (if any). Then I need a way to know that

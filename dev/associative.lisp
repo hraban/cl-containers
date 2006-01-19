@@ -531,8 +531,8 @@
 (defmethod print-container ((container associative-container)
                             &optional (stream *standard-output*))
   (iterate-key-value container
-                     #'(lambda (k v)
-                         (format stream "~&(~s => ~s)" k v)))
+                     (lambda (k v)
+                       (format stream "~&(~s => ~s)" k v)))
   (values container))
 
 ;;; ---------------------------------------------------------------------------
@@ -540,8 +540,8 @@
 (defmethod print-container ((container stable-associative-container)
                             &optional (stream *standard-output*))
   (iterate-key-value-stably container
-                     #'(lambda (k v)
-                         (format stream "~&(~s => ~s)" k v)))
+                            (lambda (k v)
+                              (format stream "~&(~s => ~s)" k v)))
   (values container))
 
 

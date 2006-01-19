@@ -408,7 +408,11 @@
     (maphash fn hash-table)
     (nreverse result)))
 
+;;; ---------------------------------------------------------------------------
 
+(defmethod iterate-key-value ((hash-table hash-table) fn)
+  (maphash fn hash-table))
+                              
 ;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((hash-table hash-table))
@@ -449,7 +453,10 @@
 (defmethod item-at-1! ((hash-table hash-table) (value t) index)
   (setf (gethash index hash-table) value))
 
+;;; ---------------------------------------------------------------------------
 
+(defmethod print-container ((hash-table hash-table) &optional (stream *standard-output*))
+  (iterate-key-value hash-table (lambda (k v) (format stream "~&(~s => ~s)" k v))))
 
 
 ;;; ---------------------------------------------------------------------------

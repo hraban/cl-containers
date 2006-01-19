@@ -72,13 +72,16 @@ instructions."))
                                             :depends-on ("package" "basic-operations"))
                                      (:file "iterators"
                                             :depends-on ("package" "basic-operations"))
+                                     (:file "file-iterators"
+                                            :depends-on ("iterators"))
                                      (:file "containers-readtable"
                                             :depends-on ("containers"))))
                (:module "website"
                         :components ((:module "source"
                                               :components ((:static-file "index.lml"))))))
   :depends-on (asdf-system-connections
-               metatilities-base metabang-dynamic-classes))
+               metatilities-base 
+               metabang-dynamic-classes))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -89,12 +92,12 @@ instructions."))
 
 ;;; ---------------------------------------------------------------------------
 
-#+NotYet
 (asdf:defsystem-connection containers-and-variates
   :requires (cl-containers cl-variates)
   :components ((:module "dev"
                         :components ((:file "container-sampling")
-                                     (:file "weighted-sampling")))))
+                                     (:file "weighted-sampling"
+                                            :depends-on ("container-sampling"))))))
 
 #|
 
