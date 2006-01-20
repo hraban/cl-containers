@@ -10,8 +10,13 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((container list-container))
-  (first (contents container)))
+(defmethod first-element ((container list-container))
+  (first-element (contents container)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (container list-container))
+  (setf (first-element (contents container)) value))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -56,8 +61,14 @@ slower 'search-for-item' instead.")
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod last-item ((container list-container))
-  (first (last (contents container))))
+(defmethod last-element ((container list-container))
+  (last-element (contents container)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf last-element) (value (container list-container))
+  (setf (last-element (contents container)) value))
+
 
 ;;; ---------------------------------------------------------------------------
 ;;; sorted-list-container
@@ -107,7 +118,13 @@ so it best for small containers."
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((container sorted-list-container))
+(defmethod first-element ((container sorted-list-container))
+  (clean-up container)
+  (call-next-method))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (container sorted-list-container))
   (clean-up container)
   (call-next-method))
 
@@ -176,8 +193,8 @@ so it best for small containers."
                               iteratable-container-mixin
                               container-uses-nodes-mixin
                               concrete-container)
-  ((first-item nil ia :type dlist-container-node)
-   (last-item nil ia :type dlist-container-node)
+  ((first-element nil ia :type dlist-container-node)
+   (last-element nil ia :type dlist-container-node)
    (size nil ia))
   (:documentation "A double-linked list"))
 
@@ -191,21 +208,21 @@ so it best for small containers."
 
 (defmethod empty! ((container dlist-container))
   (setf (slot-value container 'size) 0)
-  (setf (slot-value container 'first-item) nil
-        (slot-value container 'last-item) nil))
+  (setf (slot-value container 'first-element) nil
+        (slot-value container 'last-element) nil))
 
 ;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((list dlist-container) (node dlist-container-node)) 
-  (insert-item-after list (last-item list) node))
+  (insert-item-after list (last-element list) node))
 
 (defmethod insert-item-after ((list dlist-container) node item)
   (insert-item-after list node (make-node-for-container list item)))
 
 (defmethod insert-item-after ((list dlist-container) node (new-node dlist-container-node))
   (declare (ignore node))
-  (setf (first-item list) new-node
-        (last-item list) new-node)
+  (setf (first-element list) new-node
+        (last-element list) new-node)
   (setf (size list) 1)
   list)
 
@@ -216,8 +233,8 @@ so it best for small containers."
                               (new-node dlist-container-node))
   (setf (next-item new-node) (next-item node))
   (setf (previous-item new-node) node)
-  (if (eq node (last-item list))
-    (setf (last-item list) new-node)
+  (if (eq node (last-element list))
+    (setf (last-element list) new-node)
     (setf (previous-item (next-item node)) new-node))
   (setf (next-item node) new-node)
   (incf (size list))
@@ -234,8 +251,8 @@ so it best for small containers."
                                (new-node dlist-container-node))
   (setf (next-item new-node) node)
   (setf (previous-item new-node) (previous-item node))
-  (if (eq node (first-item list))
-    (setf (first-item list) new-node)
+  (if (eq node (first-element list))
+    (setf (first-element list) new-node)
     (setf (next-item (previous-item node)) new-node))
   (setf (previous-item node) new-node)
   (incf (size list))
@@ -243,10 +260,10 @@ so it best for small containers."
 
 (defmethod delete-item-after ((list dlist-container) (node dlist-container-node))
   (cond
-   ((not (equal (last-item list) node))
+   ((not (equal (last-element list) node))
     (let ((next (next-item node)))
-      (if (eq next (last-item list))
-        (setf (last-item list) node)
+      (if (eq next (last-element list))
+        (setf (last-element list) node)
         (setf (previous-item (next-item next)) node))
       (setf (next-item node) (next-item next))
       (decf (size list))
@@ -255,10 +272,10 @@ so it best for small containers."
 
 (defmethod delete-item-before ((list dlist-container) (node dlist-container-node))
   (cond
-   ((not (equal (first-item list) node))
+   ((not (equal (first-element list) node))
     (let ((previous (previous-item node)))
-      (if (eq previous (first-item list))
-        (setf (first-item list) node)
+      (if (eq previous (first-element list))
+        (setf (first-element list) node)
         (setf (next-item (previous-item previous)) node))
       (setf (previous-item node) (previous-item previous))
       (decf (size list))
@@ -269,11 +286,11 @@ so it best for small containers."
   (iterate-nodes list #'(lambda (node)
                               (when (funcall (test list) (element node) item)
                                 (cond
-                                 ((eq node (last-item list))
+                                 ((eq node (last-element list))
                                   (cond
-                                   ((eq node (first-item list))
-                                    (setf (first-item list) nil)
-                                    (setf (last-item list) nil)
+                                   ((eq node (first-element list))
+                                    (setf (first-element list) nil)
+                                    (setf (last-element list) nil)
                                     (decf (size list))
                                     (element node))
                                    (t (delete-item-after 
@@ -288,7 +305,7 @@ so it best for small containers."
 
 (defmethod iterate-nodes ((list dlist-container) fn)
   (loop repeat (size list)
-        with node = (first-item list) do
+        with node = (first-element list) do
         (funcall fn node)
         (setf node (next-item node)))
   list)
@@ -297,7 +314,7 @@ so it best for small containers."
   (declare (dynamic-extent indexes))
   (if (>= (first indexes) (size list))
     (error "index out of bounds.")
-    (let ((item (first-item list)))
+    (let ((item (first-element list)))
       (loop repeat (first indexes) do
             (setf item (next-item item)))
       item)))
@@ -318,22 +335,22 @@ so it best for small containers."
                                  (return counter)
                                  (setf node (next-item node))))))
     (setf (previous-item start-item) previous-item)
-    (if (not (equal node (first-item list)))
+    (if (not (equal node (first-element list)))
       (setf (next-item previous-item) start-item)
-      (setf (first-item list) start-item))
+      (setf (first-element list) start-item))
     (loop for i from 1 to length
           with next = node do
           (cond
-           ((and (eq next (last-item list)) (/= i length))
+           ((and (eq next (last-element list)) (/= i length))
             (decf (size list) (- (1- i) start-to-finish))
             (setf (next-item finish-item) (next-item next))
-            (setf (last-item list) finish-item)
+            (setf (last-element list) finish-item)
             (return list))
            ((= i length)
             (decf (size list) (- (1- i) start-to-finish))
             (setf (next-item finish-item) (next-item next))
-            (if (eq next (last-item list))
-              (setf (last-item list) finish-item)
+            (if (eq next (last-element list))
+              (setf (last-element list) finish-item)
               (setf (previous-item (next-item next)) finish-item))
             (return list))
            (t (setf next (next-item next)))))))
@@ -394,8 +411,8 @@ so it best for small containers."
                                            (node dlist-container-node)
                                            (new-node dlist-container-node))
   (when (= (size list) 0)
-    (setf (first-item list) new-node
-          (last-item list) new-node
+    (setf (first-element list) new-node
+          (last-element list) new-node
           (size list) 1)
     (return-from insert-item-ordered-about-node list))
   (with-slots (key sorter test) list
@@ -426,10 +443,10 @@ so it best for small containers."
                     (return-from insert-item-ordered-about-node list)))))))))
   
   ;; If we make it here, then this is the last item of the list...
-  (setf (next-item new-node) (next-item (last-item list)) 
-        (next-item (last-item list)) new-node
-        (previous-item new-node) (last-item list)
-        (last-item list) new-node)
+  (setf (next-item new-node) (next-item (last-element list)) 
+        (next-item (last-element list)) new-node
+        (previous-item new-node) (last-element list)
+        (last-element list) new-node)
   (incf (size list))
   (values list))
 
@@ -437,8 +454,8 @@ so it best for small containers."
                                            (node t)
                                            (new-node dlist-container-node))
   (if (= (size list) 0)
-    (setf (first-item list) new-node
-          (last-item list) new-node
+    (setf (first-element list) new-node
+          (last-element list) new-node
           (size list) 1)
     (error 
      "insert-item-ordered-about-node called with nil node and non-empty container")))
@@ -452,8 +469,8 @@ so it best for small containers."
 (defmethod insert-item-ordered ((list sorted-dlist-container) 
                                 (new-node dlist-container-node))
   (when (= (size list) 0)
-    (setf (first-item list) new-node
-          (last-item list) new-node
+    (setf (first-element list) new-node
+          (last-element list) new-node
           (size list) 1)
     (return-from insert-item-ordered list))
   (with-slots (key sorter test) list
@@ -470,10 +487,10 @@ so it best for small containers."
                   (return-from insert-item-ordered list))))))))
   
   ;; If we make it here, then this is the last item of the list...
-  (setf (next-item new-node) (next-item (last-item list)) 
-        (next-item (last-item list)) new-node
-        (previous-item new-node) (last-item list)
-        (last-item list) new-node)
+  (setf (next-item new-node) (next-item (last-element list)) 
+        (next-item (last-element list)) new-node
+        (previous-item new-node) (last-element list)
+        (last-element list) new-node)
   (incf (size list))
   (values list))
 
@@ -491,11 +508,11 @@ so it best for small containers."
            (let ((current-key (funcall key (element node))))
              (when (funcall test current-key item-key)
                (cond
-                ((eq node (last-item list))
+                ((eq node (last-element list))
                  (cond
-                  ((eq node (first-item list))
-                   (setf (first-item list) nil)
-                   (setf (last-item list) nil)
+                  ((eq node (first-element list))
+                   (setf (first-element list) nil)
+                   (setf (last-element list) nil)
                    (decf (size list))
                    (element node))
                   
@@ -515,11 +532,11 @@ so it best for small containers."
   (let ((node (my-node item)))
     (declare (dynamic-extent node))
     (cond
-     ((eq node (last-item list))
+     ((eq node (last-element list))
       (cond
-       ((eq node (first-item list))
-        (setf (first-item list) nil)
-        (setf (last-item list) nil)
+       ((eq node (first-element list))
+        (setf (first-element list) nil)
+        (setf (last-element list) nil)
         (decf (size list))
         (element node))
        
@@ -550,8 +567,8 @@ so it best for small containers."
             
             ((and (= (size list) 1)
                   (not (funcall sorter new-key
-                                (funcall key (element (first-item list))))))
-             (values (first-item list)))
+                                (funcall key (element (first-element list))))))
+             (values (first-element list)))
             
             (t 
              (iterate-nodes
@@ -562,7 +579,7 @@ so it best for small containers."
                   (when (or (funcall test new-key current-key)
                             (funcall sorter new-key current-key))
                     (return-from left-node-for-item (previous-item n))))))
-             (values (last-item list)))))))
+             (values (last-element list)))))))
 
 
 (defmethod right-node-for-item ((list sorted-dlist-container) (item t))
@@ -572,8 +589,8 @@ so it best for small containers."
             
             ((and (= (size list) 1)
                   (funcall sorter new-key
-                           (funcall key (element (first-item list)))))
-             (values (first-item list)))
+                           (funcall key (element (first-element list)))))
+             (values (first-element list)))
             
             (t 
              (iterate-nodes
@@ -593,9 +610,9 @@ so it best for small containers."
             
             ((= (size list) 1)
              (if (funcall sorter new-key
-                          (funcall key (element (first-item list))))
-               (values nil (first-item list))
-               (values (first-item list) nil)))
+                          (funcall key (element (first-element list))))
+               (values nil (first-element list))
+               (values (first-element list) nil)))
             
             (t 
              (iterate-nodes
@@ -607,7 +624,7 @@ so it best for small containers."
                             (funcall sorter new-key current-key))
                     (return-from left-and-right-nodes-for-item 
                       (values (previous-item n) n))))))
-             (values (last-item list) nil))))))
+             (values (last-element list) nil))))))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -699,16 +716,16 @@ so it best for small containers."
                           (funcall key (element next-neighbor)))) do
             (setf (next-item next-neighbor) (next-item node)
                   (previous-item node) (previous-item next-neighbor))
-            (when (not (eq next-neighbor (first-item list))) 
+            (when (not (eq next-neighbor (first-element list))) 
               (setf (next-item (previous-item next-neighbor)) node))
-            (if (not (eq node (last-item list)))
+            (if (not (eq node (last-element list)))
               (setf (previous-item (next-item node)) next-neighbor)
-              (setf (last-item list) next-neighbor))
+              (setf (last-element list) next-neighbor))
             (setf (next-item node) next-neighbor
                   (previous-item next-neighbor) node)
             (setf next-neighbor (previous-item node)))
       (when (not next-neighbor)
-        (setf (first-item list) node)))))
+        (setf (first-element list) node)))))
 
 (defmethod sort-update-right ((list sorted-dlist-container)
                               (node dlist-container-node))
@@ -722,16 +739,16 @@ so it best for small containers."
                                (funcall key (element next-neighbor))))) do
             (setf (previous-item next-neighbor) (previous-item node)
                   (next-item node) (next-item next-neighbor))
-            (when (not (eq next-neighbor (last-item list)))
+            (when (not (eq next-neighbor (last-element list)))
               (setf (previous-item (next-item next-neighbor)) node))
-            (if (not (eq node (first-item list)))
+            (if (not (eq node (first-element list)))
               (setf (next-item (previous-item next-neighbor)) next-neighbor)
-              (setf (first-item list) next-neighbor))
+              (setf (first-element list) next-neighbor))
             (setf (previous-item node) next-neighbor
                   (next-item next-neighbor) node)
             (setf next-neighbor (next-item node)))
       (when (not next-neighbor)
-        (setf (last-item list) node)))))
+        (setf (last-element list) node)))))
 
 ;; The idea here is that the key of the item probably has changed, and we
 ;; need to find the happy place in the list for the item... 

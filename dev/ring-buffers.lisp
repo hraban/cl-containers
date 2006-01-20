@@ -7,7 +7,7 @@
 ;;;
 ;;; A ring buffer is a bounded queue. It supports:
 ;;;   item-at (setf item-at)
-;;;   insert-item, dequeue, empty!, empty-p, size, total-size, first-item
+;;;   insert-item, dequeue, empty!, empty-p, size, total-size, first-element
 ;;; ---------------------------------------------------------------------------
 
 (defclass* ring-buffer (abstract-queue
@@ -105,8 +105,13 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((container ring-buffer))
+(defmethod first-element ((container ring-buffer))
    (item-at container (buffer-start container)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (container ring-buffer))
+   (setf (item-at container (buffer-start container)) value))
 
 ;;; ---------------------------------------------------------------------------
 

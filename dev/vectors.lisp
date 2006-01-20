@@ -32,13 +32,23 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((container vector-container-mixin))
+(defmethod first-element ((container vector-container-mixin))
   (item-at container 0))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod last-item ((v vector-container-mixin))
+(defmethod (setf first-element) (value (container vector-container-mixin))
+  (setf (item-at container 0) value))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod last-element ((v vector-container-mixin))
   (item-at v (1- (size v))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf last-element) (value (v vector-container-mixin))
+  (setf (item-at v (1- (size v))) value))
 
 ;;; ---------------------------------------------------------------------------
 ;;; basic-vector-container
@@ -73,7 +83,7 @@
 ;;            insert-item, delete-item,
 ;;            insert-item-at, delete-item-at,
 ;;            item-at, iterate-container, delete-first, delete-last
-;;            first-item, search-for-item, search-for-match
+;;            first-element, search-for-item, search-for-match
 
 (defclass* vector-container (basic-vector-container
                                concrete-container)

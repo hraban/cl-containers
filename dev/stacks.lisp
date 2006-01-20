@@ -6,7 +6,7 @@
 ;;; Basic and much loved first-in-last-out container.
 ;;;
 ;;; Supports:
-;;; insert-item, size, empty-p, empty!, first-item,
+;;; insert-item, size, empty-p, empty!, first-element,
 ;;; pop-item, push-item (= insert-item)
 ;;; ---------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@
                            ordered-container-mixin)
   ())
 
-(defmethod (setf first-item) (value (stack abstract-stack))
+(defmethod (setf first-element) (value (stack abstract-stack))
   ;;?? should this fail when stack is empty
   (pop-item stack)
   (insert-item stack value))
@@ -42,8 +42,15 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((container stack-container))
-  (first-item (contents container)))
+(defmethod first-element ((container stack-container))
+  (first-element (contents container)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (container stack-container))
+  (setf (first-element (contents container)) value))
+
+;;; ---------------------------------------------------------------------------
 
 (defmethod pop-item ((container stack-container))
   (delete-first (contents container)))

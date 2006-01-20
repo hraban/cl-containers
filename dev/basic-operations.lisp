@@ -397,11 +397,16 @@ arguments (args).")
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((container iteratable-container-mixin))
+(defmethod first-element ((container iteratable-container-mixin))
   (iterate-nodes
    container
    (lambda (item)
-     (return-from first-item item))))
+     (return-from first-element item))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (container iteratable-container-mixin))
+  (error "Don't know how to set the first element of ~A" container))
 
 ;;; ---------------------------------------------------------------------------
 

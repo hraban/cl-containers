@@ -142,7 +142,9 @@
            smallest-item                 ; sorted-container-mixin
            
            first-item
+           first-element
            last-item
+           last-element
            current-item
            
            element-type                  ; typed-container-mixin

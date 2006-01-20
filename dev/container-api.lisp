@@ -193,9 +193,14 @@ the transform function."))
 (defgeneric iterate-value-key (container function))
 
 ;;?? should be settable
-(defgeneric first-item (ordered-container-mixin))
+(defgeneric first-element (ordered-container-mixin))
+
+(defun first-item (x) (first-element x))
+
 ;;?? should be settable
-(defgeneric last-item (ordered-container-mixin))
+(defgeneric last-element (ordered-container-mixin))
+
+(defun last-item (x) (last-element x))
 
 (defgeneric delete-first (ordered-container-mixin)
   (:documentation "Removes (and returns) the first item in an ordered 

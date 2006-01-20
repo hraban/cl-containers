@@ -171,7 +171,7 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((node bst-node))
+(defmethod first-element ((node bst-node))
   (let ((current node))
     (loop while (not (node-empty-p (left-child current))) do
           (setf current (left-child current)))
@@ -179,25 +179,53 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((tree binary-search-tree))
-  (first-item (root tree)))
+(defmethod (setf first-element) (value (node bst-node))
+  (let ((current node))
+    (loop while (not (node-empty-p (left-child current))) do
+          (setf current (left-child current)))
+    (setf (element current) value)))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod last-item ((node bst-node))
+(defmethod first-element ((tree binary-search-tree))
+  (first-element (root tree)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (tree binary-search-tree))
+  (setf (first-element (root tree)) value))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod last-element ((node bst-node))
   (let ((current node))
     (loop while (not (node-empty-p (right-child current))) do
           (setf current (right-child current)))
     current))
 
-(defmethod last-item ((tree binary-search-tree))
-  (last-item (root tree)))
+;;; ---------------------------------------------------------------------------
+
+(defmethod last-element ((tree binary-search-tree))
+  (last-element (root tree)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf last-element) (value (node bst-node))
+  (let ((current node))
+    (loop while (not (node-empty-p (right-child current))) do
+          (setf current (right-child current)))
+    (setf (element current) value)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf last-element) (value (tree binary-search-tree))
+  (setf (last-element (root tree)) value))
 
 ;;; ---------------------------------------------------------------------------
 
 (defmethod successor ((tree binary-search-tree) (node bst-node))
   (if (not (node-empty-p (right-child node)))
-    (first-item (right-child node))
+    (first-element (right-child node))
     (let ((y (parent node)))
       (loop while (and (not (node-empty-p y))
                        (eq node (right-child y))) do
@@ -209,7 +237,7 @@
 
 (defmethod predecessor ((tree binary-search-tree) (node bst-node))
   (if (not (node-empty-p (left-child node)))
-    (last-item (left-child node))
+    (last-element (left-child node))
     (let ((y (parent node)))
       (loop while (and (not (node-empty-p y))
                        (eq node (left-child y))) do

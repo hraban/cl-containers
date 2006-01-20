@@ -60,13 +60,23 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((list list))
+(defmethod first-element ((list list))
   (first list))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod last-item ((list list))
+(defmethod (setf first-element) (value (list list))
+  (setf (first list) value))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod last-element ((list list))
   (first (last list)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf last-element) (value (list list))
+  (setf (first (last list)) value))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -168,7 +178,7 @@
 
 (defmethod size ((vector vector))
   ;; nb. Since we allow fill pointers now length and array-total-size may be different.
-  ;;     The implementation of empty-p and last-item suggest that size should be length.
+  ;;     The implementation of empty-p and last-element suggest that size should be length.
   (length vector))
 
 ;;; ---------------------------------------------------------------------------
@@ -178,13 +188,23 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((vector vector))
+(defmethod first-element ((vector vector))
   (aref vector 0))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod last-item ((vector vector))
+(defmethod (setf first-element) (value (vector vector))
+  (setf (aref vector 0) value))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod last-element ((vector vector))
   (aref vector (1- (size vector))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf last-element) (value (vector vector))
+  (setf (aref vector (1- (size vector))) value))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -226,8 +246,8 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod nth-element ((container array) (index number))
-  (row-major-aref container index))
+(defmethod nth-element ((container vector) (index number))
+  (aref container index))
 
 
 ;;; ---------------------------------------------------------------------------
@@ -263,18 +283,28 @@
 
 (defmethod size ((array array))
   ;; nb. Since we allow fill pointers now length and array-total-size may be different.
-  ;;     The implementation of empty-p and last-item suggest that size should be length.
+  ;;     The implementation of empty-p and last-element suggest that size should be length.
   (length array))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((array array))
+(defmethod first-element ((array array))
   (row-major-aref array 0))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod last-item ((array array))
+(defmethod (setf first-element) (value (array array))
+  (setf (row-major-aref array 0) value))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod last-element ((array array))
   (row-major-aref array (size array)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf last-element) (value (array array))
+  (setf (row-major-aref array (size array)) value))
 
 ;;; ---------------------------------------------------------------------------
 

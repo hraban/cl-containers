@@ -19,7 +19,7 @@ DISCUSSION
 ;;; Abstract Queue interface
 ;;;
 ;;; supports: enqueue (insert-item), dequeue (delete-first), empty!, 
-;;; size, empty-p, first-item
+;;; size, empty-p, first-element
 ;;; ---------------------------------------------------------------------------
 
 (defclass* abstract-queue (initial-contents-mixin ordered-container-mixin)
@@ -46,8 +46,8 @@ DISCUSSION
     (delete-first q))
   (values))
 
-(defmethod first-item :before ((q abstract-queue))
-  (error-if-queue-empty q "Tried to examine first-item from an empty queue."))
+(defmethod first-element :before ((q abstract-queue))
+  (error-if-queue-empty q "Tried to examine first-element from an empty queue."))
 
 (defmethod delete-first :before ((q abstract-queue))
   (error-if-queue-empty q "Tried to dequeue from an empty queue."))
@@ -62,7 +62,7 @@ DISCUSSION
 ;;; ---------------------------------------------------------------------------
 ;;; Priority Queues on 'arbitrary' containers
 ;;;
-;;; The underlying container must support: insert-item, first-item
+;;; The underlying container must support: insert-item, first-element
 ;;; delete-item, empty-p, empty!, size, find-item,
 ;;; delete-item and delete-item-if
 ;;; ---------------------------------------------------------------------------
@@ -92,7 +92,7 @@ DISCUSSION
   (insert-item (container q) item))
 
 (defmethod delete-first ((q priority-queue-on-container))
-  (let ((m (first-item (container q))))
+  (let ((m (first-element (container q))))
     (delete-item (container q) m)
     (element m)))
 
@@ -106,8 +106,15 @@ DISCUSSION
 (defmethod size ((q priority-queue-on-container))
   (size (container q)))
 
-(defmethod first-item ((q priority-queue-on-container))
-  (element (first-item (container q))))
+(defmethod first-element ((q priority-queue-on-container))
+  (element (first-element (container q))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (q priority-queue-on-container))
+  (setf (element (first-element (container q))) value))
+
+;;; ---------------------------------------------------------------------------
 
 (defmethod find-item ((q priority-queue-on-container) (item t))
   (let ((node (find-item (container q) item)))
@@ -226,9 +233,15 @@ DISCUSSION
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod first-item ((q basic-queue))
+(defmethod first-element ((q basic-queue))
   "Returns the first item in a queue without changing the queue."
   (car (front-of-queue q)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod (setf first-element) (value (q basic-queue))
+  "Returns the first item in a queue without changing the queue."
+  (setf (car (front-of-queue q)) value))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -242,7 +255,7 @@ DISCUSSION
 
 (defmethod delete-item ((queue basic-queue) item)
   (unless (empty-p queue)
-    (cond ((eq item (first-item queue))
+    (cond ((eq item (first-element queue))
            (delete-first queue))
           ((eq item (car (tail-of-queue queue)))
            ;; expensive special case...
