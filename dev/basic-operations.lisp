@@ -278,13 +278,13 @@ arguments (args).")
 ;;; ---------------------------------------------------------------------------
 
 (defmethod argmax ((items t) function &rest args &key key filter)
-  (declare (ignore test key filter))
+  (declare (ignore key filter))
   (apply #'best-item items function :test #'> args))
 
 ;;; ---------------------------------------------------------------------------
 
 (defmethod argmin ((items t) function &rest args &key key filter)
-  (declare (ignore test key filter))
+  (declare (ignore key filter))
   (apply #'best-item items function :test #'< args))
 
 #+test
