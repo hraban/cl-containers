@@ -231,9 +231,8 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((container array-container) fn)
-   (with-slots (contents contents) container
-     (dotimes (i (array-total-size contents))
-       (funcall fn (row-major-aref contents i)))))
+  (dotimes (i (array-total-size (contents container)))
+    (funcall fn (row-major-aref (contents container) i))))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -653,9 +652,7 @@
       (setf (cdr item) value)
       (progn
         (setf item (cons indexes value))
-        (with-slots (contents contents)
-                    container
-          (push item contents))))
+        (push item (contents container))))
     
     value))
 
