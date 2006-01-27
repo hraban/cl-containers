@@ -70,8 +70,10 @@ instructions."))
                                             :depends-on ("package" "basic-operations"))
                                      (:file "package-container"
                                             :depends-on ("package" "basic-operations"))
+                                     (:file "iterator-api"
+                                            :depends-on ("package"))
                                      (:file "iterators"
-                                            :depends-on ("package" "basic-operations"))
+                                            :depends-on ("iterator-api" "basic-operations"))
                                      (:file "file-iterators"
                                             :depends-on ("iterators"))
                                      (:file "containers-readtable"
