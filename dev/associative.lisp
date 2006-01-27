@@ -652,7 +652,7 @@
       (setf (cdr item) value)
       (progn
         (setf item (cons indexes value))
-        (push item (contents container))))
+        (push item (slot-value container 'contents))))
     
     value))
 
@@ -661,7 +661,7 @@
 (defmethod delete-item-at ((container alist-container) &rest indexes)
   (declare (dynamic-extent indexes))
   (setf (slot-value container 'contents)
-        (delete indexes (contents container)
+        (delete indexes (slot-value container 'contents)
                 :test (test container) :key #'first))
   (values container))
 
