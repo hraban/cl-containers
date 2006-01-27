@@ -11,7 +11,7 @@ stemming
 |#
 
 (defclass* basic-stream-iterator (forward-iterator)
-  ((stream nil ir)
+  ((stream nil i :reader iterator-stream)
    (close? nil r)))
 
 ;;; ---------------------------------------------------------------------------
@@ -22,19 +22,21 @@ stemming
         (open-file-for-iterator object container))
   
   (advance object)
-  
+
+  #+MCL
   ;; if garbage collected close the stream
   (ccl:terminate-when-unreachable object))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod terminate ((iterator basic-stream-iterator))
+#+MCL
+(defmethod ccl:terminate ((iterator basic-stream-iterator))
   ;;??
-  (format t "GC: Maybe closing stream" iterator)
+  ;(format t "GC: Maybe closing stream" iterator)
   (when (and (close? iterator)
-             (streamp (stream iterator))
-             (open-stream-p (stream iterator)))
-    (close (stream iterator))))
+             (streamp (iterator-stream iterator))
+             (open-stream-p (iterator-stream iterator)))
+    (close (iterator-stream iterator))))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -77,7 +79,7 @@ stemming
 
 (defmethod advance ((iterator file-iterator))
   (setf (slot-value iterator 'current-char) 
-        (read-char (stream iterator) nil :eof)))
+        (read-char (iterator-stream iterator) nil :eof)))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -112,7 +114,7 @@ stemming
 
 (defmethod advance ((iterator file-line-iterator))
   (setf (slot-value iterator 'current-line) 
-        (read-line (stream iterator) nil :eof)))
+        (read-line (iterator-stream iterator) nil :eof)))
 
 ;;; ---------------------------------------------------------------------------
 
