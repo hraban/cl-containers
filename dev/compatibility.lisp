@@ -25,11 +25,8 @@
   (cond ((and filter transform)
          (let ((result nil))
            (mapc (lambda (item)
-                   (when (or (not filter)
-                             (and filter (funcall filter item)))
-                     (push (if transform
-                             (funcall transform item)
-                             item) result)))
+                   (when (funcall filter item)
+                     (push (funcall transform item) result)))
                  list)
            (nreverse result)))
         ((not (null filter))
