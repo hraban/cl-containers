@@ -57,12 +57,16 @@ element returns current-element and allows for side-effects
 ;;; ---------------------------------------------------------------------------
 
 (defcondition basic-iterator-condition ()
-  ((iterator nil ir)))
+  ((iterator nil ir))
+  (:export-p t)
+  (:export-slots-p t))
 
 ;;; ---------------------------------------------------------------------------
 
 (defcondition no-current-element-error (basic-iterator-condition error)
-  ())
+  ()
+  (:export-p t)
+  (:export-slots-p t))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -90,11 +94,9 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric print-iterator (iterator stream)
-  (:documentation "")
-  (:method ((iterator abstract-generator) stream)
-           (declare (ignore stream))
-           (values)))
+(defmethod print-iterator ((iterator abstract-generator) stream)
+  (declare (ignore stream))
+  (values))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -103,17 +105,9 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric move-p (iterator direction)
-  (:documentation "")
-  (:method ((iterator abstract-generator) direction)
-           (declare (ignore direction))
-           (values nil)))
-
-;;; ---------------------------------------------------------------------------
-
-(defgeneric element-passes-p (iterator)
-  (:documentation "")
-  (:method-combination and))
+(defmethod move-p ((iterator abstract-generator) direction)
+  (declare (ignore direction))
+  (values nil))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -178,16 +172,14 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric move (iterator direction)
-  (:documentation "")
-  (:method :around ((iterator basic-iterator) direction)
-           (cond ((iterator-position iterator)
-                  (setf (slot-value iterator 'iterator-position) nil))
-                 (t
-                  (call-next-method)))
-           (unless (move-p iterator direction)
-             (setf (slot-value iterator 'iterator-position)
-                   +iterator-after-end+))))
+(defmethod move :around ((iterator basic-iterator) direction)
+  (cond ((iterator-position iterator)
+         (setf (slot-value iterator 'iterator-position) nil))
+        (t
+         (call-next-method)))
+  (unless (move-p iterator direction)
+    (setf (slot-value iterator 'iterator-position)
+          +iterator-after-end+)))
 
 ;;; ---------------------------------------------------------------------------
 
