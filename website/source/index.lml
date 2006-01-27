@@ -26,7 +26,7 @@
        (:P (rw:link :tinaa) " documentation for CL-Containers is "
            (rw:link :cl-containers-tinaa :title "available") ".")
        
-       ((:A :HREF "mailing-lists"))
+       ((:A :NAME "mailing-lists"))
        (:h3 "Mailing Lists")
        (:ul 
         (:li ((:a :href "http://common-lisp.net/cgi-bin/mailman/listinfo/cl-containers-announce") "cl-containers-announce")
@@ -36,7 +36,7 @@
              ": A list for questions, patches, bug reports, and so on; It's for everything 
 other than announcements."))
        
-       ((:A :HREF "downloads"))
+       ((:A :NAME "downloads"))
        (:H3 "Where is it")
        (:P "A " (rw:link :darcs) " repository is available (note that you'll also need to get "
            (rw:link :metatilities) " and " (rw:link :moptilities) " to get CL-Containers to work). The darcs commands are listed below:")
@@ -47,7 +47,7 @@ darcs get http://common-lisp.net/project/cl-containers/moptilities/darcs/moptili
        (:P "CL-Containers (and friends) should also be " (rw:link :asdf-install :title "ASDF installable") ". Its CLiki home is right " (rw:link :cl-containers-cliki :title "where") " you'd expect.")
        (:P "There's also a handy " (rw:link :cl-containers-package :title "gzipped tar file") ".")
        
-       ((:A :HREF "news"))
+       ((:A :NAME "news"))
        (:H3 "What is happening")
        ((:TABLE :BORDER "0") 
         ((:TR :ALIGN "left" :VALIGN "top")
