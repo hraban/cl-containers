@@ -26,30 +26,34 @@
 }
 
 .footer-text {
-	color: #000000;
+	color: black;
 	float: right;
     padding-top: 3em;
 	padding-bottom: 2em;
 	padding-right: 1em;
+	background: inherit;
 }
 
 .footer a:link {
 	font-weight:bold;
 	color:#ffffff;
 	text-decoration:underline;
+	background: inherit;
 }
 
 .footer a:visited {
 	font-weight:bold;
 	color:#ffffff; 
 	text-decoration:underline;
+	background: inherit;
 }
 
 .footer a:hover { 
 	font-weight:bold; 
 	color:#002244; 
 	text-decoration:underline;
-		 }
+	background: inherit;
+}
 
 .system-links {
 	list-style: url(http://common-lisp.net/project/cl-containers/images/lambda.png);
@@ -72,31 +76,46 @@
 	float: right;
 }
 
-.check {font-size: x-small;
-	text-align:right;}
+.check {
+	font-size: x-small;
+	text-align:right;
+	color: inherit;
+	background: inherit;
+}
 
-.check a:link { font-weight:bold;
-		color:#a0a0ff;
-		text-decoration:underline; }
+.check a:link { 
+    font-weight:bold;
+	color:#a0a0ff;
+	text-decoration:underline; 
+	background: inherit;
+}
 
-.check a:visited { font-weight:bold;
-		   color:#a0a0ff;
-		   text-decoration:underline; }
+.check a:visited { 
+    font-weight:bold;
+    color:#a0a0ff;
+    text-decoration:underline; 
+	background: inherit;
+}
 
-.check a:hover { font-weight:bold;
-		 color:#000000;
-		 text-decoration:underline; }
+.check a:hover { 
+    font-weight:bold;
+    color:#000000;
+    text-decoration:underline; 
+	background: inherit;
+}
 
 .changelog {
 	font-size: 75%;
 	padding: 1em 2em 2em;
      vertical-align: top;
 	color: #686868;
+	background: inherit;
 }
 
 .changelog-author {
 	text-align: right;
 	color: #686868;
+	background: inherit;
 }
 
 .changelog-description {
@@ -105,6 +124,7 @@
 	padding-bottom: 1em;
 	font-size: 120%;
 	padding-right: 2em;
+	background: inherit;
 }
 
 .header h2 {
@@ -127,11 +147,10 @@
 
 .nav {
 	padding-left: 1em;
-	vertical-align: center;
 }
 
 .code-block {
-	font: 90% Courier New, Courier, mono;
+	font: 90% "Courier New", Courier, monospace;
 	padding-right: 2em;
 	padding-left: 2em;
 	overflow: auto;
@@ -141,7 +160,7 @@
 }
 
 pre {
-	font: 90% Courier New, Courier, mono;
+	font: 90% "Courier New", Courier, monospace;
 	color: #000000;
 	background: #f6ead6;
 	width: 90%;
