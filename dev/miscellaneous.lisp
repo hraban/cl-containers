@@ -1,19 +1,5 @@
 (in-package containers)
 
-(export '(map-window-over-elements
-          map-window-over-nodes
-          collect-window-over-elements
-          collect-window-over-nodes
-          
-          merge-elements
-          merge-nodes
-          element-counts
-          node-counts
-          
-          map-pairs
-          collect-pairs)
-        )
-
 ;;; ---------------------------------------------------------------------------
 
 (defun merge-elements (container merge-fn initial-fn 
@@ -255,3 +241,60 @@
      (lambda (a b)
        (push (sort (list a b) #'string-lessp) result)))
     result))
+
+;;; ---------------------------------------------------------------------------
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod unique-elements ((container iteratable-container-mixin) &key
+                            (key 'identity))
+  (%unique-elements container 'merge-elements key))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod unique-elements ((container list) &key
+                            (key 'identity))
+  (%unique-elements container 'merge-elements key))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod unique-nodes ((container iteratable-container-mixin) &key
+                         (key 'identity))
+  (%unique-elements container 'merge-nodes key))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod unique-nodes ((container list) &key
+                         (key 'identity))
+  (%unique-elements container 'merge-nodes key))
+
+;;; ---------------------------------------------------------------------------
+
+(defun %unique-elements (container iterator key)
+  (collect-elements
+   (funcall iterator 
+    container
+    (lambda (old new)
+      (declare (ignore old))
+      (values new))
+    (lambda (new)
+      (values new))
+    :key key
+    :return :values)))
+
+
+#+Test
+(progn
+  (time
+   (remove-duplicates
+    (collect-items (interaction-graph (ds :p-4-4000m))
+                   :transform (lambda (v) 
+                                (aref "BTT"
+                                      (position (aref (symbol-name (id (element v))) 0) "BCT"))))))
+  
+  (time
+   (u::unique-nodes
+    (interaction-graph (ds :p-4-4000m))
+    :key (lambda (v) 
+           (aref "BTT"
+                 (position (aref (symbol-name (id (element v))) 0) "BCT"))))))

@@ -3,6 +3,7 @@
 (defpackage "METABANG.CL-CONTAINERS"
   (:use "COMMON-LISP")
   (:nicknames "CL-CONTAINERS" "CONTAINERS")
+  (:documentation "A library of container classes and algorithms for Common Lisp.")
   (:import-from "METATILITIES"
                 #:deprecated
                 #:defclass*
@@ -16,14 +17,14 @@
                 #:reset
                 #:samep
                 #:set-equal
-
+                
                 #:add-parameter->dynamic-class
                 #:add-dynamic-class-for-parameters
                 #:determine-dynamic-class
                 #:existing-subclass
                 #:find-existing-subclass
                 #:include-class-dependencies
-
+                
                 #:*samep-test*
                 #:parent
                 #:element
@@ -35,7 +36,7 @@
                 #:root
                 #:next-element
                 #:total-size)
-
+  
   (:export #:basic-queue
            #:ring-buffer
            #:vector-container
@@ -299,5 +300,20 @@
            #:filtered-iterator-mixin
            #:filter
            #:reverse-container
-
-           #:weight))
+           
+           #:weight
+           #:unique-elements
+           #:unique-nodes
+           
+           #:map-window-over-elements
+           #:map-window-over-nodes
+           #:collect-window-over-elements
+           #:collect-window-over-nodes
+           
+           #:merge-elements
+           #:merge-nodes
+           #:element-counts
+           #:node-counts
+           
+           #:map-pairs
+           #:collect-pairs))

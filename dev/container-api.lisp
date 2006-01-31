@@ -280,5 +280,15 @@ key to match. Key defaults to identity and test defaults to eq."))
 
 (defgeneric reverse-container (ordered-container-mixin)
   (:documentation "Destructively alters the elements/nodes of an ordered container so that they are reversed."))
+
+;;; ---------------------------------------------------------------------------
+
+(defgeneric unique-elements (container &key key)
+  (:documentation ""))
+
+;;; ---------------------------------------------------------------------------
+
+(defgeneric unique-nodes (container &key key)
+  (:documentation ""))
   
   

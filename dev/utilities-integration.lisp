@@ -1,7 +1,6 @@
 (in-package metatilities)
 
-(use-package (find-package "CL-CONTAINERS") 
-             (find-package "METATILITIES"))
+(export-exported-symbols "CL-CONTAINERS" "METATILITIES")
 
 ;;; ---------------------------------------------------------------------------
 
