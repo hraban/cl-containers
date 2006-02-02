@@ -5,7 +5,7 @@
 		min-width:120px;
 	font-size: medium;
 	background-color: #ff9f07;
-	color:#ffffff;
+	color: white;
 	border: solid #995f04 4px;
 	padding: 1mm 1mm 1mm 1em;
 }
@@ -14,7 +14,7 @@
 	font-size: small;
 	font-style: italic;
 	background-color: #ff9f07;
-	color:#ffffff;
+	color: white;
      border-top: 2px solid;
      border-bottom: 2px solid;
 	border-color:#002244;
@@ -168,4 +168,27 @@ pre {
 	border: 1px solid #995f04;
 	padding: 0.25em 0.5em;
 	margin-left: 2em;
+}
+
+.system-news  {
+	border-collapse: collapse;
+	vertical-align: top;
+	margin-bottom: 1em;
+}
+
+.system-news th {
+	font-weight: normal;
+	vertical-align: top;
+	width: 100px;
+	text-align: left;
+}
+
+.system-news td {
+	vertical-align: top;
+	padding-bottom: 0.4em;
+	text-align: left;
+}
+
+.odd-row {
+	background: #f4e9d7;
 }
