@@ -48,37 +48,37 @@ darcs get http://common-lisp.net/project/cl-containers/moptilities/darcs/moptili
       
       ((:A :HREF "news"))
       (:H3 "What is happening")
-      ((:TABLE :BORDER "0") 
-       ((:TR :ALIGN "left" :VALIGN "top")
-        ((:TD) "25 Nov 2005")
+      ((:TABLE :CLASS "system-news") 
+       (:TR
+        (:TH "25 Nov 2005")
         (:TD "Wrote a mini tutorial and published it on "
              ((:a :href "http://www.metabang.com/unclog/publisha/atinybit.html") "unCLog")
              "."))
        
-       ((:TR :ALIGN "left" :VALIGN "top")
-        ((:TD) "14 Nov 2005")
+       (:TR
+        (:TH "14 Nov 2005")
         (:TD "Added links, tarball, etc."))
        
-       ((:TR :ALIGN "left" :VALIGN "top")
-        ((:TD) "10 Nov 2005")
+       (:TR
+        (:TH "10 Nov 2005")
         (:TD "Small patches and corrections; links to the mailing list. Nothing exciting"))
        
-       ((:TR :ALIGN "left" :VALIGN "top")
-        ((:TD) "4 Nov 2005")
+       (:TR
+        (:TH "4 Nov 2005")
         (:TD "OK. I changed my mind aboust waiting for ASDF. CL-Containers is ready for a release. Things are pretty weak-around-the-knees however, so the release party planned on Carnival Cruise Lines has been canceled. Sorry."
              (:P)
              "Today, I hope to add CLiki pages for CL-Containers and two other bits of code it relies on: Metatilities and Moptilities. I'll also finish with the darcs repositories, and have things ASDF installable. If I'm lucky, it'll actually work!"))
        
-       ((:TR :ALIGN "left" :VALIGN "top")
-        ((:TD) "6 Oct 2005")
+       (:TR
+        (:TH "6 Oct 2005")
         (:TD "I've decided to get cl-containers out without worrying about ASDF. This means I should be able to stick what's needed up on the web site by the end of this week (oh, oh, I've almost made a commitment). This includes:					" 
              (:UL (:LI "cl-containers") 
                   (:LI "metatilities (everyone needs their own set of matching utilities)")
                   (:LI "moptilities (everyone needs their own MOP layer too)")
                   (:LI "generic-load-utilities")) 
              "Most of this will be released using the MIT license although some of the code comes from long ago and far away and has it's own (quite unrestrictive) license. Once I've released, lots of good stuff will remain to do (asdf, testing, making sure it's platform compliant, etc). As always, stay tuned."))
-       ((:TR :ALIGN "left" :VALIGN "top")
-        ((:TD) "5 Oct 2005")
+       (:TR
+        (:TH "5 Oct 2005")
         (:TD "I've got most of cl-containers under " ((:A :HREF "http://www.darcs.org/") "darcs") " now and split away from various unneccesary dependencies of the rest of my code. The next steps are:" 
              (:UL 
               (:LI "Switching completely to asdf") 
@@ -86,7 +86,7 @@ darcs get http://common-lisp.net/project/cl-containers/moptilities/darcs/moptili
               (:LI "Getting basic documentation ready") 
               (:LI "Making the source available")) 
              "If things go moderately then \"real soon now\" may actually occur \"real soon\". Thanks for your patience."))
-       ((:TR :ALIGN "left" :VALIGN "top")
+       (:TR
         (:TD "29 July 2005")
         (:TD "I'm in the process of converting cl-containers from a home grown defsystem to ASDF, of cleaning up some unnecessary dependencies and of trying to create a bit of documentation. I hope to have cl-containers up in some form real soon now. You can drop me " ((:A :HREF "mailto:gwking@metabang.com") "e-mail") " if you're interested, would like to help or want to be notified when the code actually appears up here!")))))
     
