@@ -176,14 +176,15 @@ DISCUSSION
 (defun front-of-queue! (queue new)
   (setf (car (queue-header queue)) new))
 (defsetf front-of-queue front-of-queue!)
-(proclaim '(inline front-of-queue front-of-queue!))
 
 (defun tail-of-queue (queue)
   (cdr (queue-header queue)))
 (defun tail-of-queue! (queue new)
   (setf (cdr (queue-header queue)) new))
 (defsetf tail-of-queue tail-of-queue!)
-(proclaim '(inline tail-of-queue tail-of-queue!))
+(eval-when (:compile-toplevel)
+  (proclaim '(inline front-of-queue front-of-queue!))
+  (proclaim '(inline tail-of-queue tail-of-queue!)))
 
 ;;; ---------------------------------------------------------------------------
 

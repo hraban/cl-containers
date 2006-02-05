@@ -1,12 +1,5 @@
 (in-package containers)
 
-(export '(union-find-container
-          representative
-          find-set
-          graft-nodes
-          representative-node))
-
-
 ;;; ---------------------------------------------------------------------------
 ;;; Simple union-find data structure
 ;;; ---------------------------------------------------------------------------

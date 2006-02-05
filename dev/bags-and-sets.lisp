@@ -1,9 +1,5 @@
 (in-package containers)
 
-
-(export '(set-container
-          bag-container))
-
 ;;; ---------------------------------------------------------------------------
 ;;; Bags
 ;;;

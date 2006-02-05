@@ -94,6 +94,13 @@ arguments (args).")
 
 ;;; ---------------------------------------------------------------------------
 
+(deprecated
+  "Use collect-elements instead."
+  (defmethod container->list ((container contents-as-sequence-mixin))
+    (coerce (contents container) 'list)))
+
+;;; ---------------------------------------------------------------------------
+
 (defmethod nth-element :around ((container t) (index integer))
   (if (< -1 index (size container))
     (call-next-method)
@@ -495,13 +502,6 @@ arguments (args).")
 
 (defmethod empty-p ((container contents-as-sequence-mixin))
   (= (size container) 0))
-
-;;; ---------------------------------------------------------------------------
-
-(deprecated
-  "Use collect-elements instead."
-  (defmethod container->list ((container contents-as-sequence-mixin))
-    (coerce (contents container) 'list)))
 
 ;;; ---------------------------------------------------------------------------
 

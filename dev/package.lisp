@@ -82,7 +82,15 @@
            #:k-best-heap-container
            
            #:stable-associative-container
-           #:iteratable-container-mixin)
+           #:iteratable-container-mixin
+           
+           #:set-container
+           #:bag-container
+           
+           #:union-find-container
+           #:package-container 
+           #:list-iterator
+           )
   
   ;; Basic container operations
   (:export insert-item
@@ -316,4 +324,14 @@
            #:node-counts
            
            #:map-pairs
-           #:collect-pairs))
+           #:collect-pairs)
+  
+  ;; union find stuff, maybe not the best names...
+  (:export #:representative
+           #:find-set
+           #:graft-nodes
+           #:representative-node)
+  
+  (:export #:packages
+           #:present-symbols-only-p
+           #:exported-symbols-only-p))

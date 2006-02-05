@@ -65,11 +65,10 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod make-node-for-container ((heap heap-container) (element t) &key)
-   (declare (ignore heap))
-   (when element
-     (make-instance 'heap-node
-       :element element
-       :index 0)))
+  (when element
+    (make-instance 'heap-node
+      :element element
+      :index 0)))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Float the 'node' down the tree so the subtree

@@ -45,9 +45,6 @@ element returns current-element and allows for side-effects
 
 (in-package containers)
 
-(export '(list-iterator
-          ))
-
 ;;; ---------------------------------------------------------------------------
 
 (defconstant +iterator-before-beginning+ :pre)

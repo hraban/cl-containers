@@ -1,11 +1,5 @@
 (in-package containers)
 
-(export '(package-container 
-          packages
-          present-symbols-only-p
-          exported-symbols-only-p))
-
-;;; ---------------------------------------------------------------------------
 
 (defclass* package-container (iteratable-container-mixin
                                 abstract-container)
