@@ -1,6 +1,7 @@
 (in-package metatilities)
 
-(export-exported-symbols "CL-CONTAINERS" "METATILITIES")
+(eval-when (:compile-toplevel)
+  (export-exported-symbols "CL-CONTAINERS" "METATILITIES"))
 
 ;;; ---------------------------------------------------------------------------
 
