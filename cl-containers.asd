@@ -76,6 +76,7 @@ instructions."))
                                             :depends-on ("iterator-api" "basic-operations"))
                                      (:file "file-iterators"
                                             :depends-on ("iterators"))
+                                     #+MCL
                                      (:file "containers-readtable"
                                             :depends-on ("containers"))))
                (:module "website"
