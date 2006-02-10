@@ -412,7 +412,8 @@ classified-container-mixin, and the classifier returns one of :TOP-LEFT,
                                         (initial-contents nil)
                                         (initial-element nil) 
                                         (element-type t)
-                                        (fill-pointer t))
+                                        (fill-pointer t)
+                                        &allow-other-keys)
   (if initial-contents
     (make-array (length initial-contents)
                 :initial-contents initial-contents

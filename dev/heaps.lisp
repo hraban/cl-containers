@@ -5,8 +5,8 @@
 ;;; ---------------------------------------------------------------------------
 
 (defclass* heap-container (sorted-container-mixin
-                             container-uses-nodes-mixin
-                             vector-container)
+                           vector-container
+                           container-uses-nodes-mixin)
   ()
   (:default-initargs
     :sorter #'>
@@ -143,9 +143,8 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod insert-item ((heap heap-container) item)
-  (let ((node (make-node-for-container heap item))
-        (sorter (sorter heap))
+(defmethod insert-item ((heap heap-container) (node heap-node))
+  (let ((sorter (sorter heap))
         (key (key heap)))
     (setf (index node) (size heap))
     (call-next-method heap node)
