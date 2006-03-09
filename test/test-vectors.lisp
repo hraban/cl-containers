@@ -11,5 +11,8 @@
   test-initial-contents
   (lift:ensure-same (collect-elements 
                 (make-container 'vector-container
- Ê Ê Ê Ê Ê Ê Ê Ê                :initial-contents '(2 3 4)))
-               '(2 3 4)))
+				:initial-contents '(2 3 4)))
+		    '(2 3 4)))
+
+ 
+ 

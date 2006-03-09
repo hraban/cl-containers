@@ -126,8 +126,15 @@
 
 (defmethod delete-item ((container vector-container) item)
   ;;; removes the first instance of item in the-vector
-  (setf (contents container) (delete item (contents container) :count 1))
-  container)
+  (let ((position (position item (contents container))))
+    (when position
+      (rotatef (aref (contents container) position)
+	       (aref (contents container) (1- (length (contents container)))))
+      (setf (fill-pointer (contents container))
+	    (1- (length (contents container)))))
+    #+Old
+    (setf (contents container) (delete item (contents container) :count 1))
+    container))
 
 ;;; ---------------------------------------------------------------------------
 
