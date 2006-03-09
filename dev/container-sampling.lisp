@@ -125,7 +125,7 @@
           for index = 0 then (1+ index) 
           unless (zerop bit) do
           (push (nth-element container index) result)
-          (return))
+          )
     (nreverse result)))
 
 #+Test
