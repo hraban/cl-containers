@@ -193,7 +193,8 @@
     (setf initial-element +empty-initial-element+))
   (setf (contents container) (make-array dimensions
                                          :initial-element initial-element
-                                         :element-type element-type)))
+                                         :element-type (or element-type t)
+					 :adjustable t)))
 
 ;;; ---------------------------------------------------------------------------
 
