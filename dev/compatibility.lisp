@@ -87,13 +87,6 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(deprecated
- "Use collect-elements instead."
- (defmethod container->list ((list list))
-   list))
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod size ((list list))
   (length list))
 
@@ -207,13 +200,6 @@
 
 (defmethod search-for-match ((vector vector) predicate &key (key 'identity))
   (%search-for-match vector predicate key))
-
-;;; ---------------------------------------------------------------------------
-
-(deprecated
- "Use collect-elements instead."
- (defmethod container->list ((vector vector))
-   (collect-elements vector)))
 
 ;;; ---------------------------------------------------------------------------
 

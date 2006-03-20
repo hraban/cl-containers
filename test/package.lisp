@@ -1,9 +1,9 @@
 (in-package common-lisp-user)
 
-(defpackage "METABANG.CL-CONTAINERS-TEST"
-  (:use "COMMON-LISP" "CL-CONTAINERS" "LIFT")
-  (:nicknames "CL-CONTAINERS-TEST")
-  (:import-from "METATILITIES"
+(defpackage "metabang.cl-containers-test"
+  (:use #:common-lisp #:cl-containers #:lift)
+  (:nicknames #:cl-containers-test)
+  (:import-from #:metatilities
                 #:deprecated
                 #:defclass*
                 #:defcondition

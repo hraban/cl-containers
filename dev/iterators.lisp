@@ -513,7 +513,7 @@ element returns current-element and allows for side-effects
 (defmethod include-class-dependencies ((class-type (eql :generator)) 
                                        dynamic-class class-list &rest parameters)
   (declare (ignore parameters)
-           #+ALLEGRO
+           #+allegro
            (ignorable dynamic-class))
   (append class-list (list 'abstract-generator)))
 

@@ -125,6 +125,7 @@ so it best for small containers."
 ;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container sorted-list-container))
+  (declare (ignore value))
   (clean-up container)
   (call-next-method))
 

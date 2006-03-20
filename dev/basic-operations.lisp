@@ -87,20 +87,6 @@ arguments (args).")
 
 ;;; ---------------------------------------------------------------------------
 
-(deprecated
- "Use collect-elements instead."
- (defmethod container->list ((container iteratable-container-mixin))
-   (collect-elements container)))
-
-;;; ---------------------------------------------------------------------------
-
-(deprecated
-  "Use collect-elements instead."
-  (defmethod container->list ((container contents-as-sequence-mixin))
-    (coerce (contents container) 'list)))
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod nth-element :around ((container t) (index integer))
   (if (< -1 index (size container))
     (call-next-method)
@@ -413,6 +399,7 @@ arguments (args).")
 ;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container iteratable-container-mixin))
+  (declare (ignore value))
   (error "Don't know how to set the first element of ~A" container))
 
 ;;; ---------------------------------------------------------------------------

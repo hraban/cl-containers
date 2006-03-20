@@ -1,10 +1,10 @@
 (in-package common-lisp-user)
 
-(defpackage "METABANG.CL-CONTAINERS"
-  (:use "COMMON-LISP")
-  (:nicknames "CL-CONTAINERS" "CONTAINERS")
+(defpackage #:metabang.cl-containers
+  (:use #:common-lisp)
+  (:nicknames #:cl-containers #:containers)
   (:documentation "A library of container classes and algorithms for Common Lisp.")
-  (:import-from "METATILITIES"
+  (:import-from #:metatilities
                 #:deprecated
                 #:defclass*
                 #:defcondition

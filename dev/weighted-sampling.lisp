@@ -6,8 +6,9 @@ This is the dynamic version... could make a faster static version too. One that
 you set up and then sample repeatedly. More like a random 'element' generator.
 |#
 
-(export '(weighted-sampling-container
-          weight))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (export '(weighted-sampling-container
+            weight)))
 
 ;;; ---------------------------------------------------------------------------
 
