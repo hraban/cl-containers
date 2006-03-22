@@ -102,19 +102,17 @@ instructions."))
                                      (:file "weighted-sampling"
                                             :depends-on ("container-sampling"))))))
 
+(asdf:defsystem-connection containers-and-metacopy
+  :requires (cl-containers metacopy)
+  :components ((:module "dev"
+                        :components ((:file "copying")))))
+
+
 #|
 
 (define-eksl-module :container-immutable 
   ("immutable-containers")
   :system containers)
-
-;;; ---------------------------------------------------------------------------
-
-(defsystem-connection containers-and-copying
-  ("container-copying")
-
-  :bin-identifiers (:platform :vendor)
-  :requires (containers copying))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -136,17 +134,6 @@ instructions."))
   ((("container-thread-safe")))
   :system containers
   :depends-on (containers))
-
-;;; ---------------------------------------------------------------------------
-
-(define-eksl-system :test-containers
-  ((("test-*"
-     
-     ) :load-only? t))
-  
-  :bin-identifiers (:platform :vendor)
-  :depends-on (lift containers)
-  :nice-name "Containers Test Suite")
 
 |#   
 
