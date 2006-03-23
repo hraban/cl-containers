@@ -5,7 +5,7 @@
 
 (defgeneric copy-container (abstract-container)
   (:method ((container abstract-container))
-           (metacopy:copy-top-level container)))
+           (metacopy:copy-thing container)))
 
 ;;; ---------------------------------------------------------------------------
 
