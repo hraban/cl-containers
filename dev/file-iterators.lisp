@@ -136,6 +136,46 @@ stemming
   'file-line-iterator)
 
 ;;; ---------------------------------------------------------------------------
+;;; file-form-iterator
+;;; ---------------------------------------------------------------------------
+
+(defclass* file-form-iterator (basic-stream-iterator)
+  ((current-form nil r)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod move ((iterator file-form-iterator) (direction (eql :forward)))
+  (advance iterator))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod advance ((iterator file-form-iterator))
+  (setf (slot-value iterator 'current-form) 
+        (read (iterator-stream iterator) nil :eof)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod current-element ((iterator file-form-iterator))
+  (current-form iterator))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod current-element-p ((iterator file-form-iterator))
+  (and (call-next-method)
+       (not (eq (current-form iterator) :eof))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod move-p ((iterator file-form-iterator) (direction (eql :forward)))
+  (not (eq (current-form iterator) :eof)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod class-for-contents-as ((contents pathname) (as (eql :forms)))
+  'file-form-iterator)
+
+
+;;; ---------------------------------------------------------------------------
 ;;; delimited-iterator
 ;;; ---------------------------------------------------------------------------
 
@@ -301,6 +341,7 @@ stemming
 
 (defmethod class-for-contents-as ((contents t) (as (eql :words)))
   'word-iterator)
+
 
 
 #|
