@@ -166,7 +166,8 @@ DISCUSSION
 (defclass* basic-queue (abstract-queue iteratable-container-mixin 
                                          concrete-container)
   ((queue nil :accessor queue-queue)
-   (indexer nil :accessor queue-header)))
+   (indexer nil :accessor queue-header))
+  (:documentation "A simple FIFO queue implemented as a list with extra bookkeeping for efficiency."))
 
 ;;; ---------------------------------------------------------------------------
 

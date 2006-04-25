@@ -6,8 +6,8 @@ Brent Heeringa, Louis Theran)
 
 |#
 
-(defpackage "CONTAINERS-SYSTEM" (:use #:cl #:asdf))
-(in-package "CONTAINERS-SYSTEM")
+(defpackage #:containers-system (:use #:cl #:asdf))
+(in-package #:containers-system)
 
 ;;; ---------------------------------------------------------------------------
 ;;; system definitions
@@ -16,7 +16,7 @@ Brent Heeringa, Louis Theran)
 ;; try hard
 (unless (find-system 'asdf-system-connections nil)
  (when (find-package 'asdf-install)
-   (funcall (intern "INSTALL" "ASDF-INSTALL") 'asdf-system-connections)))
+   (funcall (intern (symbol-name :install) :asdf-install) 'asdf-system-connections)))
 ;; give up with a useful (?) error message
 (unless (find-system 'asdf-system-connections nil)
   (error "The CL-Containers system requires ASDF-SYSTEM-CONNECTIONS. See 

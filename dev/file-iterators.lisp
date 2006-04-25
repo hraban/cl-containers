@@ -1,7 +1,7 @@
 (in-package containers)
 
 #|
-file lines
+- file lines
 file forms
 string as characters
 string as words
@@ -23,14 +23,12 @@ stemming
   
   (advance object)
 
-  #+MCL
   ;; if garbage collected close the stream
-  (ccl:terminate-when-unreachable object))
+  (mopu:care-when-finalized object))
 
 ;;; ---------------------------------------------------------------------------
 
-#+MCL
-(defmethod ccl:terminate ((iterator basic-stream-iterator))
+(defmethod mopu:when-finalized ((iterator basic-stream-iterator))
   ;;??
   ;(format t "GC: Maybe closing stream" iterator)
   (when (and (close? iterator)
@@ -137,79 +135,6 @@ stemming
 (defmethod class-for-contents-as ((contents pathname) (as (eql :lines)))
   'file-line-iterator)
 
-
-#|
-;;; ---------------------------------------------------------------------------
-;;; word-iterator
-;;; ---------------------------------------------------------------------------
-
-(defclass* word-iterator (forward-iterator)
-  ((cache (make-array 20 :element-type 'character :fill-pointer 0 :adjustable t) r)
-   (current-word nil r)
-   (internal-iterator nil r)))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod initialize-instance :after ((object word-iterator) &key container)
-  (setf (slot-value object 'internal-iterator) 
-        (make-iterator container))
-  (when (move-forward-p (internal-iterator object))
-    (move-forward (internal-iterator object)))
-  (advance object))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod delimiter-p ((iterator word-iterator) (thing character))
-  (metatilities:whitespacep thing))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod move ((iterator word-iterator) (direction (eql :forward)))
-  (advance iterator))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod advance ((iterator word-iterator))
-  (let ((internal (internal-iterator iterator)))
-    (setf (fill-pointer (cache iterator)) 0) 
-    (loop while (move-forward-p internal) do
-          (when (delimiter-p iterator (current-element internal))
-            (loop while (and (move-forward-p internal)
-                             (delimiter-p iterator (current-element internal))) do
-                  (move-forward internal))
-            (return))
-          (vector-push-extend (current-element internal) (cache iterator))
-          (move-forward internal))
-    (setf (slot-value iterator 'current-word)
-          (coerce (cache iterator) 'string))))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod current-element ((iterator word-iterator))
-  (current-word iterator))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod current-element-p ((iterator word-iterator))
-  (and (call-next-method)
-       (plusp (fill-pointer (cache iterator)))))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod move-p ((iterator word-iterator) (direction (eql :forward)))
-  (or (move-p (internal-iterator iterator) direction)
-      (plusp (size (cache iterator)))))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod class-for-contents-as ((contents t) (as (eql :words)))
-  'word-iterator)
-
-
-
-
-|#
-
 ;;; ---------------------------------------------------------------------------
 ;;; delimited-iterator
 ;;; ---------------------------------------------------------------------------
@@ -218,22 +143,45 @@ stemming
   ((cache (make-array 20 :element-type 'character :fill-pointer 0 :adjustable t) r)
    (current-chunk nil r)
    (internal-iterator nil r)
-   (delimiterp 'metatilities:whitespacep ia)
-   (skip-empty-chunks? t ia)))
+   (element-characterizer 'metatilities:whitespacep ia)
+   (skip-empty-chunks? t ia)
+   (starting-element nil a)))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod initialize-instance :after ((object delimited-iterator) &key container)
+(defclass* internal-iterator-mixin ()
+  ((iterator nil ir)))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod initialize-instance :after ((object delimited-iterator) &key container
+                                       &allow-other-keys)
   (setf (slot-value object 'internal-iterator) 
-        (make-iterator container))
+        (make-internal-iterator object container))
   (when (move-forward-p (internal-iterator object))
     (move-forward (internal-iterator object)))
   (advance object))
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod check-delimiter ((iterator delimited-iterator) (thing t))
-  (funcall (delimiterp iterator) thing))
+(defmethod make-internal-iterator ((object delimited-iterator) container)
+  (make-iterator container 
+                 :iterator-class 'internal-iterator-mixin
+                 :iterator object))
+
+;;; ---------------------------------------------------------------------------
+
+(defgeneric characterize-element (iterator element)
+  (:documentation "Examines element in the context of iterator and returns a value describing how to treat it. This can be one of:
+
+* nil or :appended - append element to the current chunk
+* t or :delimiter  - complete the current chunk and start a new one \(ignore element\)
+* :ignored         - act as if this element was never seen
+* :start-new       - complete the current chunk and start a new one with this element
+"))
+
+(defmethod characterize-element ((iterator delimited-iterator) (thing t))
+  (funcall (element-characterizer iterator) thing))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -242,14 +190,66 @@ stemming
 
 ;;; ---------------------------------------------------------------------------
 
+(defmethod move-internal ((iterator delimited-iterator) (direction (eql :forward)))
+  (move-forward (internal-iterator iterator)))
+
+;;; ---------------------------------------------------------------------------
+
 (defmethod advance ((iterator delimited-iterator))
   (let ((internal (internal-iterator iterator)))
+    (setf (fill-pointer (cache iterator)) 0)
+    (when (starting-element iterator)
+      (vector-push-extend (starting-element iterator) (cache iterator))
+      (setf (starting-element iterator) nil))
+    (loop while (move-forward-p internal) do
+          (let ((element-is (characterize-element iterator (current-element internal))))
+            ;(format t "~%~A ~A" (current-element internal) element-is)
+            (case element-is
+              (((nil) :appended) 
+               (vector-push-extend (current-element internal) (cache iterator)))
+              ((t :delimiter)
+               (if (skip-empty-chunks? iterator)
+                 (loop while (and (move-forward-p internal)
+                                  (member (characterize-element
+                                           iterator (current-element internal))
+                                          '(:ignored :delimiter t))) do
+                       ;(format t "~%  '~A'" (current-element internal))
+                       (move-internal iterator :forward))
+                 
+                 (move-internal iterator :forward))
+               ;; leave loop
+               (return))
+              (:ignored nil)
+              (:start-new 
+               (setf (starting-element iterator) (current-element internal))
+               (move-internal iterator :forward)
+               ;; leave loop
+               (return))
+              (t 
+               (warn "Don't know how to ~S ~S" element-is (current-element internal)))))
+      
+          (move-forward internal))
+    (setf (slot-value iterator 'current-chunk)
+          (combine-elements iterator))))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod combine-elements ((iterator delimited-iterator)) 
+  (coerce (cache iterator) 'string))
+
+#+Experimental
+;;?? trying to guarentee single calls to characterize-element (this doesn't work)
+(defmethod advance ((iterator delimited-iterator))
+  (let ((internal (internal-iterator iterator))
+        (first? t))
     (setf (fill-pointer (cache iterator)) 0) 
     (loop while (move-forward-p internal) do
-          (when (check-delimiter iterator (current-element internal))
+          (when (characterize-element iterator (current-element internal))
             (if (skip-empty-chunks? iterator)
-              (loop while (and (move-forward-p internal)
-                               (check-delimiter iterator (current-element internal))) do
+              (loop while (or first?
+                              (and (move-forward-p internal)
+                                   (characterize-element iterator (current-element internal)))) do
+                    (setf first? nil)
                     (move-forward internal))
               
               (move-forward internal))
@@ -282,20 +282,25 @@ stemming
 (defclass* word-iterator (delimited-iterator)
   ()
   (:default-initargs
-    :delimiterp 'metatilities:whitespacep))
+    :element-characterizer 'metatilities:whitespacep))
 
 ;;; ---------------------------------------------------------------------------
 
 (defclass* line-iterator (delimited-iterator)
   ()
   (:default-initargs
-    :delimiterp (lambda (ch) (or (eq ch #\linefeed)
-                                 (eq ch #\newline)))))
+    :element-characterizer (lambda (ch) (or (eq ch #\linefeed)
+                                            (eq ch #\newline)))))
 
 ;;; ---------------------------------------------------------------------------
 
 (defmethod class-for-contents-as ((contents t) (as (eql :lines)))
   'line-iterator)
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod class-for-contents-as ((contents t) (as (eql :words)))
+  'word-iterator)
 
 
 #|
@@ -314,5 +319,6 @@ three." :treat-contents-as :lines))
 
 (collect-elements (make-iterator #P"user-home:qt.lisp" :treat-contents-as :lines))
 |#
+
 
 

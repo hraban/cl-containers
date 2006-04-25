@@ -400,6 +400,12 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
+(defmethod current-element-p ((iterator array-iterator))
+  (and (call-next-method)
+       (< (index iterator) (size (iterating-container iterator)))))
+
+;;; ---------------------------------------------------------------------------
+
 (defmethod current-element ((iterator array-iterator ))
   (row-major-aref (iterating-container iterator) (index iterator)))
 
