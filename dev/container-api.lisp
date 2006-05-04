@@ -170,9 +170,7 @@ the nodes. If not, collect-nodes is equivalent to collect-elements."))
 ;;; ---------------------------------------------------------------------------
 
 (defgeneric collect-elements (container &key filter transform)
-  (:documentation "Returns a possibly filtered and possibly transformed list
-of the elements in a container. If the container uses nodes, then the elements are
-the things 'in' the nodes."))
+  (:documentation "Returns a possibly filtered and possibly transformed list of the elements in a container. If the container uses nodes, then the elements are the things 'in' the nodes. Warning: it is possible for the result to share structure with the original container."))
 
 ;;; ---------------------------------------------------------------------------
 
