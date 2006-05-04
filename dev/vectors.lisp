@@ -128,12 +128,24 @@
   ;;; removes the first instance of item in the-vector
   (let ((position (position item (contents container))))
     (when position
+      (delete-item-at container position))
+    container))
+
+#+Wrong
+;;?? This doesn't keep the adjustable property on all lisps
+(defmethod delete-item ((container vector-container) item)
+  ;;; removes the first instance of item in the-vector
+  (setf (contents container) (delete item (contents container) :count 1)))
+
+#+Wrong
+;;?? This is fast but doesn't respect the ordered-container contract
+(defmethod delete-item ((container vector-container) item)
+  (let ((position (position item (contents container))))
+    (when position
       (rotatef (aref (contents container) position)
 	       (aref (contents container) (1- (length (contents container)))))
       (setf (fill-pointer (contents container))
 	    (1- (length (contents container)))))
-    #+Old
-    (setf (contents container) (delete item (contents container) :count 1))
     container))
 
 ;;; ---------------------------------------------------------------------------
