@@ -30,11 +30,17 @@ stemming
 
 (defmethod mopu:when-finalized ((iterator basic-stream-iterator))
   ;;??
-  ;(format t "GC: Maybe closing stream" iterator)
+  (format t "GC: Maybe closing stream" iterator)
+  (finish iterator))
+
+;;; ---------------------------------------------------------------------------
+
+(defmethod finish ((iterator basic-stream-iterator))
   (when (and (close? iterator)
              (streamp (iterator-stream iterator))
              (open-stream-p (iterator-stream iterator)))
-    (close (iterator-stream iterator))))
+    (close (iterator-stream iterator))
+    (setf (slot-value iterator 'close?) nil)))
 
 ;;; ---------------------------------------------------------------------------
 

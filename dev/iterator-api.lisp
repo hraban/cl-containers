@@ -5,6 +5,11 @@
 
 ;;; ---------------------------------------------------------------------------
 
+(defgeneric finish (iterator)
+  (:documentation "Tell Lisp that you are done with this iterator. Further calls to current-element, etc. will have unspecified behavior and may cause an error."))
+
+;;; ---------------------------------------------------------------------------
+
 (defgeneric move-p (iterator direction)
   (:documentation ""))
 

@@ -72,6 +72,11 @@ element returns current-element and allows for side-effects
 
 ;;; ---------------------------------------------------------------------------
 
+(defmethod finish ((iterator abstract-generator))
+  (values))
+
+;;; ---------------------------------------------------------------------------
+
 (defclass* basic-iterator (abstract-generator)
   ((initial-container nil ir :initarg :container)
    (iterating-container nil r)))
@@ -521,7 +526,9 @@ element returns current-element and allows for side-effects
   (declare (ignore parameters)
            #+allegro
            (ignorable dynamic-class))
-  (append class-list (list 'abstract-generator)))
+  (if (some (lambda (x) (mopu:subclassp x 'abstract-generator)) class-list)
+    class-list
+    (append class-list (list 'abstract-generator))))
 
 ;;; ---------------------------------------------------------------------------
 
