@@ -644,6 +644,16 @@ element returns current-element and allows for side-effects
            containers)
     (nreverse result)))
 
+;;; ---------------------------------------------------------------------------
+
+(defmacro with-iterator ((var source &rest args) &body body)
+  `(let (,var)
+     (unwind-protect
+       (progn
+         (setf ,var (make-iterator ,source ,@args))
+         ,@body)
+       (when ,var (finish ,var)))))
+
 
 
 #| Old, non iterator version

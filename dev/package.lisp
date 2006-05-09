@@ -308,6 +308,9 @@
            #:filtered-iterator-mixin
            #:filter
            #:reverse-container
+           #:finish
+           #:with-iterator
+           #:iterate-forward
            
            #:weight
            #:unique-elements
