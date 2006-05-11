@@ -43,7 +43,7 @@ element returns current-element and allows for side-effects
   in unique-value-iterator-mixin
 |#
 
-(in-package containers)
+(in-package #:containers)
 
 ;;; ---------------------------------------------------------------------------
 

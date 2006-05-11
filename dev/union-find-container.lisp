@@ -1,4 +1,4 @@
-(in-package containers)
+(in-package #:containers)
 
 ;;; ---------------------------------------------------------------------------
 ;;; Simple union-find data structure

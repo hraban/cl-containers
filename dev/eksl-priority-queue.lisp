@@ -1,4 +1,4 @@
-(in-package containers)
+(in-package #:containers)
 
 ;;; ---------------------------------------------------------------------------
 ;;; Heap based queue using EKSL priority-queue

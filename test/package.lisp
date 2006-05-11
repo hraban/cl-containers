@@ -1,4 +1,4 @@
-(in-package common-lisp-user)
+(in-package #:common-lisp-user)
 
 (defpackage "metabang.cl-containers-test"
   (:use #:common-lisp #:cl-containers #:lift)

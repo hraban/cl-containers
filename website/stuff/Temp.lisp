@@ -1,4 +1,4 @@
-(in-package few)
+(in-package #:few)
 
 #+Ignore
 ;; suck site up and output as LML

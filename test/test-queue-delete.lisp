@@ -1,4 +1,4 @@
-(in-package ccl)
+(in-package #:ccl)
 (use-package "LIFT")
 
 (deftestsuite test-queue () 

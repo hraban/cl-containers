@@ -1,5 +1,5 @@
 
-(in-package containers)
+(in-package #:containers)
 
 (lift:deftestsuite test-containers () ()
   (:timeout 1))

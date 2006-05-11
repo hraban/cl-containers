@@ -1,4 +1,4 @@
-(in-package u)
+(in-package #:u)
 
 (deftestsuite test-set-container () 
   ((c (make-container 'set-container :initial-contents '(1 2 3 3 3 4)))))

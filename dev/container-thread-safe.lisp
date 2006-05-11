@@ -1,4 +1,4 @@
-(in-package containers)
+(in-package #:containers)
 
 (defclass* thread-safe-container-mixin ()
   ()

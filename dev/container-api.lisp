@@ -1,5 +1,5 @@
 
-(in-package containers)
+(in-package #:containers)
 
 (defgeneric sample-elements (container generator count)
   (:documentation "Return a list of count elements of the container uniformly at

@@ -1,4 +1,4 @@
-(in-package cl-containers-test)
+(in-package #:cl-containers-test)
 
 ;; WIP
 

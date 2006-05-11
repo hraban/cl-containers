@@ -1,4 +1,4 @@
-(in-package containers)
+(in-package #:containers)
 
 (defclass* file-backed-table-container (table-container)
   ((pathspec nil ir)

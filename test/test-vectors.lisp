@@ -1,5 +1,5 @@
 
-(in-package containers)
+(in-package #:containers)
 
 (lift:deftestsuite test-vectors (test-containers) ())
 

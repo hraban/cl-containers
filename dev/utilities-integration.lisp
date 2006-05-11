@@ -1,4 +1,4 @@
-(in-package metatilities)
+(in-package #:metatilities)
 
 (eval-when (:compile-toplevel)
   (export-exported-symbols '#:cl-containers '#:metatilities))

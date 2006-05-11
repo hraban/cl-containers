@@ -13,7 +13,7 @@ Author: Gary King
 DISCUSSION
 
 |#
-(in-package containers)
+(in-package #:containers)
 
 ;;; ---------------------------------------------------------------------------
 ;;; Abstract Queue interface
