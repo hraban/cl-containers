@@ -462,21 +462,19 @@ arguments (args).")
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric successor (sorted-container-mixin item)
-  (:method ((container container-uses-nodes-mixin) (item t))
-           (successor container
-                      (search-for-node container
-                                       item
-                                       :key #'element))))
+(defmethod successor ((container container-uses-nodes-mixin) (item t))
+  (successor container
+             (search-for-node container
+                              item
+                              :key #'element)))
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric predecessor (sorted-container-mixin item)
-  (:method ((container container-uses-nodes-mixin) (item t))
-           (predecessor container
-                        (search-for-node container
-                                         item
-                                         :key #'element))))
+(defmethod predecessor ((container container-uses-nodes-mixin) (item t))
+  (predecessor container
+               (search-for-node container
+                                item
+                                :key #'element)))
 
 ;;; ---------------------------------------------------------------------------
 ;;; contents-as-sequence-mixin

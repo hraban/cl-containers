@@ -106,9 +106,19 @@ super-container."))
 
 ;;; ---------------------------------------------------------------------------
 
+(defgeneric (setf item-at) (value container &rest indexes)
+  (:documentation ""))
+
+;;; ---------------------------------------------------------------------------
+
 (defgeneric item-at! (indexed-container-mixin value &rest indexes)
   (:documentation "[Destructively] modifies the item specified by the 
 indexes to the value."))
+
+;;; ---------------------------------------------------------------------------
+
+(defgeneric (setf item-at-1) (value container index)
+  (:documentation ""))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -193,10 +203,16 @@ the transform function."))
 ;;?? should be settable
 (defgeneric first-element (ordered-container-mixin))
 
+(defgeneric (setf first-element) (x y)
+  (:documentation ""))
+
 (defun first-item (x) (first-element x))
 
 ;;?? should be settable
 (defgeneric last-element (ordered-container-mixin))
+
+(defgeneric (setf last-element) (x y)
+  (:documentation ""))
 
 (defun last-item (x) (last-element x))
 
@@ -289,4 +305,365 @@ key to match. Key defaults to identity and test defaults to eq."))
 (defgeneric unique-nodes (container &key key)
   (:documentation ""))
   
-  
+(defgeneric add-default-item (object &rest indexes)
+  (:documentation ""))
+
+(defgeneric add-initial-contents (object initial-contents)
+  (:documentation ""))
+
+(defgeneric best-element (container function &key key test filter)
+  (:documentation ""))
+
+(defgeneric best-node (container function &key key test filter)
+  (:documentation ""))
+
+(defgeneric biggest-item (heap)
+  (:documentation ""))
+
+(defgeneric children (many-child-node)
+  (:documentation ""))
+
+(defgeneric clean-up (container)
+  (:documentation ""))
+
+(defgeneric collect-elements-stably (container &key filter transform)
+  (:documentation ""))
+
+(defgeneric collect-items (object &rest args &key filter transform)
+  (:documentation ""))
+
+(defgeneric collect-key-value-stably (container)
+  (:documentation ""))
+
+(defgeneric combine-elements (iterator)
+  (:documentation ""))
+
+(defgeneric container-difference (c1 c2 &key key1 key2 )
+  (:documentation ""))
+
+(defgeneric container-dimension (container dimension)
+  (:documentation ""))
+
+(defgeneric count-elements (container item &key key test)
+  (:documentation ""))
+
+(defgeneric count-elements-if (container test &key key)
+  (:documentation ""))
+
+(defgeneric count-items (container item &key key test)
+  (:documentation ""))
+
+(defgeneric delete-biggest-item (heap)
+  (:documentation ""))
+
+(defgeneric delete-element (q item)
+  (:documentation ""))
+
+(defgeneric delete-item (ordered-container-mixin item)
+  (:documentation ""))
+
+(defgeneric delete-item-after (list node)
+  (:documentation ""))
+
+(defgeneric delete-item-at (container &rest indexes)
+  (:documentation ""))
+
+(defgeneric delete-item-before (list node)
+  (:documentation ""))
+
+(defgeneric delete-item-if (ordered-container-mixin test)
+  (:documentation ""))
+
+(defgeneric delete-node (tree node)
+  (:documentation ""))
+
+(defgeneric dequeue (abstract-queue)
+  (:documentation ""))
+
+(defgeneric dimensions (x)
+  (:documentation ""))
+
+(defgeneric element (x)
+  (:documentation ""))
+
+(defgeneric enqueue (abstract-queue item)
+  (:documentation ""))
+
+(defgeneric error-if-queue-empty (q &optional message &rest rest)
+  (:documentation ""))
+
+(defgeneric every-element-p (array predicate)
+  (:documentation ""))
+
+(defgeneric every-key-value-p (container predicate)
+  (:documentation ""))
+
+(defgeneric exchange-heap-nodes (n1 n2 heap)
+  (:documentation ""))
+
+(defgeneric find-child-node (node child &key test key)
+  (:documentation ""))
+
+(defgeneric find-set (item)
+  (:documentation ""))
+
+(defgeneric find-value (container item)
+  (:documentation ""))
+
+(defgeneric first-element (x)
+  (:documentation ""))
+
+(defgeneric graft-nodes (node1 node2)
+  (:documentation ""))
+
+(defgeneric has-children-p (node)
+  (:documentation ""))
+
+(defgeneric heap-node-parent (node heap)
+  (:documentation ""))
+
+(defgeneric heapify (heap node)
+  (:documentation ""))
+
+(defgeneric height (tree)
+  (:documentation ""))
+
+(defgeneric increment-end (container)
+  (:documentation ""))
+
+(defgeneric initialize-container (container)
+  (:documentation ""))
+
+(defgeneric inorder-walk (tree walk-fn)
+  (:documentation ""))
+
+(defgeneric inorder-walk-nodes (tree walk-fn)
+  (:documentation ""))
+
+(defgeneric insert-item-after (list node new-node)
+  (:documentation ""))
+
+(defgeneric insert-item-at (container item index)
+  (:documentation ""))
+
+(defgeneric insert-item-before (list node new-node)
+  (:documentation ""))
+
+(defgeneric insert-item-ordered (list new-node)
+  (:documentation ""))
+
+(defgeneric insert-item-ordered-about-node (list node new-node)
+  (:documentation ""))
+
+(defgeneric item-at-1 (container index)
+  (:documentation ""))
+
+(defgeneric item-at-1! (hash-table value index)
+  (:documentation ""))
+
+(defgeneric item-key (container &rest indexes)
+  (:documentation ""))
+
+(defgeneric iterate-container (iterator fn)
+  (:documentation ""))
+
+(defgeneric iterate-elements (graph fn)
+  (:documentation ""))
+
+(defgeneric iterate-elements-stably (container fn)
+  (:documentation ""))
+
+(defgeneric iterate-key-value (container function)
+  (:documentation ""))
+
+(defgeneric iterate-key-value-stably (container fn)
+  (:documentation ""))
+
+(defgeneric iterate-keys (container function)
+  (:documentation ""))
+
+(defgeneric iterate-left (list item fn &optional inclusive?)
+  (:documentation ""))
+
+(defgeneric iterate-left-nodes (list item fn)
+  (:documentation ""))
+
+(defgeneric iterate-nodes-about-node (list item left-fn right-fn)
+  (:documentation ""))
+
+(defgeneric iterate-right (list item fn &optional inclusive?)
+  (:documentation ""))
+
+(defgeneric iterate-right-nodes (list item fn)
+  (:documentation ""))
+
+(defgeneric l-child (node heap)
+  (:documentation ""))
+
+(defgeneric l-child-index (node)
+  (:documentation ""))
+
+(defgeneric last-element (x)
+  (:documentation ""))
+
+(defgeneric left-and-right-nodes-for-item (list item)
+  (:documentation ""))
+
+(defgeneric left-node-for-item (list item)
+  (:documentation ""))
+
+(defgeneric link-nodes (node1 node2)
+  (:documentation ""))
+
+(defgeneric make-initial-element (container)
+  (:documentation ""))
+
+
+(defgeneric make-node-for-container (container item &key)
+  (:documentation ""))
+
+(defgeneric make-set (item)
+  (:documentation ""))
+
+(defgeneric next-item (x)
+  (:documentation ""))
+
+(defgeneric node-empty-p (node)
+  (:documentation ""))
+
+(defgeneric node-parent-index (node)
+  (:documentation ""))
+
+(defgeneric pop-item (abstract-stack)
+  (:documentation ""))
+
+(defgeneric postorder-walk (tree walk-fn)
+  (:documentation ""))
+
+(defgeneric postorder-walk-nodes (tree walk-fn)
+  (:documentation ""))
+
+(defgeneric predecessor (sorted-container-mixin item)
+  (:documentation ""))
+
+(defgeneric preorder-walk (tree walk-fn)
+  (:documentation ""))
+
+(defgeneric preorder-walk-nodes (tree walk-fn)
+  (:documentation ""))
+
+(defgeneric print-container-contents (container stream)
+  (:documentation ""))
+
+(defgeneric print-container-summary (container stream)
+  (:documentation ""))
+
+(defgeneric push-item (stack item)
+  (:documentation ""))
+
+(defgeneric r-child (node heap)
+  (:documentation ""))
+
+(defgeneric r-child-index (node)
+  (:documentation ""))
+
+(defgeneric rb-delete-fixup (tree x)
+  (:documentation ""))
+
+(defgeneric reduce-container (container function &rest args &key key initial-value start end)
+  (:documentation ""))
+
+(defgeneric reduce-elements (container function &key 
+                                       key initial-value start end)
+  (:documentation ""))
+
+(defgeneric reduce-nodes (container function &key key initial-value start end)
+  (:documentation ""))
+
+(defgeneric replace-item (list node start-item &key length finish-item)
+  (:documentation ""))
+
+(defgeneric representative (container item)
+  (:documentation ""))
+
+(defgeneric representative-node (container item)
+  (:documentation ""))
+
+
+(defgeneric right-node-for-item (list item)
+  (:documentation ""))
+
+(defgeneric rotate-left (tree x)
+  (:documentation ""))
+
+(defgeneric rotate-right (tree x)
+  (:documentation ""))
+
+(defgeneric search-for-element (list item &key test key)
+  (:documentation ""))
+
+(defgeneric search-for-key (container key-to-find &key test key)
+  (:documentation ""))
+
+(defgeneric search-for-matching-node (container predicate &key key)
+  (:documentation ""))
+
+(defgeneric search-for-node (container item &key test key)
+  (:documentation ""))
+
+(defgeneric search-for-node* (container item &key test key)
+  (:documentation ""))
+
+(defgeneric set-dirty-flag (container flag)
+  (:documentation ""))
+
+(defgeneric some-element-p (array predicate)
+  (:documentation ""))
+
+(defgeneric some-key-value-p (container predicate)
+  (:documentation ""))
+
+(defgeneric sort-container (container sorter key-fn)
+  (:documentation ""))
+
+(defgeneric sort-elements (container sorter &key key)
+  (:documentation ""))
+
+(defgeneric sort-keys (container sorter &key key)
+  (:documentation ""))
+
+(defgeneric sort-update-left (list node)
+  (:documentation ""))
+
+(defgeneric sort-update-right (list node)
+  (:documentation ""))
+
+(defgeneric successor (sorted-container-mixin item)
+  (:documentation ""))
+
+(defgeneric total-size (x)
+  (:documentation ""))
+
+(defgeneric update-element (tree value &rest indexes)
+  (:documentation ""))
+
+(defgeneric update-item (list item)
+  (:documentation ""))
+
+(defgeneric walk-tree (node walk-fn &optional mode)
+  (:documentation ""))
+
+(defgeneric walk-tree-nodes (node walk-fn &optional mode)
+  (:documentation ""))
+
+(defgeneric (setf element) (x y)
+  (:documentation ""))
+
+(defgeneric (setf packages) (value container)
+  (:documentation ""))
+
+(defgeneric container->list (graph)
+  (:documentation ""))
+
+(defgeneric current-item (container)
+  (:documentation ""))

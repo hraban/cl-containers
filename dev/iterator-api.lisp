@@ -41,6 +41,43 @@
 
 ;;; ---------------------------------------------------------------------------
 
+(defgeneric current-element-p (iterator)
+  (:documentation ""))
+
+;;; ---------------------------------------------------------------------------
+
 (defgeneric setup-initial-container (object)
   (:documentation ""))
 
+;;; ---------------------------------------------------------------------------
+
+(defgeneric advance (iterator)
+  (:documentation ""))
+
+;;; ---------------------------------------------------------------------------
+
+(defgeneric iterate-forward (iterator function)
+  (:documentation ""))
+
+;;; ---------------------------------------------------------------------------
+
+(defgeneric make-internal-iterator (object container)
+  (:documentation ""))
+
+(defgeneric move-forward (iterator)
+  (:documentation ""))
+
+(defgeneric move-forward-to-next-element (iterator)
+  (:documentation ""))
+
+(defgeneric move-internal (iterator direction)
+  (:documentation ""))
+
+(defgeneric next-element (iterator)
+  (:documentation ""))
+
+(defgeneric open-file-for-iterator (object filename)
+  (:documentation ""))
+
+(defgeneric reset (iterator)
+  (:documentation ""))
