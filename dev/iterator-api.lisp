@@ -41,17 +41,6 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric include-class-dependencies (class-type
-                                        dynamic-class class-list &rest parameters)
-  (:documentation ""))
-
-;;; ---------------------------------------------------------------------------
-
-(defgeneric existing-subclass (class-type class-list)
-  (:documentation ""))
-
-;;; ---------------------------------------------------------------------------
-
 (defgeneric setup-initial-container (object)
   (:documentation ""))
 

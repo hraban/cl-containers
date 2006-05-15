@@ -39,7 +39,7 @@ instructions."))
                                      (:file "containers"
                                             :depends-on ("package"))
                                      (:file "basic-operations"
-                                            :depends-on ("package" "containers"))
+                                            :depends-on ("container-api" "containers"))
                                      (:file "queues"
                                             :depends-on ("package" "basic-operations"))
                                      (:file "stacks"

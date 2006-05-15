@@ -186,15 +186,16 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod make-container-for-contents ((container array-container) 
-                                        &key dimensions initial-element
-                                        element-type)
-  (when (initial-element-fn container)
-    (setf initial-element +empty-initial-element+))
-  (setf (contents container) (make-array dimensions
-                                         :initial-element initial-element
-                                         :element-type (or element-type t)
-					 :adjustable t)))
+(defmethod make-container-for-contents ((container array-container) &rest args)
+  (let ((dimensions (getf args :dimensions))
+        (initial-element (getf args :initial-element))
+        (element-type (getf args :element-type)))
+    (when (initial-element-fn container)
+      (setf initial-element +empty-initial-element+))
+    (make-array dimensions
+                :initial-element initial-element
+                :element-type (or element-type t)
+                :adjustable t)))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -270,7 +271,8 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod make-container-for-contents ((container sparse-array-container) 
-                                        &key &allow-other-keys)
+                                        &rest args)
+  (declare (ignore args))
   (setf (slot-value container 'test) (if (use-fixnums? container) #'eq #'equal))
   (call-next-method))
 

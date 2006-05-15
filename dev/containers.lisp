@@ -409,24 +409,23 @@ classified-container-mixin, and the classifier returns one of :TOP-LEFT,
 ;;; ---------------------------------------------------------------------------
 
 (defmethod make-container-for-contents ((container contents-as-array-mixin)
-                                        &key 
-                                        (initial-size 0)
-                                        (initial-contents nil)
-                                        (initial-element nil) 
-                                        (element-type t)
-                                        (fill-pointer t)
-                                        &allow-other-keys)
-  (if initial-contents
-    (make-array (length initial-contents)
-                :initial-contents initial-contents
-                :adjustable t
-                :fill-pointer fill-pointer
-                :element-type element-type)
-    (make-array initial-size
-                :initial-element initial-element
-                :adjustable t
-                :fill-pointer fill-pointer
-                :element-type element-type)))
+                                        &rest args)
+  (let ((initial-size (getf args :initial-size 0))
+        (initial-contents (getf args :initial-contents nil))
+        (initial-element (getf args :initial-element nil)) 
+        (element-type (getf args :element-type t))
+        (fill-pointer (getf args :fill-pointer t)))
+    (if initial-contents
+      (make-array (length initial-contents)
+                  :initial-contents initial-contents
+                  :adjustable t
+                  :fill-pointer fill-pointer
+                  :element-type element-type)
+      (make-array initial-size
+                  :initial-element initial-element
+                  :adjustable t
+                  :fill-pointer fill-pointer
+                  :element-type element-type))))
 
 
 ;;; ---------------------------------------------------------------------------
