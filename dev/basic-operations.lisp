@@ -617,6 +617,8 @@ arguments (args).")
 ;;; contents-as-hashtable-mixin
 ;;; ---------------------------------------------------------------------------
 
+#+Remove
+;; Gary King 2006-05-14: redundent with the definition for uses-contents-mixin
 (defmethod initialize-instance :after ((container contents-as-hashtable-mixin) &key
                                        &allow-other-keys)
   (when (or (not (slot-boundp container 'contents))

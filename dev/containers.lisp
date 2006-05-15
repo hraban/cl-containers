@@ -337,8 +337,10 @@ classified-container-mixin, and the classifier returns one of :TOP-LEFT,
 
 (defmethod initialize-instance :after ((object uses-contents-mixin) &rest args 
                                        &key &allow-other-keys)
-  (setf (slot-value object 'contents) 
-        (apply #'make-container-for-contents object args)))
+  (when (or (not (slot-boundp object 'contents))
+            (null (contents object))) 
+    (setf (slot-value object 'contents) 
+          (apply #'make-container-for-contents object args))))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -457,8 +459,8 @@ classified-container-mixin, and the classifier returns one of :TOP-LEFT,
 
 ;;?? should we apply the key function to the indexes?
 (defclass* contents-as-hashtable-mixin (uses-contents-mixin
-                                          key-value-iteratable-container-mixin
-                                          findable-container-mixin)
+                                        key-value-iteratable-container-mixin
+                                        findable-container-mixin)
   ((contents :unbound :accessor contents)  ;; unbound for make-ht-for-container
    )) 
 
