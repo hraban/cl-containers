@@ -251,7 +251,7 @@ stemming
           (let ((element-is (characterize-element iterator (current-element internal))))
             ;(format t "~%~A ~A" (current-element internal) element-is)
             (case element-is
-              (((nil) :appended) 
+              ((nil :appended) 
                (vector-push-extend (current-element internal) (cache iterator)))
               ((t :delimiter)
                (if (skip-empty-chunks? iterator)
@@ -281,7 +281,7 @@ stemming
 ;;; ---------------------------------------------------------------------------
 
 (defmethod combine-elements ((iterator delimited-iterator)) 
-  (coerce (cache iterator) 'string))
+  (format nil "~A" (coerce (cache iterator) 'string)))
 
 #+Experimental
 ;;?? trying to guarentee single calls to characterize-element (this doesn't work)
