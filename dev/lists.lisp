@@ -320,7 +320,9 @@ so it best for small containers."
             (setf item (next-item item)))
       item)))
 
-(defmethod replace-item ((list dlist-container) (node dlist-container-node) item &key (length 1))
+(defmethod replace-item ((list dlist-container) (node dlist-container-node) item 
+                         &key (length 1) finish-item)
+  (declare (ignore finish-item))
   (replace-item list node (make-container 'dlist-container-node item) 
                 :length length))
 
