@@ -76,7 +76,7 @@ instructions."))
                                             :depends-on ("iterator-api" "basic-operations"))
                                      (:file "file-iterators"
                                             :depends-on ("iterators"))
-                                     #+MCL
+                                     #+(or digitool openmcl)
                                      (:file "containers-readtable"
                                             :depends-on ("containers"))))
                (:module "website"
