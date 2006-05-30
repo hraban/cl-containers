@@ -504,6 +504,18 @@
            (ignore filter transform))
   (apply #'%collect-key-value container args))
 
+(defmethod collect-keys ((container list) &key filter (transform 'identity))
+  (if (atom (car container))
+      ;; treat as property list
+      (loop for current in container by #'cddr 
+	    when (or (not filter)
+		     (funcall filter current)) collect
+	   (if transform (funcall transform current) current))
+      ;; treat as alist
+      (%collect-key-value
+       container :filter filter
+       :transform (lambda (k v) (declare (ignore v)) (funcall transform k)))))
+
 ;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item-at ((container list) &rest indexes)
