@@ -726,9 +726,10 @@ arguments (args).")
 ;;; ---------------------------------------------------------------------------
 
 (defmethod add-default-item ((object stable-associative-container) &rest indexes)
-  (setf (item-at (slot-value object 'numbered-container) 
-                 (incf (slot-value object 'counter)))
-        (if (length-1-list-p indexes) (first indexes) indexes)))
+  (when (has-initial-element-p (slot-value object 'associative-container))
+    (setf (item-at (slot-value object 'numbered-container) 
+                   (incf (slot-value object 'counter)))
+          (if (length-1-list-p indexes) (first indexes) indexes))))
            
 ;;; ---------------------------------------------------------------------------
 
