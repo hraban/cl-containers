@@ -336,7 +336,8 @@ stemming
   ()
   (:default-initargs
     :element-characterizer (lambda (ch) (or (eq ch #\linefeed)
-                                            (eq ch #\newline)))))
+                                            (eq ch #\newline)
+                                            (eq ch #\return)))))
 
 ;;; ---------------------------------------------------------------------------
 
