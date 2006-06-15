@@ -619,7 +619,7 @@
                                  (funcall (test container) key1 key2))))))
     (if it
       (values it t)
-      (maybe-set-initial-element container #'item-at-1! index))))
+      (maybe-set-initial-element container #'item-at-1! (list index)))))
 
 ;;; ---------------------------------------------------------------------------
 
