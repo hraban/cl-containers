@@ -28,7 +28,7 @@ instructions."))
 
 (defsystem cl-containers
   :version "0.8"
-  :author "Gary King <gwking@metabang.com>"
+  :author "Brendan Burns, Andrew Hannon, Brent Heeringa, Gary King, Joshua Moody, Charles Sutton, Louis Theran, David Westbrook, and other former students and staff of EKSL."
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
   :description "A generic container library for Common Lisp"
