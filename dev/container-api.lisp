@@ -444,7 +444,7 @@ key to match. Key defaults to identity and test defaults to eq."))
   (:documentation ""))
 
 (defgeneric insert-item-at (container item index)
-  (:documentation ""))
+  (:documentation "Inserts item at the specified index, increasing the index of all following elements"))
 
 (defgeneric insert-item-before (list node new-node)
   (:documentation ""))

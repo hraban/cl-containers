@@ -98,8 +98,6 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item-at ((container vector-container) item index)
-  ;;; inserts item at the specified index, increasing the index
-  ;;;  of all following elements
   (resize-vector container (max (1+ (size container))
                                 (1+ index)))
   (replace (contents container) (contents container)
