@@ -1,14 +1,13 @@
+(in-package #:cl-containers-test)
 
-(in-package #:containers)
+(deftestsuite cl-containers-test () ())
 
-(lift:deftestsuite test-containers () ()
-  (:timeout 1))
-
+#|
 ;;; ---------------------------------------------------------------------------
 ;;; out of range errors
 ;;; ---------------------------------------------------------------------------
 
-(lift:deftestsuite test-index-out-of-range (test-containers) 
+(lift:deftestsuite test-index-out-of-range (cl-containers-test) 
   (container-class container)
   (:cases (container-class '(list-container vector-container)))
   (:setup (setf container (make-container container-class))))
@@ -46,7 +45,7 @@
   (spy container-class)
   (lift:ensure-same (collect-elements 
                      (make-container container-class
- Ê Ê Ê Ê Ê Ê Ê Ê                     :initial-contents '(2 3 4)))
+                      :initial-contents '(2 3 4)))
                     '(2 3 4)))
 
 ;;; ---------------------------------------------------------------------------
@@ -98,7 +97,7 @@
 ;;; sorted-list-container
 ;;; ---------------------------------------------------------------------------
 
-(lift:deftestsuite test-sorted-list-container (test-containers) 
+(lift:deftestsuite test-sorted-list-container (cl-containers-test) 
   ((c (make-container 'sorted-list-container))))
 
 (lift:addtest (test-sorted-list-container)
@@ -112,7 +111,7 @@
 ;;; collect-keys
 ;;; ---------------------------------------------------------------------------
 
-(lift:deftestsuite test-collect-keys (test-containers)
+(lift:deftestsuite test-collect-keys (cl-containers-test)
   ())
 
 (lift:addtest (test-collect-keys)
@@ -135,7 +134,7 @@
 ;;; associative-containers
 ;;; ---------------------------------------------------------------------------
 
-(lift:deftestsuite test-associative-containers (test-containers) ())
+(lift:deftestsuite test-associative-containers (cl-containers-test) ())
 
 ;;; ---------------------------------------------------------------------------
 
@@ -161,8 +160,9 @@
 (lift:addtest (test-associative-containers)
   looking-does-not-add
   (let ((c (make-container 'alist-container)))
- Ê  (item-at c :hello)
+   (item-at c :hello)
     (item-at c :bye)
- Ê  (lift:ensure (null (contents c)))))
+   (lift:ensure (null (contents c)))))
 
 
+|#

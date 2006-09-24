@@ -1,0 +1,26 @@
+;;; -*- Mode: Lisp -*-
+
+(in-package #:lml2)
+
+(html-file-page ("test")
+  (html
+   (:HEAD (:TITLE "CL-Containers")
+          ((:LINK :REL "stylesheet" :TYPE "text/css" :HREF "style.css"))
+          ((:META :HTTP-EQUIV "Content-Type" :CONTENT "text/html; charset=ISO-8859-1")))
+   (:BODY
+    ((:DIV :CLASS "header")
+     (:H1 "CL-Containers")
+     "More fun than kissing bunnies!")
+    
+    (:P
+     "Modified on " ((:comment :virtual "last-update"))) 
+    
+    ((:DIV :CLASS "footer") 
+     "Last updated: " 
+     (lml-princ (metatilities:format-date "%A, %e %B %Y" (get-universal-time))))    
+    
+    ((:DIV :CLASS "common-lisp-link")
+     "Back to " ((:A :HREF "http://common-lisp.net/") "Common-lisp.net") ".")
+    
+    ((:DIV :CLASS "check")
+     ((:A :HREF "http://validator.w3.org/check/referer") "Valid XHTML 1.0 Strict")))))
