@@ -175,7 +175,7 @@
   (let ((current node))
     (loop while (not (node-empty-p (left-child current))) do
           (setf current (left-child current)))
-    current))
+    (element current)))
 
 ;;; ---------------------------------------------------------------------------
 

@@ -544,7 +544,7 @@ key to match. Key defaults to identity and test defaults to eq."))
   (:documentation ""))
 
 (defgeneric predecessor (sorted-container-mixin item)
-  (:documentation ""))
+  (:documentation "Return the item that comes *before* item in the container. Only makes sense for sorted containers. Raises an element-not-found-error if the item isn't present in the container."))
 
 (defgeneric preorder-walk (tree walk-fn)
   (:documentation ""))
@@ -639,7 +639,7 @@ key to match. Key defaults to identity and test defaults to eq."))
   (:documentation ""))
 
 (defgeneric successor (sorted-container-mixin item)
-  (:documentation ""))
+  (:documentation "Return the item that comes after item in the container. Only makes sense for sorted containers. Raises an element-not-found-error if the item isn't present in the container."))
 
 (defgeneric total-size (x)
   (:documentation ""))
