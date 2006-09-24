@@ -1,18 +1,5 @@
 ;;;-*- Mode: Lisp; Package: CONTAINERS -*-
 
-#| simple-header
-
-$Id: queues.lisp,v 1.5 2005/09/07 16:17:29 gwking Exp $
-
-Copyright 1992 - 2004 Experimental Knowledge Systems Lab, 
-University of Massachusetts Amherst MA, 01003-4610
-Professor Paul Cohen, Director
-
-Author: Gary King
-
-DISCUSSION
-
-|#
 (in-package #:containers)
 
 ;;; ---------------------------------------------------------------------------
@@ -24,14 +11,6 @@ DISCUSSION
 
 (defclass* abstract-queue (initial-contents-mixin ordered-container-mixin)
   ())
-
-(define-condition eksl-queue-empty (error)
-                  ((message :initarg :message
-                            :reader message))
-  (:report (lambda (c stream)
-             (format stream "~A" (message c)))))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod enqueue ((queue abstract-queue) item)
   (insert-item queue item))

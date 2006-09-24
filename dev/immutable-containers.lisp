@@ -9,16 +9,6 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(define-condition container-error (error)
-  ())
-
-;;; ---------------------------------------------------------------------------
-
-(define-condition key-does-not-exist-error (container-error)
-  ())
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod item-at! :around ((container immutable-keys-mixin) 
                              value &rest indexes)
   (declare (dynamic-extent indexes))

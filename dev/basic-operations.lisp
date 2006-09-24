@@ -460,21 +460,21 @@ arguments (args).")
     (insert-item container item))
   (values container))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod successor ((container container-uses-nodes-mixin) (item t))
-  (successor container
-             (search-for-node container
-                              item
-                              :key #'element)))
-
-;;; ---------------------------------------------------------------------------
+  (%operate-after-finding container item #'successor))
 
 (defmethod predecessor ((container container-uses-nodes-mixin) (item t))
-  (predecessor container
-               (search-for-node container
-                                item
-                                :key #'element)))
+  (%operate-after-finding container item #'predecessor))
+
+(defmethod %operate-after-finding ((container container-uses-nodes-mixin)
+				   (element t)
+				   operation)
+  (let ((element (search-for-node container element
+				  :key #'element))) 
+    (unless element
+      (error 'element-not-found-error :container container 
+	     :element element))
+    (funcall operation container element)))
 
 ;;; ---------------------------------------------------------------------------
 ;;; contents-as-sequence-mixin

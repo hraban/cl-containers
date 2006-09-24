@@ -107,12 +107,6 @@
 ;;; table-container
 ;;; ---------------------------------------------------------------------------
 
-(define-condition record-not-found-error (error)
-                  ((table :initarg :table :accessor table)
-                   (value :initarg :value :accessor value)))
-
-;;; ---------------------------------------------------------------------------
-
 (defclass* table-container (key-value-iteratable-container-mixin
                               concrete-container)
   ((unique-counter 0 r)
