@@ -27,13 +27,15 @@ instructions."))
 ;;; ---------------------------------------------------------------------------
 
 (defsystem cl-containers
-  :version "0.8"
+  :version "0.9.1"
   :author "Brendan Burns, Andrew Hannon, Brent Heeringa, Gary King, Joshua Moody, Charles Sutton, Louis Theran, David Westbrook, and other former students and staff of EKSL."
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
   :description "A generic container library for Common Lisp"
   :components ((:module "dev"
                         :components ((:file "package")
+				     (:file "conditions"
+				     	    :depends-on ("package"))
                                      (:file "container-api" 
                                             :depends-on ("package"))
                                      (:file "containers"
@@ -41,7 +43,7 @@ instructions."))
                                      (:file "basic-operations"
                                             :depends-on ("container-api" "containers"))
                                      (:file "queues"
-                                            :depends-on ("package" "basic-operations"))
+                                            :depends-on ("conditions" "basic-operations"))
                                      (:file "stacks"
                                             :depends-on ("package" "basic-operations"))
                                      (:file "trees"
@@ -82,11 +84,18 @@ instructions."))
                (:module "website"
                         :components ((:module "source"
                                               :components ((:static-file "index.lml"))))))
+  :in-order-to ((test-op (load-op cl-containers-test)))
+  :perform (test-op :after (op c)
+                    (describe 
+		     (funcall (intern (symbol-name '#:run-tests) :lift) 
+			      :suite '#:cl-containers-test)))
   :depends-on (asdf-system-connections
                metatilities-base 
                metabang-dynamic-classes))
 
-;;; ---------------------------------------------------------------------------
+(defmethod operation-done-p 
+           ((o test-op) (c (eql (find-system 'cl-containers))))
+  (values nil))
 
 (asdf:defsystem-connection containers-and-utilities
   :requires (cl-containers metatilities-base)
@@ -111,7 +120,7 @@ instructions."))
 #|
 
 (define-eksl-module :container-immutable 
-  ("immutable-containers")
+  ("immutable-containers" :depends-on ("conditions"))
   :system containers)
 
 ;;; ---------------------------------------------------------------------------
