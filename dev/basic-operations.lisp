@@ -2,25 +2,6 @@
 (in-package #:containers)
 
 ;;; ---------------------------------------------------------------------------
-;;; conditions
-;;; ---------------------------------------------------------------------------
-
-(defcondition container-error (error)
-  ((container nil ir)))
-
-;;; ---------------------------------------------------------------------------
-
-(defcondition index-out-of-range-error (container-error)
-  ((index 0 ir))
-  (:report (lambda (c s)
-             (if (< (index c) 0)
-               (format s "Index ~D is negative, it must be between 0 and the size of the container."
-                       (index c))
-               (format s "Index ~D out of range for container ~A, size is only ~D."
-                       (index c) (class-name (class-of (container c))) (size (container c)))))))
-
-
-;;; ---------------------------------------------------------------------------
 ;;; stuff and nonsense
 ;;; ---------------------------------------------------------------------------
 

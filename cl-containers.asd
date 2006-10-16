@@ -37,13 +37,13 @@ instructions."))
 				     (:file "conditions"
 				     	    :depends-on ("package"))
                                      (:file "container-api" 
-                                            :depends-on ("package"))
+                                            :depends-on ("conditions" "package"))
                                      (:file "containers"
-                                            :depends-on ("package"))
+                                            :depends-on ("conditions" "package"))
                                      (:file "basic-operations"
                                             :depends-on ("container-api" "containers"))
                                      (:file "queues"
-                                            :depends-on ("conditions" "basic-operations"))
+                                            :depends-on ("basic-operations"))
                                      (:file "stacks"
                                             :depends-on ("package" "basic-operations"))
                                      (:file "trees"
