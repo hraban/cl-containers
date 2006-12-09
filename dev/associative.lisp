@@ -5,12 +5,6 @@
 ;;; Associative-Containers, various flavors
 ;;; ---------------------------------------------------------------------------
 
-(defclass* associative-container-mixin (initial-contents-key-value-mixin
-                                          indexed-container-mixin)
-   ())
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod some-key-value-p ((container associative-container-mixin) 
                              (predicate t))
   (iterate-key-value container
@@ -155,23 +149,6 @@
 ;;; framework.
 ;;; ---------------------------------------------------------------------------
 
-(defclass* array-container-abstract (associative-container-mixin
-                                       bounded-container-mixin
-                                       uses-contents-mixin)
-  ())
-
-;;; ---------------------------------------------------------------------------
-
-(defclass* array-container (array-container-abstract
-                              typed-container-mixin
-                              initial-element-mixin
-                              iteratable-container-mixin
-                              concrete-container)
-  ((contents :initform nil
-             :accessor contents)))
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod print-container-summary ((container array-container) stream)
   (format stream "~{~Dx~}" (array-dimensions (contents container))))
 
@@ -247,19 +224,6 @@
 ;;;
 ;;; This uses a hash table and only allocates the memory for
 ;;; the "cells" of the array that you set.
-;;; ---------------------------------------------------------------------------
-
-(defclass* sparse-array-container (associative-container-mixin
-                                     contents-as-hashtable-mixin
-                                     test-container-mixin
-                                     initial-element-mixin
-                                     bounded-container-mixin
-                                     concrete-container)
-  ((dimensions nil ir)
-   (use-fixnums? nil r))
-  (:default-initargs
-    :test #'equal))
-
 ;;; ---------------------------------------------------------------------------
 
 (defmethod initialize-instance :around ((object sparse-array-container) &key
@@ -344,16 +308,6 @@
 ;;; like a regular hash-table
 ;;; ---------------------------------------------------------------------------
 
-(defclass* simple-associative-container (associative-container-mixin
-                                           initial-element-mixin
-                                           contents-as-hashtable-mixin
-                                           test-container-mixin
-                                           concrete-container
-                                           )
-  ())
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod item-at-1 ((container simple-associative-container) index)
   (multiple-value-bind (value found?)
                        (gethash index (contents container))
@@ -401,15 +355,6 @@
 ;;; associative-container
 ;;;
 ;;; Nested hash tables
-;;; ---------------------------------------------------------------------------
-
-(defclass* associative-container (initial-element-mixin
-                                    contents-as-hashtable-mixin
-                                    test-container-mixin
-                                    associative-container-mixin
-                                    concrete-container)
-  ())
-
 ;;; ---------------------------------------------------------------------------
 
 (defmethod initialize-instance :after ((object associative-container) 
@@ -548,28 +493,7 @@
 
 
 ;;; ---------------------------------------------------------------------------
-;;; biassociative-container-mixin
-;;;
-;;;   A biassociative container is one in which FIND-ITEM and REVERSE-FIND
-;;;   are just as fast.  (Positive example: alist, negative example: hashtable).
-;;;
-;;; ---------------------------------------------------------------------------
-
-(defclass* biassociative-container-mixin (associative-container-mixin)
-   ())
-
-
-;;; ---------------------------------------------------------------------------
 ;;; Associative-list based container
-;;; ---------------------------------------------------------------------------
-
-(defclass* alist-container (biassociative-container-mixin
-                              initial-element-mixin
-                              key-value-iteratable-container-mixin
-                              uses-contents-mixin
-                              concrete-container)
-  ((test #'equal i)))
-
 ;;; ---------------------------------------------------------------------------
 
 (defmethod initialize-container ((container alist-container))

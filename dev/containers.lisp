@@ -465,6 +465,109 @@ classified-container-mixin, and the classifier returns one of :TOP-LEFT,
 
 
 ;;; ---------------------------------------------------------------------------
+;;; Associative-Containers, various flavors
+
+(defclass* associative-container-mixin (initial-contents-key-value-mixin
+                                          indexed-container-mixin)
+   ())
+
+
+;;; ---------------------------------------------------------------------------
+;;; array-container
+;;;
+;;; This is a regular array wrapped by the standard associative container
+;;; framework.
+;;; ---------------------------------------------------------------------------
+
+(defclass* array-container-abstract (associative-container-mixin
+                                       bounded-container-mixin
+                                       uses-contents-mixin)
+  ())
+
+;;; ---------------------------------------------------------------------------
+
+(defclass* array-container (array-container-abstract
+                              typed-container-mixin
+                              initial-element-mixin
+                              iteratable-container-mixin
+                              concrete-container)
+  ((contents :initform nil
+             :accessor contents)))
+
+
+;;; ---------------------------------------------------------------------------
+;;; Sparse-Array-Container
+;;;
+;;; This uses a hash table and only allocates the memory for
+;;; the "cells" of the array that you set.
+;;; ---------------------------------------------------------------------------
+
+(defclass* sparse-array-container (associative-container-mixin
+                                     contents-as-hashtable-mixin
+                                     test-container-mixin
+                                     initial-element-mixin
+                                     bounded-container-mixin
+                                     concrete-container)
+  ((dimensions nil ir)
+   (use-fixnums? nil r))
+  (:default-initargs
+    :test #'equal))
+
+
+;;; ---------------------------------------------------------------------------
+;;; simple-associative-container
+;;;
+;;; like a regular hash-table
+;;; ---------------------------------------------------------------------------
+
+(defclass* simple-associative-container (associative-container-mixin
+                                           initial-element-mixin
+                                           contents-as-hashtable-mixin
+                                           test-container-mixin
+                                           concrete-container
+                                           )
+  ())
+
+
+;;; ---------------------------------------------------------------------------
+;;; associative-container
+;;;
+;;; Nested hash tables
+;;; ---------------------------------------------------------------------------
+
+(defclass* associative-container (initial-element-mixin
+                                    contents-as-hashtable-mixin
+                                    test-container-mixin
+                                    associative-container-mixin
+                                    concrete-container)
+  ())
+
+
+;;; ---------------------------------------------------------------------------
+;;; biassociative-container-mixin
+;;;
+;;;   A biassociative container is one in which FIND-ITEM and REVERSE-FIND
+;;;   are just as fast.  (Positive example: alist, negative example: hashtable).
+;;;
+;;; ---------------------------------------------------------------------------
+
+(defclass* biassociative-container-mixin (associative-container-mixin)
+   ())
+
+
+;;; ---------------------------------------------------------------------------
+;;; Associative-list based container
+;;; ---------------------------------------------------------------------------
+
+(defclass* alist-container (biassociative-container-mixin
+                              initial-element-mixin
+                              key-value-iteratable-container-mixin
+                              uses-contents-mixin
+                              concrete-container)
+  ((test #'equal i)))
+
+
+;;; ---------------------------------------------------------------------------
 ;;; stable-associative-container
 ;;;
 ;;; an associative container that supports "stable" iteration; i.e., you

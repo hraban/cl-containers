@@ -49,14 +49,6 @@ for specializations."))
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric make-node-for-container (container item &key))
-
-;;; ---------------------------------------------------------------------------
-
-(defgeneric node-empty-p (node))
-
-;;; ---------------------------------------------------------------------------
-
 (defgeneric size (abstract-container)
   (:documentation "Returns the number of items currently in the container."))
 
@@ -94,10 +86,6 @@ super-container."))
 
 (defgeneric nth-item (container index)
   (:documentation "Returns the nth item in the container's 'natural' order. This is the same as nth-element unless the contaienr is of type container-uses-nodes-mixin."))
-
-;;; ---------------------------------------------------------------------------
-
-(defgeneric total-size (bounded-container-mixin))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -196,23 +184,12 @@ the transform function."))
 
 ;;; ---------------------------------------------------------------------------
 
-(defgeneric iterate-key-value (container function))
-
 (defgeneric iterate-value-key (container function))
-
-;;?? should be settable
-(defgeneric first-element (ordered-container-mixin))
 
 (defgeneric (setf first-element) (x y)
   (:documentation ""))
 
 (defun first-item (x) (first-element x))
-
-;;?? should be settable
-(defgeneric last-element (ordered-container-mixin))
-
-(defgeneric (setf last-element) (x y)
-  (:documentation ""))
 
 (defun last-item (x) (last-element x))
 
@@ -256,13 +233,6 @@ upspecified order."))
   (:documentation "Finds the key in the associative-container whose 
 value is VALUE."))
 
-(defgeneric enqueue (abstract-queue item))
-(defgeneric dequeue (abstract-queue))
-
-(defgeneric pop-item (abstract-stack))
-
-(defgeneric children (many-child-node))
-
 ;;; ---------------------------------------------------------------------------
 
 (defgeneric ensure-sorted (container)
@@ -287,8 +257,6 @@ container is returned."))
 (defgeneric element-position (ordered-container-mixin element &key test key)
   (:documentation "Returns the position of element in container using test and
 key to match. Key defaults to identity and test defaults to eq."))
-(defgeneric delete-item (ordered-container-mixin item))
-(defgeneric delete-item-if (ordered-container-mixin test))
 
 ;;; ---------------------------------------------------------------------------
 
@@ -506,6 +474,9 @@ key to match. Key defaults to identity and test defaults to eq."))
 (defgeneric last-element (x)
   (:documentation ""))
 
+(defgeneric (setf last-element) (x y)
+  (:documentation ""))
+
 (defgeneric left-and-right-nodes-for-item (list item)
   (:documentation ""))
 
@@ -517,7 +488,6 @@ key to match. Key defaults to identity and test defaults to eq."))
 
 (defgeneric make-initial-element (container)
   (:documentation ""))
-
 
 (defgeneric make-node-for-container (container item &key)
   (:documentation ""))
