@@ -385,11 +385,6 @@ arguments (args).")
 
 ;;; ---------------------------------------------------------------------------
 
-(defclass* key-value-iteratable-container-mixin (iteratable-container-mixin)
-  ())
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod delete-item :after ((container container-uses-nodes-mixin)
                                (item i-know-my-node-mixin))
   (setf (my-node item) nil))

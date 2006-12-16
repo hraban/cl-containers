@@ -234,6 +234,11 @@ be instantiated using make-container."))
 
 ;;; ---------------------------------------------------------------------------
 
+(defclass* key-value-iteratable-container-mixin (iteratable-container-mixin)
+  ())
+
+;;; ---------------------------------------------------------------------------
+
 (defgeneric iteratable-p (thing)
   (:documentation "Returns true if thing knows how to iterate-nodes.")
   (:method ((thing iteratable-container-mixin))
