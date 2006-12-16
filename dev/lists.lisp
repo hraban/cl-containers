@@ -194,25 +194,30 @@ so it best for small containers."
                               iteratable-container-mixin
                               container-uses-nodes-mixin
                               concrete-container)
-  ((first-element nil ia :type dlist-container-node)
-   (last-element nil ia :type dlist-container-node)
+  ;;?? nil is not a dlist-container-node so the type clause is bogus
+  ((first-element nil ia 
+		  #+(or)
+		 :type
+		 #+(or) 
+		 dlist-container-node)
+   (last-element nil ia 
+		 #+(or)
+		 :type
+		 #+(or) 
+		 dlist-container-node)
    (size nil ia))
   (:documentation "A double-linked list"))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod make-node-for-container ((container dlist-container) (item t) &rest args)
+(defmethod make-node-for-container ((container dlist-container) 
+				    (item t) &rest args)
+  (declare (dynamic-extent args))
   (apply #'make-instance 'dlist-container-node
          :element item args))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((container dlist-container))
   (setf (slot-value container 'size) 0)
   (setf (slot-value container 'first-element) nil
         (slot-value container 'last-element) nil))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((list dlist-container) (node dlist-container-node)) 
   (insert-item-after list (last-element list) node))
@@ -220,17 +225,20 @@ so it best for small containers."
 (defmethod insert-item-after ((list dlist-container) node item)
   (insert-item-after list node (make-node-for-container list item)))
 
-(defmethod insert-item-after ((list dlist-container) node (new-node dlist-container-node))
+(defmethod insert-item-after ((list dlist-container) node
+			      (new-node dlist-container-node))
   (declare (ignore node))
   (setf (first-element list) new-node
         (last-element list) new-node)
   (setf (size list) 1)
   list)
 
-(defmethod insert-item-after ((list dlist-container) (node dlist-container-node) item)
+(defmethod insert-item-after ((list dlist-container)
+			      (node dlist-container-node) item)
   (insert-item-after list node (make-node-for-container list item)))
 
-(defmethod insert-item-after ((list dlist-container) (node dlist-container-node) 
+(defmethod insert-item-after ((list dlist-container) 
+			      (node dlist-container-node) 
                               (new-node dlist-container-node))
   (setf (next-item new-node) (next-item node))
   (setf (previous-item new-node) node)
@@ -245,10 +253,12 @@ so it best for small containers."
   (declare (ignore node))
   (insert-item list item))
 
-(defmethod insert-item-before ((list dlist-container) (node dlist-container-node) item)
+(defmethod insert-item-before ((list dlist-container)
+			       (node dlist-container-node) item)
   (insert-item-before list node (make-node-for-container list item)))
 
-(defmethod insert-item-before ((list dlist-container) (node dlist-container-node) 
+(defmethod insert-item-before ((list dlist-container)
+			       (node dlist-container-node) 
                                (new-node dlist-container-node))
   (setf (next-item new-node) node)
   (setf (previous-item new-node) (previous-item node))
@@ -259,7 +269,8 @@ so it best for small containers."
   (incf (size list))
   list)
 
-(defmethod delete-item-after ((list dlist-container) (node dlist-container-node))
+(defmethod delete-item-after ((list dlist-container)
+			      (node dlist-container-node))
   (cond
    ((not (equal (last-element list) node))
     (let ((next (next-item node)))
@@ -271,7 +282,8 @@ so it best for small containers."
       (values (element next) t)))
    (t (values nil nil))))
 
-(defmethod delete-item-before ((list dlist-container) (node dlist-container-node))
+(defmethod delete-item-before ((list dlist-container)
+			       (node dlist-container-node))
   (cond
    ((not (equal (first-element list) node))
     (let ((previous (previous-item node)))
@@ -284,22 +296,24 @@ so it best for small containers."
    (t (values nil nil))))
 
 (defmethod delete-item ((list dlist-container) item)
-  (iterate-nodes list #'(lambda (node)
-                              (when (funcall (test list) (element node) item)
-                                (cond
-                                 ((eq node (last-element list))
-                                  (cond
-                                   ((eq node (first-element list))
-                                    (setf (first-element list) nil)
-                                    (setf (last-element list) nil)
-                                    (decf (size list))
-                                    (element node))
-                                   (t (delete-item-after 
-                                       list 
-                                       (previous-item node)))))
-                                 (t (delete-item-before 
-                                     list 
-                                     (next-item node))))))))
+  (iterate-nodes 
+   list 
+   (lambda (node)
+     (when (funcall (test list) (element node) item)
+       (cond
+	 ((eq node (last-element list))
+	  (cond
+	    ((eq node (first-element list))
+	     (setf (first-element list) nil)
+	     (setf (last-element list) nil)
+	     (decf (size list))
+	     (element node))
+	    (t (delete-item-after 
+		list 
+		(previous-item node)))))
+	 (t (delete-item-before 
+	     list 
+	     (next-item node))))))))
 
 (defmethod delete-item ((list dlist-container) (node dlist-container-node))
   (delete-item list (element node)))
@@ -320,13 +334,12 @@ so it best for small containers."
             (setf item (next-item item)))
       item)))
 
-(defmethod replace-item ((list dlist-container) (node dlist-container-node) item 
+(defmethod replace-item ((list dlist-container)
+			 (node dlist-container-node) item 
                          &key (length 1) finish-item)
   (declare (ignore finish-item))
   (replace-item list node (make-container 'dlist-container-node item) 
                 :length length))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod replace-item ((list dlist-container) (node dlist-container-node) 
                          (start-item dlist-container-node)
@@ -358,12 +371,8 @@ so it best for small containers."
             (return list))
            (t (setf next (next-item next)))))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod successor ((container dlist-container) (node dlist-container-node))
   (next-item node))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod predecessor ((container dlist-container) 
                         (node dlist-container-node))
@@ -405,7 +414,8 @@ so it best for small containers."
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod insert-item ((list sorted-dlist-container) (node dlist-container-node))
+(defmethod insert-item ((list sorted-dlist-container)
+			(node dlist-container-node))
   (insert-item-ordered list node))
 
 ;;; ---------------------------------------------------------------------------
@@ -421,7 +431,8 @@ so it best for small containers."
   (with-slots (key sorter test) list
     (let ((new-key (funcall key (element new-node))))
       (if (and (previous-item node) 
-               (funcall sorter new-key (funcall key (element (previous-item node)))))
+               (funcall sorter new-key 
+			(funcall key (element (previous-item node)))))
         (iterate-left-nodes 
          list node
          (lambda (n)
@@ -466,8 +477,8 @@ so it best for small containers."
 (defmethod insert-item-ordered-about-node ((list sorted-dlist-container) 
                                            (node t)
                                            (new-node t))
-  (insert-item-ordered-about-node list node (make-node-for-container list new-node)))
-
+  (insert-item-ordered-about-node 
+   list node (make-node-for-container list new-node)))
 
 (defmethod insert-item-ordered ((list sorted-dlist-container) 
                                 (new-node dlist-container-node))
@@ -500,8 +511,6 @@ so it best for small containers."
 (defmethod insert-item-ordered ((list sorted-dlist-container) (new-node t))
   (insert-item-ordered list (make-node-for-container list new-node)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod delete-item ((list sorted-dlist-container) item)
   (with-slots (key sorter test) list
     (let ((item-key (funcall key item)))
@@ -531,7 +540,8 @@ so it best for small containers."
              (when (funcall sorter item-key current-key)
                (return-from delete-item list))))))))
 
-(defmethod delete-item ((list sorted-dlist-container) (item i-know-my-node-mixin))
+(defmethod delete-item ((list sorted-dlist-container) 
+			(item i-know-my-node-mixin))
   (let ((node (my-node item)))
     (declare (dynamic-extent node))
     (cond
