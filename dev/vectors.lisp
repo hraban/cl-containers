@@ -86,7 +86,7 @@
 ;;            first-element, search-for-item, search-for-match
 
 (defclass* vector-container (basic-vector-container
-                               concrete-container)
+			     concrete-container)
   ())
 
 ;;; ---------------------------------------------------------------------------

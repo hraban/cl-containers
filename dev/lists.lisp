@@ -440,7 +440,7 @@ so it best for small containers."
              (declare (dynamic-extent current-key))
              (cond ((funcall test (element new-node) (element n))
                     (return-from insert-item-ordered-about-node list))
-                   
+
                    ((not (funcall sorter new-key current-key))
                     (insert-item-after list n new-node)
                     (return-from insert-item-ordered-about-node list))))))

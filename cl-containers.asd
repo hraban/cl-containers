@@ -24,10 +24,8 @@ http://www.cliki.net/asdf-system-connections for details and download
 instructions."))
 (operate 'load-op 'asdf-system-connections)
 
-;;; ---------------------------------------------------------------------------
-
 (defsystem cl-containers
-  :version "0.9.2"
+  :version "0.9.3"
   :author "Brendan Burns, Andrew Hannon, Brent Heeringa, Gary King, Joshua Moody, Charles Sutton, Louis Theran, David Westbrook, and other former students and staff of EKSL."
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
@@ -97,13 +95,13 @@ instructions."))
            ((o test-op) (c (eql (find-system 'cl-containers))))
   (values nil))
 
+#+asdf-system-connections
 (asdf:defsystem-connection containers-and-utilities
   :requires (cl-containers metatilities-base)
   :components ((:module "dev"
                         :components ((:file "utilities-integration")))))
 
-;;; ---------------------------------------------------------------------------
-
+#+asdf-system-connections
 (asdf:defsystem-connection containers-and-variates
   :requires (cl-containers cl-variates)
   :components ((:module "dev"
@@ -111,7 +109,8 @@ instructions."))
                                      (:file "weighted-sampling"
                                             :depends-on ("container-sampling"))))))
 
-#-sbcl(asdf:defsystem-connection containers-and-metacopy
+#-sbcl
+(asdf:defsystem-connection containers-and-metacopy
   :requires (cl-containers metacopy)
   :components ((:module "dev"
                         :components ((:file "copying")))))
@@ -145,7 +144,3 @@ instructions."))
   :depends-on (containers))
 
 |#   
-
-;;; ***************************************************************************
-;;; *                              End of File                                *
-;;; ***************************************************************************
