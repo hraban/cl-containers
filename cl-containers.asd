@@ -30,66 +30,69 @@ instructions."))
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
   :description "A generic container library for Common Lisp"
-  :components ((:module "dev"
-                        :components ((:file "package")
-				     (:file "conditions"
-				     	    :depends-on ("package"))
-                                     (:file "container-api" 
-                                            :depends-on ("conditions" "package"))
-                                     (:file "containers"
-                                            :depends-on ("conditions" "package"))
-                                     (:file "basic-operations"
-                                            :depends-on ("container-api" "containers"))
-                                     (:file "queues"
-                                            :depends-on ("basic-operations"))
-                                     (:file "stacks"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "trees"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "lists"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "bags-and-sets"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "ring-buffers"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "miscellaneous"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "associative"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "compatibility" 
-                                            :depends-on ("package" "basic-operations" "associative"))
-                                     (:file "vectors"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "quad-tree"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "heaps"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "container-mixins"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "union-find-container"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "package-container"
-                                            :depends-on ("package" "basic-operations"))
-                                     (:file "iterator-api"
-                                            :depends-on ("package"))
-                                     (:file "iterators"
-                                            :depends-on ("iterator-api" "basic-operations"))
-                                     (:file "file-iterators"
-                                            :depends-on ("iterators"))
-                                     #+(or digitool openmcl)
-                                     (:file "containers-readtable"
-                                            :depends-on ("containers"))))
-               (:module "website"
-                        :components ((:module "source"
-                                              :components ((:static-file "index.lml"))))))
+  :components 
+  ((:module 
+    "dev"
+    :components
+    ((:file "package")
+     (:file "conditions"
+	    :depends-on ("package"))
+     (:file "container-api" 
+	    :depends-on ("conditions" "package"))
+     (:file "containers"
+	    :depends-on ("conditions" "package"))
+     (:file "basic-operations"
+	    :depends-on ("container-api" "containers"))
+     (:file "queues"
+	    :depends-on ("basic-operations"))
+     (:file "stacks"
+	    :depends-on ("package" "basic-operations"))
+     (:file "trees"
+	    :depends-on ("package" "basic-operations"))
+     (:file "lists"
+	    :depends-on ("package" "basic-operations"))
+     (:file "bags-and-sets"
+	    :depends-on ("package" "basic-operations"))
+     (:file "ring-buffers"
+	    :depends-on ("package" "basic-operations"))
+     (:file "miscellaneous"
+	    :depends-on ("package" "basic-operations"))
+     (:file "associative"
+	    :depends-on ("package" "basic-operations"))
+     (:file "compatibility" 
+	    :depends-on ("package" "basic-operations" "associative"))
+     (:file "vectors"
+	    :depends-on ("package" "basic-operations"))
+     (:file "quad-tree"
+	    :depends-on ("package" "basic-operations"))
+     (:file "heaps"
+	    :depends-on ("package" "basic-operations"))
+     (:file "container-mixins"
+	    :depends-on ("package" "basic-operations"))
+     (:file "union-find-container"
+	    :depends-on ("package" "basic-operations"))
+     (:file "package-container"
+	    :depends-on ("package" "basic-operations"))
+     (:file "iterator-api"
+	    :depends-on ("package"))
+     (:file "iterators"
+	    :depends-on ("iterator-api" "basic-operations"))
+     (:file "file-iterators"
+	    :depends-on ("iterators"))
+     #+(or digitool openmcl)
+     (:file "containers-readtable"
+	    :depends-on ("containers"))))
+   (:module "website"
+	    :components ((:module "source"
+				  :components ((:static-file "index.lml"))))))
   :in-order-to ((test-op (load-op cl-containers-test)))
   :perform (test-op :after (op c)
                     (describe 
 		     (funcall (intern (symbol-name '#:run-tests) :lift) 
 			      :suite '#:cl-containers-test)))
-  :depends-on (asdf-system-connections
-               metatilities-base 
-               metabang-dynamic-classes))
+  :depends-on (:asdf-system-connections
+               :metatilities-base 
+               :metabang-dynamic-classes))
 
 (defmethod operation-done-p 
            ((o test-op) (c (eql (find-system 'cl-containers))))
@@ -104,10 +107,11 @@ instructions."))
 #+asdf-system-connections
 (asdf:defsystem-connection containers-and-variates
   :requires (cl-containers cl-variates)
-  :components ((:module "dev"
-                        :components ((:file "container-sampling")
-                                     (:file "weighted-sampling"
-                                            :depends-on ("container-sampling"))))))
+  :components ((:module 
+		"dev"
+		:components ((:file "container-sampling")
+			     (:file "weighted-sampling"
+				    :depends-on ("container-sampling"))))))
 
 #-sbcl
 (asdf:defsystem-connection containers-and-metacopy
