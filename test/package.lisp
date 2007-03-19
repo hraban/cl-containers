@@ -1,6 +1,6 @@
 (in-package #:common-lisp-user)
 
-(defpackage "metabang.cl-containers-test"
+(defpackage "metabang.cl-containers.test"
   (:use #:common-lisp #:cl-containers #:lift)
   (:nicknames #:cl-containers-test)
   (:import-from #:metatilities

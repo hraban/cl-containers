@@ -275,8 +275,6 @@
                       (setf (right-child y) item)))))
   tree)
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod delete-node ((tree binary-search-tree) (node bst-node))
   (let* ((y (if (or (node-empty-p (left-child node))
                     (node-empty-p (right-child node)))
@@ -296,24 +294,19 @@
     (if (not (equal y node))
       (setf (element node) (element y)))
     
-    (decf (tree-size tree))
-          
     y))
 
-;;; ---------------------------------------------------------------------------
-
+(defmethod delete-node :after ((tree binary-search-tree) (node bst-node))
+  (decf (tree-size tree)))
+  
 (defmethod delete-item ((tree binary-search-tree) (node bst-node))
   (delete-node tree node))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod delete-item ((tree binary-search-tree) (item t))
-  (let ((found (find-item tree item)))
+  (let ((found (find-node tree item)))
     (if found
-      (delete-item tree found)
+      (delete-node tree found)
       tree)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item-if (test (tree binary-search-tree))
   "Iterate over the nodes of the tree, deleting them if they match
@@ -671,7 +664,7 @@ test."
 ;;; Misc
 
 (defmethod walk-tree-nodes ((node (eql *rbt-empty-node*)) walk-fn 
-&optional (mode :inorder))
+			    &optional (mode :inorder))
    "Special case..."
    (declare (ignore walk-fn mode)))
 
