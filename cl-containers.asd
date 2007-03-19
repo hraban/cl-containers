@@ -9,24 +9,17 @@ Brent Heeringa, Louis Theran)
 (defpackage #:containers-system (:use #:cl #:asdf))
 (in-package #:containers-system)
 
-;;; ---------------------------------------------------------------------------
-;;; system definitions
-;;; ---------------------------------------------------------------------------
-
 ;; try hard
 (unless (find-system 'asdf-system-connections nil)
-  (when (find-package 'asdf-install)
-    (funcall (intern (symbol-name :install) :asdf-install) 'asdf-system-connections)))
-;; give up with a useful (?) error message
-(unless (find-system 'asdf-system-connections nil)
-  (warn "The CL-Containers system requires ASDF-SYSTEM-CONNECTIONS. See 
+  (warn "The CL-Containers system would enjoy having ~
+asdf-system-connections around. See 
 http://www.cliki.net/asdf-system-connections for details and download
 instructions."))
 (when (find-system 'asdf-system-connections nil)
   (operate 'load-op 'asdf-system-connections))
 
 (defsystem cl-containers
-  :version "0.9.4"
+  :version "0.9.5"
   :author "Brendan Burns, Andrew Hannon, Brent Heeringa, Gary King, Joshua Moody, Charles Sutton, Louis Theran, David Westbrook, and other former students and staff of EKSL."
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
