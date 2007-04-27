@@ -35,7 +35,8 @@
                 #:size
                 #:root
                 #:next-element
-                #:total-size)
+                #:total-size
+                #:element-type)
   
   (:export #:basic-queue
            #:ring-buffer
