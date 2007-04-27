@@ -86,14 +86,10 @@
   (size (container q)))
 
 (defmethod first-element ((q priority-queue-on-container))
-  (element (first-element (container q))))
-
-;;; ---------------------------------------------------------------------------
+  (first-element (container q)))
 
 (defmethod (setf first-element) (value (q priority-queue-on-container))
-  (setf (element (first-element (container q))) value))
-
-;;; ---------------------------------------------------------------------------
+  (setf (first-element (container q)) value))
 
 (defmethod find-item ((q priority-queue-on-container) (item t))
   (let ((node (find-item (container q) item)))
