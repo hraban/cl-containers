@@ -477,11 +477,10 @@ arguments (args).")
 
 (defmethod empty! ((container contents-as-array-mixin))
   (setf (contents container)
-        (adjust-array (contents container) 0 
-                      :fill-pointer (array-has-fill-pointer-p (contents container))
-                      :element-type (array-element-type (contents container)))))
-
-;;; ---------------------------------------------------------------------------
+        (adjust-array 
+	 (contents container) 0 
+	 :fill-pointer (array-has-fill-pointer-p (contents container))
+	 :element-type (array-element-type (contents container)))))
 
 (defmethod iterate-nodes ((container contents-as-array-mixin) function)
   (let ((array (contents container)))
@@ -493,15 +492,11 @@ arguments (args).")
               (incf index)))))
   container)
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod search-for-item ((container contents-as-array-mixin) item &key
                             (test (test container)) (key 'identity))
   (loop for container-item across (contents container) 
         when (funcall test (funcall key container-item) item) do
         (return-from search-for-item container-item)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-item ((container contents-as-array-mixin) item)
   (find item (contents container)))
@@ -526,8 +521,6 @@ arguments (args).")
 (defmethod every-element-p ((container iteratable-container-mixin) (predicate function))
   (%every-thing-p container #'iterate-elements predicate))
 
-;;; ---------------------------------------------------------------------------
-
 (defun %every-thing-p (container iterator predicate)
   (funcall iterator container
            (lambda (item)
@@ -536,14 +529,11 @@ arguments (args).")
   
   (values t))
 
-;;; ---------------------------------------------------------------------------
-
 (defun %some-thing-p (container iterator predicate)
   (funcall iterator container
            (lambda (item)
              (when (funcall predicate item)
                (return-from %some-thing-p item))))
-  
   (values nil))
 
 

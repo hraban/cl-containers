@@ -35,8 +35,6 @@
                          (eq type :inherited))) 
             (funcall fn symbol)))))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod size ((container package-container))
   ;; it's gonna cons
   (count-using #'iterate-elements nil container))

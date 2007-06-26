@@ -1,7 +1,5 @@
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
-
 (defun merge-elements (container merge-fn initial-fn 
                                  &key (key 'identity) (test 'equal)
                                  (argument 'identity) (return :both)
@@ -18,7 +16,6 @@
   (%merge-helper
    container #'iterate-nodes merge-fn initial-fn key test argument return filter))
 
-;;; ---------------------------------------------------------------------------
 
 (defun %merge-helper (container iterator merge-fn initial-fn 
                                 key test argument return filter)
@@ -40,8 +37,6 @@
       (:keys (collect-keys result))
       (:values (collect-elements result)))))
 
-;;; ---------------------------------------------------------------------------
-
 (defun element-counts (container &key (test 'equal) (key 'identity)
                                  (sort nil) (sort-on :counts) (return :both)
                                  (weight (constantly 1))
@@ -52,8 +47,6 @@
 #+Test
 (element-counts '((a 1) (b 2) (c 1) (d 1) (e 2))
                  :key #'second :return :counts :sort #'< :sort-on :counts)
-
-;;; ---------------------------------------------------------------------------
 
 (defun node-counts (container &key (test 'equal) (key 'identity) 
                               (sort nil) (sort-on :counts) (return :both)
@@ -88,8 +81,6 @@
           ((eq return :counts)
            (mapcar #'second result)))))
 
-;;; ---------------------------------------------------------------------------
-
 #+Ignore
 (defun map-window-over-list (list window-size function)
    (loop for i from 0 to (- (length list) window-size)
@@ -98,8 +89,6 @@
         as current = (nthcdr window-size list) then (rest current)
         do
         (funcall function window)))
-
-;;; ---------------------------------------------------------------------------
 
 #+Ignore
 (defun map-window-over-sequence (sequence window-size function)
@@ -112,9 +101,6 @@
                                :displaced-to temp
                                :displaced-index-offset index)))))
 
-;;; ---------------------------------------------------------------------------
-
-
 #+Ignore
 ;;?? This suffers from shared structure if you just try to collect
 ;; the windows? Should we have another version that copies the window
@@ -126,8 +112,6 @@
         as current = (nthcdr window-size list) then (rest current)
         collect
         (funcall function window)))
-
-;;; ---------------------------------------------------------------------------
 
 (defun map-window-over-elements
        (container window-size window-step function &key duplicate-ends?)
@@ -143,8 +127,6 @@
   (map-window-over-elements-helper 
    container 'iterate-nodes window-size window-step function duplicate-ends?))
 
-;;; ---------------------------------------------------------------------------
-
 (defun collect-window-over-elements
        (container window-size window-step &key (transform 'identity) duplicate-ends?)
   "Moves a windows of size `window-size` across the elements of `container`, stepping by `window-step` each time. At each step, it applies function `fn` to the elements in the current window \(as a list\)."
@@ -156,8 +138,6 @@
      duplicate-ends?)
     (nreverse result)))
 
-;;; ---------------------------------------------------------------------------
-
 (defun collect-window-over-nodes
        (container window-size window-step &key (transform 'identity) duplicate-ends?)
   "Moves a windows of size `window-size` across the elements of `container`, stepping by `window-step` each time. At each step, it applies function `fn` to the elements in the current window \(as a list\)."
@@ -168,8 +148,6 @@
        (push (funcall transform w) result))
      duplicate-ends?)
     (nreverse result)))
-
-;;; ---------------------------------------------------------------------------
 
 (defun map-window-over-elements-helper
        (container iterator window-size window-step function duplicate-ends?)
@@ -208,8 +186,6 @@
   
   (values container))
 
-;;; ---------------------------------------------------------------------------
-
 (defun map-pairs (container fn)
   (let ((size (size container)))
     (dotimes (i size)
@@ -231,8 +207,6 @@
                   (nth-element container index-1) 
                   (nth-element container index-2)))))))
 
-;;; ---------------------------------------------------------------------------
-
 ;;??
 (defun collect-pairs (elements)
   (let ((result nil))
@@ -242,33 +216,21 @@
        (push (sort (list a b) #'string-lessp) result)))
     result))
 
-;;; ---------------------------------------------------------------------------
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod unique-elements ((container iteratable-container-mixin) &key
                             (key 'identity))
   (%unique-elements container 'merge-elements key))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod unique-elements ((container list) &key
                             (key 'identity))
   (%unique-elements container 'merge-elements key))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod unique-nodes ((container iteratable-container-mixin) &key
                          (key 'identity))
   (%unique-elements container 'merge-nodes key))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod unique-nodes ((container list) &key
                          (key 'identity))
   (%unique-elements container 'merge-nodes key))
-
-;;; ---------------------------------------------------------------------------
 
 (defun %unique-elements (container iterator key)
   (collect-elements
