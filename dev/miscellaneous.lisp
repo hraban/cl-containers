@@ -152,38 +152,37 @@
 (defun map-window-over-elements-helper
        (container iterator window-size window-step function duplicate-ends?)
   (let ((window nil)
-         (state :initial)
-         (count window-size))
-    (when duplicate-ends?
-      (setf window (make-list window-size :initial-element (nth-element container 0))
-            state :process))
-    (block do-it
-      (funcall iterator
-       container
-       (lambda (element)
-         (when (eq state :initial)
-           (push element window)
-           (when (zerop (decf count))
-             (setf window (nreverse window))
-             (setf state :process)))
-         
-         (when (eq state :fill)
-           (setf window (nconc (rest window) (list element)))
-           (when (zerop (decf count))
-             (setf state :process)))
-         
-         (when (eq state :process)
-           (setf state :fill 
-                 count window-step)
-           (funcall function window)))))
-    (when duplicate-ends?
-      (let ((final-element (first (last window))))
-        (dotimes (i (1- window-size))
-          (setf window (nconc (rest window) (list final-element)))
-          (when (zerop (decf count))
-            (funcall function window)
-            (setf count window-step))))))
-  
+	(state :initial)
+	(count window-size))
+    (unless (empty-p container)
+      (when duplicate-ends?
+	(setf window (make-list window-size 
+				:initial-element (nth-element container 0))
+	      state :process))
+      (block do-it
+	(funcall iterator
+		 container
+		 (lambda (element)
+		   (when (eq state :initial)
+		     (push element window)
+		     (when (zerop (decf count))
+		       (setf window (nreverse window))
+		       (setf state :process)))
+		   (when (eq state :fill)
+		     (setf window (nconc (rest window) (list element)))
+		     (when (zerop (decf count))
+		       (setf state :process)))
+		   (when (eq state :process)
+		     (setf state :fill 
+			   count window-step)
+		     (funcall function window)))))
+      (when duplicate-ends?
+	(let ((final-element (first (last window))))
+	  (dotimes (i (1- window-size))
+	    (setf window (nconc (rest window) (list final-element)))
+	    (when (zerop (decf count))
+	      (funcall function window)
+	      (setf count window-step)))))))
   (values container))
 
 (defun map-pairs (container fn)
