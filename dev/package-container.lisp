@@ -23,7 +23,8 @@
 
 (defmethod iterate-elements ((container package-container) fn)
   (block iterator
-    (with-package-iterator (x (packages container) :internal :external :inherited)
+    (with-package-iterator (x (packages container)
+			      :internal :external :inherited)
       (loop
         (multiple-value-bind (more? symbol type) (x)
           (unless more? (return-from iterator))

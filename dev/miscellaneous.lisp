@@ -5,16 +5,16 @@
                                  (argument 'identity) (return :both)
                                  (filter (constantly t)))
   (%merge-helper
-   container #'iterate-elements merge-fn initial-fn key test argument return filter))
-
-;;; ---------------------------------------------------------------------------
+   container #'iterate-elements 
+   merge-fn initial-fn key test argument return filter))
 
 (defun merge-nodes (container merge-fn initial-fn 
                               &key (key 'identity) (test 'equal)
                               (argument 'identity) (return :both)
                               (filter (constantly t)))
   (%merge-helper
-   container #'iterate-nodes merge-fn initial-fn key test argument return filter))
+   container #'iterate-nodes
+   merge-fn initial-fn key test argument return filter))
 
 
 (defun %merge-helper (container iterator merge-fn initial-fn 
@@ -55,9 +55,8 @@
   (%container-counts container #'merge-nodes 
                      test key sort sort-on return weight filter))
 
-;;; ---------------------------------------------------------------------------
-
-(defun %container-counts (container merger test key sort sort-on return weight filter)
+(defun %container-counts 
+    (container merger test key sort sort-on return weight filter)
   (assert (member return '(:both :keys :counts)))
   (let ((result
          (funcall merger container
@@ -117,9 +116,8 @@
        (container window-size window-step function &key duplicate-ends?)
   "Moves a windows of size `window-size` across the elements of `container`, stepping by `window-step` each time. At each step, it applies function `fn` to the elements in the current window \(as a list\)."
   (map-window-over-elements-helper 
-   container 'iterate-elements window-size window-step function duplicate-ends?))
-
-;;; ---------------------------------------------------------------------------
+   container 'iterate-elements
+   window-size window-step function duplicate-ends?))
 
 (defun map-window-over-nodes
        (container window-size window-step function &key duplicate-ends?)
@@ -128,7 +126,8 @@
    container 'iterate-nodes window-size window-step function duplicate-ends?))
 
 (defun collect-window-over-elements
-       (container window-size window-step &key (transform 'identity) duplicate-ends?)
+       (container window-size window-step 
+	&key (transform 'identity) duplicate-ends?)
   "Moves a windows of size `window-size` across the elements of `container`, stepping by `window-step` each time. At each step, it applies function `fn` to the elements in the current window \(as a list\)."
   (let ((result nil))
     (map-window-over-elements-helper 
@@ -139,7 +138,8 @@
     (nreverse result)))
 
 (defun collect-window-over-nodes
-       (container window-size window-step &key (transform 'identity) duplicate-ends?)
+       (container window-size window-step 
+	&key (transform 'identity) duplicate-ends?)
   "Moves a windows of size `window-size` across the elements of `container`, stepping by `window-step` each time. At each step, it applies function `fn` to the elements in the current window \(as a list\)."
   (let ((result nil))
     (map-window-over-elements-helper 

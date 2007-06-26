@@ -487,7 +487,8 @@ arguments (args).")
     (loop for index = 0 then index
           while (< index (length array)) do
           (let ((current-size (length array)))
-            (funcall function (aref array index))       ;?? non-optimal for vectors
+					;?? non-optimal for vectors
+            (funcall function (aref array index))
             (when (= current-size (length array))
               (incf index)))))
   container)
@@ -501,32 +502,27 @@ arguments (args).")
 (defmethod find-item ((container contents-as-array-mixin) item)
   (find item (contents container)))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod some-item-p ((container iteratable-container-mixin) (predicate function))
+(defmethod some-item-p
+    ((container iteratable-container-mixin) (predicate function))
   (%some-thing-p container #'iterate-nodes predicate))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod every-item-p ((container iteratable-container-mixin) (predicate function))
+(defmethod every-item-p
+    ((container iteratable-container-mixin) (predicate function))
   (%every-thing-p container #'iterate-nodes predicate))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod some-element-p ((container iteratable-container-mixin) (predicate function))
+(defmethod some-element-p
+    ((container iteratable-container-mixin) (predicate function))
   (%some-thing-p container #'iterate-elements predicate))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod every-element-p ((container iteratable-container-mixin) (predicate function))
+(defmethod every-element-p
+    ((container iteratable-container-mixin) (predicate function))
   (%every-thing-p container #'iterate-elements predicate))
 
 (defun %every-thing-p (container iterator predicate)
   (funcall iterator container
            (lambda (item)
              (unless (funcall predicate item)
-               (return-from %every-thing-p nil))))
-  
+               (return-from %every-thing-p nil))))  
   (values t))
 
 (defun %some-thing-p (container iterator predicate)
