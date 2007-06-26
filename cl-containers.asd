@@ -1,8 +1,9 @@
 #|
 
 Author: Gary King, et. al.  
-most recent working over by Andrew Hannon, David Westbrook, Gary King, 
-Brent Heeringa, Louis Theran)
+
+Major contributions by Andrew Hannon, David Westbrook, Gary King, 
+Brent Heeringa, Louis Theran
 
 |#
 
