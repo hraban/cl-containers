@@ -61,8 +61,9 @@
                           :test #'equal))
   (insert-list b '((2) (3) (10) (1) (4)))
   (lift:ensure-same (size b) 5)
-  (lift:ensure-same (first (element (first-item b))) 1)
-  (lift:ensure-same (search-for-node b 1 :key #'first) (first-item b))
+  (lift:ensure-same (first (first-element b)) 1)
+  (lift:ensure-same (element (search-for-node b 1 :key #'first))
+		    (first-item b))
   (delete-item b '(2))
   (lift:ensure-same (size b) 4)
   (insert-item b '(7))
@@ -166,3 +167,17 @@
 
 
 |#
+
+
+(deftestsuite test-priority-queue-on-container (cl-containers-test)
+  ())
+
+(addtest (test-priority-queue-on-container)
+  add-and-delete
+  (let ((c (make-container 'priority-queue-on-container)))
+    (insert-item c 2)
+    (insert-item c 1)
+    (insert-item c 3)
+    (delete-element c 2)
+    (ensure-same (size c) 2 :test '=)
+    (ensure-same (first-element c) 1)))

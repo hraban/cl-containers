@@ -57,16 +57,16 @@
 ;;; ---------------------------------------------------------------------------
 
 ;; we sort keys of the nodes using sorter; we test equality with test.
-(defclass* binary-search-tree (initial-contents-mixin
-                                 sorted-container-mixin
-                                 findable-container-mixin
-                                 iteratable-container-mixin
-                                 container-uses-nodes-mixin
-                                 rooted-tree-container
-                                 concrete-container)
+(defclass* binary-search-tree (container-uses-nodes-mixin
+			       initial-contents-mixin
+			       sorted-container-mixin
+			       findable-container-mixin
+			       iteratable-container-mixin
+			       rooted-tree-container
+			       concrete-container)
   ((tree-size 0 iar))
   (:default-initargs
-    :key 'identity
+      :key 'identity
     :test 'eq
     :sorter '<))
 
@@ -133,7 +133,6 @@
          (key-item (funcall key (element item)))
          (current (root tree))
          (not-found? nil))
-
     (loop while (and (not (node-empty-p current))
                      (setf not-found? 
                            (not (funcall test
@@ -142,42 +141,24 @@
           (if (funcall sorter key-item
                        (funcall key (element current)))
             (setf current (left-child current))
-            (setf current (right-child current))))
-    
+            (setf current (right-child current))))    
     (if (and (not (node-empty-p current)) (not not-found?))
       current
       nil)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-node ((tree binary-search-tree) (item t))
-  (let* ((key (key tree))
-         (test (test tree))
-         (sorter (sorter tree))
-         (current (root tree))
-         (not-found? nil))
-    (loop while (and (not (node-empty-p current))
-                     (setf not-found? 
-                           (not (funcall test
-                                         item
-                                         (funcall key (element current)))))) do
-          (if (funcall sorter item (funcall key (element current)))
-            (setf current (left-child current))
-            (setf current (right-child current))))
-    
-    (if (and (not (node-empty-p current)) (not not-found?))
-      current
-      nil)))
+  (find-item tree (make-node-for-container tree item)))
 
 ;;; ---------------------------------------------------------------------------
 
 (defmethod first-element ((node bst-node))
+  (element (first-node node)))
+
+(defmethod first-node ((node bst-node))
   (let ((current node))
     (loop while (not (node-empty-p (left-child current))) do
           (setf current (left-child current)))
-    (element current)))
-
-;;; ---------------------------------------------------------------------------
+    current))
 
 (defmethod (setf first-element) (value (node bst-node))
   (let ((current node))
@@ -225,7 +206,7 @@
 
 (defmethod successor ((tree binary-search-tree) (node bst-node))
   (if (not (node-empty-p (right-child node)))
-    (first-element (right-child node))
+    (first-node (right-child node))
     (let ((y (parent node)))
       (loop while (and (not (node-empty-p y))
                        (eq node (right-child y))) do
@@ -289,11 +270,9 @@
       (setf (root tree) x)
       (if (equal y (left-child (parent y)))
         (setf (left-child (parent y)) x)
-        (setf (right-child (parent y)) x)))
-    
+        (setf (right-child (parent y)) x)))    
     (if (not (equal y node))
-      (setf (element node) (element y)))
-    
+      (setf (element node) (element y)))    
     y))
 
 (defmethod delete-node :after ((tree binary-search-tree) (node bst-node))
