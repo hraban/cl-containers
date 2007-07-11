@@ -1,4 +1,4 @@
-;;;-*- Mode: Lisp; Package: CONTAINERS -*-
+;;;-*- Mode: Lisp; Package: containers -*-
 
 (in-package #:containers)
 
