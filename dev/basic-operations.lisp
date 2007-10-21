@@ -482,22 +482,22 @@ arguments (args).")
 	 :fill-pointer (array-has-fill-pointer-p (contents container))
 	 :element-type (array-element-type (contents container)))))
 
+(defmethod search-for-item ((container contents-as-array-mixin) item &key
+                            (test (test container)) (key 'identity))
+  (loop for container-item across (contents container) do
+        (when (funcall test (funcall key container-item) item)
+          (return-from search-for-item container-item))))
+
 (defmethod iterate-nodes ((container contents-as-array-mixin) function)
-  (let ((array (contents container)))
-    (loop for index = 0 then index
-          while (< index (length array)) do
+  (let ((array (contents container))
+	(index 0))
+    (loop while (< index (length array)) do
           (let ((current-size (length array)))
 					;?? non-optimal for vectors
             (funcall function (aref array index))
             (when (= current-size (length array))
               (incf index)))))
   container)
-
-(defmethod search-for-item ((container contents-as-array-mixin) item &key
-                            (test (test container)) (key 'identity))
-  (loop for container-item across (contents container) 
-        when (funcall test (funcall key container-item) item) do
-        (return-from search-for-item container-item)))
 
 (defmethod find-item ((container contents-as-array-mixin) item)
   (find item (contents container)))

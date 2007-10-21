@@ -108,7 +108,7 @@ instructions."))
 			     (:file "weighted-sampling"
 				    :depends-on ("container-sampling"))))))
 
-#-sbcl
+#+(and (not sbcl) asdf-system-connections)
 (asdf:defsystem-connection containers-and-metacopy
   :requires (cl-containers metacopy)
   :components ((:module "dev"
