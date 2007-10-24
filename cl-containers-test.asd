@@ -9,19 +9,15 @@
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
   :description "Tests for CL-Containers"
-  :components ((:module 
-		"test"
-		:components 
-		((static-file "notes.text")
-                                     
-		 (:file "package")
-		 (:file "test-containers" 
-			:depends-on ("package"))
-		 (:file "misc" 
-			:depends-on ("test-containers"))
-		 (:file "trees" 
-			:depends-on ("test-containers"))
-		 #+Ignore
-		 (:file "test-*" 
-			:depends-on ("package")))))
+  :components ((:module "setup"
+			:pathname "tests/" 
+			:components ((:file "package")
+				     (:file "test-containers" 
+				      :depends-on ("package"))))
+	       (:module "tests"
+			:components 
+			((static-file "notes.text")
+			 (:file "priority-queues")
+			 (:file "misc")
+			 (:file "trees"))))
   :depends-on (:cl-containers :lift))
