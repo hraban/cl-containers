@@ -71,8 +71,8 @@
   (insert-item (container q) item))
 
 (defmethod delete-first ((q priority-queue-on-container))
-  (let ((m (first-element (container q))))
-    (delete-item (container q) m)
+  (let ((m (first-node (container q))))
+    (delete-node (container q) m)
     (element m)))
 
 (defmethod empty-p ((q priority-queue-on-container))
