@@ -166,17 +166,14 @@
           (setf current (left-child current)))
     (setf (element current) value)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod first-element ((tree binary-search-tree))
   (first-element (root tree)))
 
-;;; ---------------------------------------------------------------------------
+(defmethod first-node ((tree binary-search-tree))
+  (first-node (root tree)))
 
 (defmethod (setf first-element) (value (tree binary-search-tree))
   (setf (first-element (root tree)) value))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod last-element ((node bst-node))
   (let ((current node))
@@ -184,12 +181,8 @@
           (setf current (right-child current)))
     current))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod last-element ((tree binary-search-tree))
   (last-element (root tree)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf last-element) (value (node bst-node))
   (let ((current node))
