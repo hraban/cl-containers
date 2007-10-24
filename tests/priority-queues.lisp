@@ -8,7 +8,8 @@
 (deftestsuite test-delete-priority-queue (test-priority-queue)
   ()
   (:equality-test 'string=)
-  (:setup (insert-item q "a")
+  (:setup (empty! q)
+	  (insert-item q "a")
           (insert-item q "b")
           (insert-item q "c")))
 
