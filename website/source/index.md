@@ -25,8 +25,8 @@
 
 Common Lisp ships with a set of powerful built in data structures including the venerable list, full featured arrays, and hash-tables. CL-containers enhances and builds on these structures in two ways:
 
-  1. By adding containers that are not available in native Lisp (for example: binary search trees, red-black trees, sparse arrays and so on). 
-  2. By providing a standard interface so that they are simpler to use and so that changing design decisions becomes significantly easier.
+1. By adding containers that are not available in native Lisp (for example: binary search trees, red-black trees, sparse arrays and so on). 
+2. By providing a standard interface so that they are simpler to use and so that changing design decisions becomes significantly easier.
 
 Here is a slightly crazy picture of the class hierarchy for [containers][8] and for [generators. These are PDFs.][9]
 
