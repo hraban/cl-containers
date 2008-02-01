@@ -79,7 +79,7 @@ instructions."))
 	    :depends-on ("containers"))))
    (:module "website"
 	    :components ((:module "source"
-				  :components ((:static-file "index.lml"))))))
+				  :components ((:static-file "index.md"))))))
   :in-order-to ((test-op (load-op cl-containers-test)))
   :perform (test-op :after (op c)
                     (describe 

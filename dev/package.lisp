@@ -34,7 +34,8 @@
                 #:argmax
                 #:argmin
                 #:best-item
-                
+                #:filter
+
                 #:size
                 #:root
                 #:total-size
