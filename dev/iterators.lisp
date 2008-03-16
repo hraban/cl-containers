@@ -454,15 +454,19 @@ element returns current-element and allows for side-effects
            iterator-class
            parameters)))
 
-;;; ---------------------------------------------------------------------------
-
-(defun make-iterator (iteratee  &rest args &key (iterator-class nil) &allow-other-keys)
+(defmethod make-iterator
+    (iteratee  &rest args &key (iterator-class nil) &allow-other-keys)
   (apply #'make-instance 
          (apply #'determine-iterator-class iteratee iterator-class args)
          :container iteratee
          args))
 
-;;; ---------------------------------------------------------------------------
+(defmethod make-iterator
+    ((iteratee basic-iterator) &rest args &key &allow-other-keys)
+  (when args 
+    (warn "make-iterator not using args with ~a, ~a" 
+	  iteratee args))
+  iteratee)
 
 (defmethod class-for-contents-as ((contents t) (as t))
   (values nil))
