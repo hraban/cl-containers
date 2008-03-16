@@ -42,21 +42,18 @@ stemming
     (close (iterator-stream iterator))
     (setf (slot-value iterator 'close?) nil)))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod open-file-for-iterator ((object basic-stream-iterator) (filename string))
+(defmethod open-file-for-iterator
+    ((object basic-stream-iterator) (filename string))
   (values (open filename :if-does-not-exist :error
                 :direction :input)
           t))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod open-file-for-iterator ((object basic-stream-iterator) (filename pathname))
+(defmethod open-file-for-iterator
+    ((object basic-stream-iterator) (filename pathname))
   (open-file-for-iterator object (namestring filename)))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod open-file-for-iterator ((object basic-stream-iterator) (filename stream))
+(defmethod open-file-for-iterator
+    ((object basic-stream-iterator) (filename stream))
   (values filename nil))
 
 
