@@ -69,34 +69,22 @@ stemming
 (defclass* file-iterator (basic-stream-iterator)
   ((current-char nil r)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod base-class-for-iteratee ((container pathname))
   'file-iterator)
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod move ((iterator file-iterator) (direction (eql :forward)))
   (advance iterator))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod advance ((iterator file-iterator))
   (setf (slot-value iterator 'current-char) 
         (read-char (iterator-stream iterator) nil :eof)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod current-element ((iterator file-iterator))
   (current-char iterator))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod current-element-p ((iterator file-iterator))
   (and (call-next-method)
        (not (eq (current-char iterator) :eof))))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move-p ((iterator file-iterator) (direction (eql :forward)))
   (not (eq (current-char iterator) :eof)))
@@ -109,34 +97,22 @@ stemming
 (defclass* file-line-iterator (basic-stream-iterator)
   ((current-line nil r)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod move ((iterator file-line-iterator) (direction (eql :forward)))
   (advance iterator))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod advance ((iterator file-line-iterator))
   (setf (slot-value iterator 'current-line) 
         (read-line (iterator-stream iterator) nil :eof)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod current-element ((iterator file-line-iterator))
   (current-line iterator))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod current-element-p ((iterator file-line-iterator))
   (and (call-next-method)
        (not (eq (current-line iterator) :eof))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod move-p ((iterator file-line-iterator) (direction (eql :forward)))
   (not (eq (current-line iterator) :eof)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod class-for-contents-as ((contents pathname) (as (eql :lines)))
   'file-line-iterator)
@@ -317,20 +293,14 @@ stemming
        (or (not (skip-empty-chunks? iterator))
            (plusp (fill-pointer (cache iterator))))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod move-p ((iterator delimited-iterator) (direction (eql :forward)))
   (or (move-p (internal-iterator iterator) direction)
       (plusp (size (cache iterator)))))
-
-;;; ---------------------------------------------------------------------------
 
 (defclass* word-iterator (delimited-iterator)
   ()
   (:default-initargs
     :element-characterizer 'metatilities:whitespacep))
-
-;;; ---------------------------------------------------------------------------
 
 (defclass* line-iterator (delimited-iterator)
   ()
@@ -339,12 +309,8 @@ stemming
                                             (eq ch #\newline)
                                             (eq ch #\return)))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod class-for-contents-as ((contents t) (as (eql :lines)))
   'line-iterator)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod class-for-contents-as ((contents t) (as (eql :words)))
   'word-iterator)
