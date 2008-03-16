@@ -467,11 +467,10 @@ element returns current-element and allows for side-effects
 (defmethod class-for-contents-as ((contents t) (as t))
   (values nil))
   
-;;; ---------------------------------------------------------------------------
-
-(defmethod include-class-dependencies ((class-type (eql :iterator)) 
-                                         dynamic-class class-list &rest parameters
-                                         &key treat-contents-as &allow-other-keys)
+(defmethod include-class-dependencies
+    ((class-type (eql :iterator)) 
+     dynamic-class class-list &rest parameters
+     &key treat-contents-as &allow-other-keys)
   (declare (ignore dynamic-class parameters))
   (append class-list 
           (list
