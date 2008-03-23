@@ -1,5 +1,6 @@
 (in-package #:common-lisp-user)
 
+#+(or)
 (unless (find-symbol (symbol-name :next-element) (find-package :metatilities))
   (intern (symbol-name :next-element) (find-package :metatilities)))
 
@@ -300,6 +301,7 @@
   (:export #:current-element
            #:current-element-p
            #:element
+	   #:next-element
            #:move-p
            #:move
            #:move-forward
