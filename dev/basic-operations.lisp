@@ -9,18 +9,7 @@
   (:documentation "Creates a new container of type class using the additional
 arguments (args).")
   (:method ((class symbol) &rest args)
-           (apply #'make-instance class args)) 
-  
-  (:method ((classes list) &rest args)
-           (let ((name (find-matching-container-class classes))) 
-             (apply #'make-instance name args))))
-
-;;; ---------------------------------------------------------------------------
-
-(defun find-matching-container-class (classes)
-  (find-or-create-class 'abstract-container classes))
-
-;;; ---------------------------------------------------------------------------
+           (apply #'make-instance class args))) 
 
 (defgeneric empty-p (abstract-container)
   (:documentation "Returns t if there are no items in the container.")

@@ -5,7 +5,7 @@
   (intern (symbol-name :next-element) (find-package :metatilities)))
 
 (defpackage #:metabang.cl-containers
-  (:use #:common-lisp)
+  (:use #:common-lisp #:dynamic-classes)
   (:nicknames #:cl-containers #:containers)
   (:documentation
    "A library of container classes and algorithms for Common Lisp.")

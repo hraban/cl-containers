@@ -166,12 +166,6 @@ element returns current-element and allows for side-effects
    (transformed-element nil r)
    (compute-element? t r)))
 
-;;; ---------------------------------------------------------------------------
-
-(add-parameter->dynamic-class :iterator :transform 'transforming-iterator-mixin)
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod current-element :around ((iterator transforming-iterator-mixin))
   (cond ((compute-element? iterator)
          (setf (slot-value iterator 'compute-element?) nil
