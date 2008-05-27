@@ -22,7 +22,6 @@ stemming
         (open-file-for-iterator object container))
   
   (advance object)
-
   ;; if garbage collected close the stream
   (mopu:care-when-finalized object))
 

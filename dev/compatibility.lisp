@@ -1,6 +1,5 @@
 (in-package #:containers)
 
-
 ;;; ---------------------------------------------------------------------------
 ;;; just regular lists
 ;;; ---------------------------------------------------------------------------
@@ -13,8 +12,6 @@
 ;; need both b/c list-container cannot use abstract-containers
 (defmethod iterate-elements ((list list) fn)
   (mapc fn list))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((list list) fn)
   (mapc fn list))
@@ -167,8 +164,9 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod size ((vector vector))
-  ;; nb. Since we allow fill pointers now length and array-total-size may be different.
-  ;;     The implementation of empty-p and last-element suggest that size should be length.
+  ;; nb. Since we allow fill pointers now length and array-total-size 
+  ;; may be different. The implementation of empty-p and last-element 
+  ;; suggest that size should be length.
   (length vector))
 
 ;;; ---------------------------------------------------------------------------
@@ -265,8 +263,9 @@
 ;;; ---------------------------------------------------------------------------
 
 (defmethod size ((array array))
-  ;; nb. Since we allow fill pointers now length and array-total-size may be different.
-  ;;     The implementation of empty-p and last-element suggest that size should be length.
+  ;; nb. Since we allow fill pointers now length and array-total-size 
+  ;; may be different. The implementation of empty-p and last-element 
+  ;; suggest that size should be length.
   (length array))
 
 ;;; ---------------------------------------------------------------------------

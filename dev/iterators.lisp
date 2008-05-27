@@ -65,17 +65,11 @@ element returns current-element and allows for side-effects
   (:export-p t)
   (:export-slots-p t))
 
-;;; ---------------------------------------------------------------------------
-
 (defclass* abstract-generator ()
   ((iterator-position +iterator-before-beginning+ r)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod finish ((iterator abstract-generator))
   (values))
-
-;;; ---------------------------------------------------------------------------
 
 (defclass* basic-iterator (abstract-generator)
   ((initial-container nil ir :initarg :container)
@@ -86,21 +80,15 @@ element returns current-element and allows for side-effects
 (defmethod initialize-instance :after ((object basic-iterator) &key &allow-other-keys)
   (setup-initial-container object))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod setup-initial-container ((object basic-iterator))
   (setf (slot-value object 'iterating-container)
         (if (typep (initial-container object) 'uses-contents-mixin)
           (contents (initial-container object))
           (initial-container object))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod print-iterator ((iterator abstract-generator) stream)
   (declare (ignore stream))
   (values))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod reset :before ((iterator abstract-generator))
   (setf (slot-value iterator 'iterator-position) +iterator-before-beginning+))
@@ -111,68 +99,44 @@ element returns current-element and allows for side-effects
   (declare (ignore direction))
   (values nil))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod print-object ((object abstract-generator) stream)
   (print-unreadable-object (object stream :type t :identity t)
     (print-iterator object stream)))
-
-;;; ---------------------------------------------------------------------------
 
 #+Ignore
 (defmethod size ((iterator basic-iterator))
   ;; a decent general method
   (size (container iterator)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod print-iterator ((iterator basic-iterator) stream)
   (format stream "~D" (current-element-p iterator)))
-
-;;; ---------------------------------------------------------------------------
 
 (defclass* forward-iterator (basic-iterator iteratable-container-mixin)
   ())
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod iterate-container ((iterator forward-iterator) fn)
   (iterate-forward iterator fn))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((iterator forward-iterator) fn)
   (iterate-forward iterator fn))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod empty-p ((object forward-iterator))
   (not (move-forward-p object)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod element ((iterator abstract-generator))
   (current-element iterator))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod next-element ((iterator abstract-generator))
   (move-forward iterator)
   (current-element iterator))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod current-element-p ((iterator basic-iterator))
   (null (iterator-position iterator)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod element :around ((iterator abstract-generator))
   (unless (current-element-p iterator)
     (error 'no-current-element-error :iterator iterator))
   (call-next-method))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move :around ((iterator basic-iterator) direction)
   (cond ((iterator-position iterator)
@@ -183,17 +147,11 @@ element returns current-element and allows for side-effects
     (setf (slot-value iterator 'iterator-position)
           +iterator-after-end+)))
 
-;;; ---------------------------------------------------------------------------
-
 (defun move-forward-p (iterator)
   (move-p iterator :forward))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod move-forward ((iterator forward-iterator))
   (move iterator :forward))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-forward ((iterator basic-iterator) function)
   (loop while (move-forward-p iterator) do
@@ -224,8 +182,6 @@ element returns current-element and allows for side-effects
                (funcall (transform iterator) (call-next-method))))
         (t
          (transformed-element iterator))))
-         
-;;; ---------------------------------------------------------------------------
 
 (defmethod move :after ((iterator transforming-iterator-mixin) direction)
   (declare (ignorable direction))
@@ -239,13 +195,9 @@ element returns current-element and allows for side-effects
 (defclass* basic-filtered-iterator-mixin ()
   ())
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod move :after ((iterator basic-filtered-iterator-mixin) 
                         (direction (eql :forward)))
   (move-forward-to-next-element iterator))
-
-;;; ---------------------------------------------------------------------------
 
 (defclass* filtered-iterator-mixin (basic-filtered-iterator-mixin)
   ((filter nil ir)))
@@ -254,14 +206,10 @@ element returns current-element and allows for side-effects
 (defmethod element-passes-p and ((iterator filtered-iterator-mixin))
   (funcall (filter iterator) (current-element iterator)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod initialize-instance :around ((object filtered-iterator-mixin) &key)
   (prog1
     (call-next-method)
     (move-forward-to-next-element object)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move-forward-to-next-element ((iterator basic-iterator))
   (loop while (and (move-p iterator :forward)
@@ -284,12 +232,8 @@ element returns current-element and allows for side-effects
         (make-container 'simple-associative-container
                         :test (test object))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod element-passes-p and ((iterator unique-value-iterator-mixin))
   (not (item-at (visited iterator) (current-element iterator))))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod element :around ((iterator unique-value-iterator-mixin))
   (let ((element (call-next-method)))
@@ -346,25 +290,17 @@ element returns current-element and allows for side-effects
 (defclass* list-iterator (forward-iterator)
   ())
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod reset ((iterator list-iterator))
   (setup-initial-container iterator)
   iterator)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move ((iterator list-iterator) (direction (eql :forward)))
   (setf (slot-value iterator 'iterating-container) 
         (rest (iterating-container iterator)))
   (values))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod current-element ((iterator list-iterator))
   (first (iterating-container iterator)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move-p ((iterator list-iterator) (direction (eql :forward)))
   (not (null (iterating-container iterator))))
@@ -377,30 +313,20 @@ element returns current-element and allows for side-effects
 (defclass* array-iterator (forward-iterator)
   ((index 0 ir)))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod reset ((iterator array-iterator))
   (setf (slot-value iterator 'index) 0)
   iterator)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move ((iterator array-iterator) (direction (eql :forward)))
   (incf (slot-value iterator 'index))
   (values))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod current-element-p ((iterator array-iterator))
   (and (call-next-method)
        (< (index iterator) (size (iterating-container iterator)))))
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod current-element ((iterator array-iterator ))
   (row-major-aref (iterating-container iterator) (index iterator)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move-p ((iterator array-iterator ) (direction (eql :forward)))
   (< (index iterator) (size (iterating-container iterator))))
@@ -412,12 +338,8 @@ element returns current-element and allows for side-effects
 (defclass* hash-table-iterator (list-iterator)
   ())
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod initialize-instance :after ((object hash-table-iterator) &key)
   (reset object))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod reset ((iterator hash-table-iterator))
   (setf (slot-value iterator 'iterating-container) 
@@ -430,8 +352,6 @@ element returns current-element and allows for side-effects
 ;;; ---------------------------------------------------------------------------
 
 (defvar *current-iteratee* nil)
-
-;;; ---------------------------------------------------------------------------
 
 (defun determine-iterator-class (iteratee iterator-class &rest parameters)
   (let ((*current-iteratee* iteratee))
@@ -472,17 +392,11 @@ element returns current-element and allows for side-effects
 (defmethod base-class-for-iteratee ((container list))
   'list-iterator)
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod base-class-for-iteratee ((container array))
   'array-iterator)
 
-;;; ---------------------------------------------------------------------------
-
 (defmethod base-class-for-iteratee ((container hash-table))
   'hash-table-iterator)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod base-class-for-iteratee ((container uses-contents-mixin))
   (base-class-for-iteratee (contents container)))
@@ -494,8 +408,6 @@ element returns current-element and allows for side-effects
 
 (defun determine-generator-class (generator-class &rest parameters)
   (apply #'determine-dynamic-class :generator generator-class parameters))
-
-;;; ---------------------------------------------------------------------------
 
 (defun make-generator (&rest args &key (generator-class nil) &allow-other-keys)
   (apply #'make-instance 
@@ -529,8 +441,6 @@ element returns current-element and allows for side-effects
 
 (defmethod move-p ((iterator arithmetic-sequence-generator) (direction (eql :forward)))
   (values t))
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod current-element ((iterator arithmetic-sequence-generator))
   (slot-value iterator 'element))
@@ -584,16 +494,12 @@ element returns current-element and allows for side-effects
           (apply fn (mapcar #'current-element iterators))
           (mapc #'move-forward iterators))))
 
-;;; ---------------------------------------------------------------------------
-
 (defun collect-containers (fn &rest containers)
   (let ((result nil))
     (apply #'map-containers (lambda (&rest args)
                               (push (apply fn args) result))
            containers)
     (nreverse result)))
-
-;;; ---------------------------------------------------------------------------
 
 (defmacro with-iterator ((var source &rest args) &body body)
   `(let (,var)
@@ -604,19 +510,14 @@ element returns current-element and allows for side-effects
        (when ,var (finish ,var)))))
 
 
-
 #| Old, non iterator version
 (defun map-containers (fn &rest containers)
   (apply #'mapc fn
          (mapcar #'listify containers)))
 
-;;; ---------------------------------------------------------------------------
-
 (defun collect-containers (fn &rest containers)
   (apply #'mapcar fn
          (mapcar #'listify containers)))
-
-;;; ---------------------------------------------------------------------------
 
 (defgeneric listify (container)
   (:method ((container list)) (values container))
