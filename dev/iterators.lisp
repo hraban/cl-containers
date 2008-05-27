@@ -1,3 +1,5 @@
+(in-package #:cl-containers)
+
 #|
 IF we were going to re-write, would we write collect / iterate in terms
 of iterators or vis verso?!
@@ -43,17 +45,12 @@ element returns current-element and allows for side-effects
   in unique-value-iterator-mixin
 |#
 
-(in-package #:containers)
-
-;;; ---------------------------------------------------------------------------
 
 (defconstant +iterator-before-beginning+ :pre)
 
 (defconstant +iterator-after-end+ :post)
 
-;;; ---------------------------------------------------------------------------
-
-(defcondition basic-iterator-condition ()
+(metatilities:defcondition basic-iterator-condition ()
   ((iterator nil ir))
   (:export-p t)
   (:export-slots-p t))

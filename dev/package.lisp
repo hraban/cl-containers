@@ -33,6 +33,7 @@
 
                 #:size
                 #:root
+                #:next-element
                 #:total-size
                 #:element-type)
   
@@ -297,7 +298,6 @@
   (:export #:current-element
            #:current-element-p
            #:element
-	   #:next-element
            #:move-p
            #:move
            #:move-forward
