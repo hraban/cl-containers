@@ -250,11 +250,6 @@ element returns current-element and allows for side-effects
 (defclass* filtered-iterator-mixin (basic-filtered-iterator-mixin)
   ((filter nil ir)))
 
-;;; ---------------------------------------------------------------------------
-
-(add-parameter->dynamic-class :iterator :filter 'filtered-iterator-mixin)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod element-passes-p and ((iterator filtered-iterator-mixin))
   (funcall (filter iterator) (current-element iterator)))
@@ -283,13 +278,8 @@ element returns current-element and allows for side-effects
                                           test-container-mixin)
   ((visited nil ir)))
 
-;;; ---------------------------------------------------------------------------
-
-(add-parameter->dynamic-class :iterator :unique 'unique-value-iterator-mixin)
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod initialize-instance :after ((object unique-value-iterator-mixin) &key)
+(defmethod initialize-instance
+    :after ((object unique-value-iterator-mixin) &key)
   (setf (slot-value object 'visited)
         (make-container 'simple-associative-container
                         :test (test object))))
@@ -337,10 +327,6 @@ element returns current-element and allows for side-effects
     ;;?? perhaps an ugly hack?!
     (move-forward iterator))
   (values t))
-
-;;; ---------------------------------------------------------------------------
-
-(add-parameter->dynamic-class :iterator :circular 'circular-iterator-mixin)
 
 #+Test
 (let ((i (make-iterator '(1 2 3) :circular t)))
@@ -483,13 +469,6 @@ element returns current-element and allows for side-effects
                  (class-for-contents-as *current-iteratee* treat-contents-as))
             (base-class-for-iteratee *current-iteratee*)))))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod existing-subclass ((class-type (eql :iterator)) class-list)
-  (find-existing-subclass 'abstract-generator class-list))
-
-;;; ---------------------------------------------------------------------------
-
 (defmethod base-class-for-iteratee ((container list))
   'list-iterator)
 
@@ -522,22 +501,6 @@ element returns current-element and allows for side-effects
   (apply #'make-instance 
          (apply #'determine-generator-class generator-class args) args))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod include-class-dependencies ((class-type (eql :generator)) 
-                                       dynamic-class class-list &rest parameters)
-  (declare (ignore parameters)
-           #+allegro
-           (ignorable dynamic-class))
-  (if (some (lambda (x) (mopu:subclassp x 'abstract-generator)) class-list)
-    class-list
-    (append class-list (list 'abstract-generator))))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod existing-subclass ((class-type (eql :generator)) class-list)
-  (find-existing-subclass 'abstract-generator class-list))
-
 
 ;;; ---------------------------------------------------------------------------
 ;;; sequences
@@ -558,20 +521,6 @@ element returns current-element and allows for side-effects
 (defmethod initialize-instance :after ((object arithmetic-sequence-generator) &key)
   (setf (slot-value object 'element) (start object)))
 
-;;; ---------------------------------------------------------------------------
-
-;;?? Gary King 2005-07-18: didn't work??
-(add-dynamic-class-for-parameters :generator 'arithmetic-sequence-generator
-                                    nil '(:start :by))
-
-(add-parameter->dynamic-class :generator :start 'arithmetic-sequence-generator)
-(add-parameter->dynamic-class :generator :by 'arithmetic-sequence-generator)
-
-(add-parameter->dynamic-class :generator :transform 'transforming-iterator-mixin)
-(add-parameter->dynamic-class :generator :filter 'filtered-iterator-mixin)
-(add-parameter->dynamic-class :generator :unique 'unique-value-iterator-mixin)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move ((iterator arithmetic-sequence-generator) (direction (eql :forward)))
   (incf (slot-value iterator 'element) (by iterator)))
@@ -591,9 +540,6 @@ element returns current-element and allows for side-effects
 (defclass* finite-arithmetic-sequence-generator (arithmetic-sequence-generator)
   ((end 0 ir)))
 
-(add-parameter->dynamic-class :generator :end 'finite-arithmetic-sequence-generator)
-
-;;; ---------------------------------------------------------------------------
 
 (defmethod move-p ((iterator finite-arithmetic-sequence-generator) (direction (eql :forward)))
   (<= (current-element iterator) (end iterator)))

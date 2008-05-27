@@ -17,13 +17,6 @@
                 #:samep
                 #:set-equal
 
-                #:add-parameter->dynamic-class
-                #:add-dynamic-class-for-parameters
-                #:determine-dynamic-class
-                #:existing-subclass
-                #:find-existing-subclass
-                #:include-class-dependencies
-
                 #:*samep-test*
                 #:parent
                 #:element
