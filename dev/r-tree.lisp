@@ -1,4 +1,3 @@
-
 (in-package :eksl-utilities)
 
 
@@ -1217,55 +1216,3 @@ OLD STUFF FOR ORIGINAL 1995 ALGORITHM...
 
 |#
 
-;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-;;; EOF
-;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-#|
-
-$Log: r-tree.lisp,v $
-Revision 1.1  2004/08/26 19:39:01  gwking
-moved from utilities
-
-Revision 1.16  2004/07/12 15:53:23  gwking
-removed container->list; changed signature of collect-elements, collect-elements-stabley, collect-items and collect-key-value. Bugzid: 1025.
-
-Revision 1.15  2002/12/04 18:00:12  gwking
-changed distance to neighbor-distance
-
-Revision 1.14  2002/01/18 18:22:28  heeringa
-Added Gary's change to find-leaf-node
-Fixed the r-tree-depth error
-
-Revision 1.13  2002/01/04 20:46:01  gwking
-copyable stuff
-
-Revision 1.12  2001/11/26 18:56:45  heeringa
-Added promises and promise-pruning.  Reworked algorithm a bit too.
-
-Revision 1.11  2001/10/19 17:59:14  heeringa
-Added promises and promise-pruning.  Reworked algorithm a bit too.
-
-Revision 1.10  2001/09/05 14:04:48  gwking
-Added some more methods for euclidean-distance*
-
-Revision 1.9  2001/08/29 14:55:12  gwking
-Added container-node-mixin and container-uses-nodes-mixin and lots of other fun stuff
-
-Revision 1.7  2001/08/07 01:04:14  heeringa
-Fixed misspelling
-
-Revision 1.6  2001/08/06 21:14:53  heeringa
-Added euclidean-distance for lists
-
-Revision 1.5  2001/08/06 17:48:12  heeringa
-Added some usage comments
-
-Revision 1.4  2001/08/06 17:27:02  heeringa
-Added labelled r-tree-items
-
-Revision 1.3  2001/07/29 03:14:38  heeringa
-Added nearest-neighbor queries
-
-
-|#
