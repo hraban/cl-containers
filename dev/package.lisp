@@ -82,6 +82,7 @@
            
            #:stable-associative-container
            #:iteratable-container-mixin
+           #:key-value-iteratable-container-mixin
            
            #:set-container
            #:bag-container
@@ -126,6 +127,7 @@
            total-size                    ; bounded-container-mixin
            
            iteratable-p
+           key-value-iteratable-p
            
            ;;?? deprecated
            iterate-container             ; iteratable-container-mixin

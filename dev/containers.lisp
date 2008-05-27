@@ -241,10 +241,17 @@ be instantiated using make-container."))
 
 (defgeneric iteratable-p (thing)
   (:documentation "Returns true if thing knows how to iterate-nodes.")
+  (:method ((thing t))
+           (values nil))
   (:method ((thing iteratable-container-mixin))
            (values t)))
 
-;;; ---------------------------------------------------------------------------
+(defgeneric key-value-iteratable-p (thing)
+  (:documentation "Returns true if thing knows how to iterate-nodes.")
+  (:method ((thing t))
+           (values nil))
+  (:method ((thing key-value-iteratable-container-mixin))
+           (values t)))
 
 ;;?? deprecate
 ;;?? backward compatibility
