@@ -14,9 +14,8 @@ stemming
   ((stream nil i :reader iterator-stream)
    (close? nil r)))
 
-;;; ---------------------------------------------------------------------------
-   
-(defmethod initialize-instance :after ((object basic-stream-iterator) &key container)
+(defmethod initialize-instance :after
+    ((object basic-stream-iterator) &key container)
   (setf (values (slot-value object 'stream)
                 (slot-value object 'close?))
         (open-file-for-iterator object container))
@@ -158,7 +157,8 @@ stemming
 ;;; ---------------------------------------------------------------------------
 
 (defclass* delimited-iterator (forward-iterator)
-  ((cache (make-array 20 :element-type 'character :fill-pointer 0 :adjustable t) r)
+  ((cache (make-array 20 :element-type 'character
+		      :fill-pointer 0 :adjustable t) r)
    (current-chunk nil r)
    (internal-iterator nil r)
    (element-characterizer 'metatilities:whitespacep ia)

@@ -58,9 +58,8 @@ element returns current-element and allows for side-effects
   (:export-p t)
   (:export-slots-p t))
 
-;;; ---------------------------------------------------------------------------
-
-(defcondition no-current-element-error (basic-iterator-condition error)
+(metatilities:defcondition no-current-element-error
+    (basic-iterator-condition error)
   ()
   (:export-p t)
   (:export-slots-p t))
@@ -75,9 +74,8 @@ element returns current-element and allows for side-effects
   ((initial-container nil ir :initarg :container)
    (iterating-container nil r)))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod initialize-instance :after ((object basic-iterator) &key &allow-other-keys)
+(defmethod initialize-instance
+    :after ((object basic-iterator) &key &allow-other-keys)
   (setup-initial-container object))
 
 (defmethod setup-initial-container ((object basic-iterator))
@@ -91,9 +89,8 @@ element returns current-element and allows for side-effects
   (values))
 
 (defmethod reset :before ((iterator abstract-generator))
-  (setf (slot-value iterator 'iterator-position) +iterator-before-beginning+))
-
-;;; ---------------------------------------------------------------------------
+  (setf (slot-value iterator 'iterator-position)
+	+iterator-before-beginning+))
 
 (defmethod move-p ((iterator abstract-generator) direction)
   (declare (ignore direction))
@@ -263,9 +260,8 @@ element returns current-element and allows for side-effects
 (defclass* circular-iterator-mixin ()
   ())
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod move-p ((iterator circular-iterator-mixin) (direction (eql :forward)))
+(defmethod move-p ((iterator circular-iterator-mixin) 
+		   (direction (eql :forward)))
   (unless (call-next-method)
     (reset iterator)
     ;;?? perhaps an ugly hack?!
@@ -361,9 +357,9 @@ element returns current-element and allows for side-effects
            parameters)))
 
 (defmethod make-iterator
-    (iteratee  &rest args &key (iterator-class nil) &allow-other-keys)
+    (iteratee &rest args &key (iterator-class nil) &allow-other-keys)
   (apply #'make-instance 
-         (apply #'determine-iterator-class iteratee iterator-class args)
+	 (apply #'determine-iterator-class iteratee iterator-class args)
          :container iteratee
          args))
 
@@ -428,30 +424,28 @@ element returns current-element and allows for side-effects
    (by 1 ir)
    (element nil r)))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod initialize-instance :after ((object arithmetic-sequence-generator) &key)
+(defmethod initialize-instance 
+    :after ((object arithmetic-sequence-generator) &key)
   (setf (slot-value object 'element) (start object)))
 
 
 (defmethod move ((iterator arithmetic-sequence-generator) (direction (eql :forward)))
   (incf (slot-value iterator 'element) (by iterator)))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod move-p ((iterator arithmetic-sequence-generator) (direction (eql :forward)))
+(defmethod move-p ((iterator arithmetic-sequence-generator)
+		   (direction (eql :forward)))
   (values t))
 
 (defmethod current-element ((iterator arithmetic-sequence-generator))
   (slot-value iterator 'element))
 
-;;; ---------------------------------------------------------------------------
-
-(defclass* finite-arithmetic-sequence-generator (arithmetic-sequence-generator)
+(defclass* finite-arithmetic-sequence-generator 
+    (arithmetic-sequence-generator)
   ((end 0 ir)))
 
 
-(defmethod move-p ((iterator finite-arithmetic-sequence-generator) (direction (eql :forward)))
+(defmethod move-p ((iterator finite-arithmetic-sequence-generator)
+		   (direction (eql :forward)))
   (<= (current-element iterator) (end iterator)))
 
 #|
@@ -478,9 +472,10 @@ element returns current-element and allows for side-effects
 
 (subtypep 'finite-arithmetic-sequence-generator 'abstract-generator) 
 
-(u::remove-redundant-classes '(finite-arithmetic-sequence-generator
-                               arithmetic-sequence-generator transforming-iterator-mixin
-                               abstract-generator))
+(remove-redundant-classes
+ '(finite-arithmetic-sequence-generator
+   arithmetic-sequence-generator transforming-iterator-mixin
+   abstract-generator))
 |#
 
 ;;; ---------------------------------------------------------------------------

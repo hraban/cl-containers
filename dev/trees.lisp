@@ -59,14 +59,14 @@
 ;; we sort keys of the nodes using sorter; we test equality with test.
 (defclass* binary-search-tree (container-uses-nodes-mixin
 			       initial-contents-mixin
-			       sorted-container-mixin
-			       findable-container-mixin
-			       iteratable-container-mixin
-			       rooted-tree-container
-			       concrete-container)
+                                 sorted-container-mixin
+                                 findable-container-mixin
+                                 iteratable-container-mixin
+                                 rooted-tree-container
+                                 concrete-container)
   ((tree-size 0 iar))
   (:default-initargs
-      :key 'identity
+    :key 'identity
     :test 'eq
     :sorter '<))
 
@@ -141,7 +141,7 @@
           (if (funcall sorter key-item
                        (funcall key (element current)))
             (setf current (left-child current))
-            (setf current (right-child current))))    
+            (setf current (right-child current))))
     (if (and (not (node-empty-p current)) (not not-found?))
       current
       nil)))
@@ -263,9 +263,9 @@
       (setf (root tree) x)
       (if (equal y (left-child (parent y)))
         (setf (left-child (parent y)) x)
-        (setf (right-child (parent y)) x)))    
+        (setf (right-child (parent y)) x)))
     (if (not (equal y node))
-      (setf (element node) (element y)))    
+      (setf (element node) (element y)))
     y))
 
 (defmethod delete-node :after ((tree binary-search-tree) (node bst-node))

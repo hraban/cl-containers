@@ -467,8 +467,10 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod print-container ((hash-table hash-table) &optional (stream *standard-output*))
-  (iterate-key-value hash-table (lambda (k v) (format stream "~&(~s => ~s)" k v))))
+(defmethod print-container ((hash-table hash-table)
+			    &optional (stream *standard-output*))
+  (iterate-key-value hash-table 
+		     (lambda (k v) (format stream "~&(~s => ~s)" k v))))
 
 
 ;;; ---------------------------------------------------------------------------

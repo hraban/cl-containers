@@ -7,7 +7,8 @@
 (defpackage #:metabang.cl-containers
   (:use #:common-lisp)
   (:nicknames #:cl-containers #:containers)
-  (:documentation "A library of container classes and algorithms for Common Lisp.")
+  (:documentation
+   "A library of container classes and algorithms for Common Lisp.")
   (:import-from #:metatilities
                 #:deprecated
                 #:defclass*
