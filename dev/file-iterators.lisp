@@ -22,16 +22,7 @@ stemming
   
   (advance object)
   ;; if garbage collected close the stream
-  (mopu:care-when-finalized object))
-
-;;; ---------------------------------------------------------------------------
-
-(defmethod mopu:when-finalized ((iterator basic-stream-iterator))
-  ;;??
-  ;(format t "~%GC: Maybe closing stream" iterator)
-  (finish iterator))
-
-;;; ---------------------------------------------------------------------------
+  (apply-if-exists 'care-when-finalized 'mopu object))
 
 (defmethod finish ((iterator basic-stream-iterator))
   (when (and (close? iterator)

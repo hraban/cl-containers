@@ -95,13 +95,12 @@ instructions."))
            ((o test-op) (c (eql (find-system 'cl-containers))))
   (values nil))
 
-#|
+
 #+asdf-system-connections
-(asdf:defsystem-connection dynamic-containers
+(asdf:defsystem-connection containers-moptilities
   :requires (cl-containers moptilities)
   :components ((:module "dev"
-                        :components ((:file "dynamic-classes")))))
-|#
+                        :components ((:file "moptilities")))))
 
 #+asdf-system-connections
 (asdf:defsystem-connection containers-and-utilities
