@@ -7,7 +7,12 @@
 (defmethod iteratable-p ((thing list))
   (values t))
 
-;;; ---------------------------------------------------------------------------
+;; need both b/c list-container cannot use abstract-containers
+(defmethod iterate-elements ((list null) fn)
+  (declare (ignore fn)))
+
+(defmethod iterate-nodes ((list null) fn)
+  (declare (ignore fn)))
 
 ;; need both b/c list-container cannot use abstract-containers
 (defmethod iterate-elements ((list list) fn)
