@@ -421,7 +421,8 @@ arguments (args).")
 
 (defmethod insert-new-item ((container searchable-container-mixin) item
                             &key (test (test container)) (key (key container)))
-  (unless (search-for-item container item :test test :key key)
+  (unless (search-for-item container (funcall key item)
+                           :test test :key key)
     (insert-item container item))
   (values container))
 
