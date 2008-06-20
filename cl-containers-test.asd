@@ -15,6 +15,7 @@
 				     (:file "test-containers" 
 				      :depends-on ("package"))))
 	       (:module "tests"
+			:depends-on ("setup")
 			:components 
 			((static-file "notes.text")
 			 (:file "priority-queues")
