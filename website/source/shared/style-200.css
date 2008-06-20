@@ -1,6 +1,91 @@
 /* @override http://common-lisp.net/project/cl-containers/shared/style.css */
 
-/* @group header-footer */
+/* @group documentation */
+
+.hidden {
+	visibility: hidden;
+}
+
+.documentation .header {
+	display: block;
+	position: relative;
+	border-top-style: solid;
+	border-top-width: 1pt;
+	padding-top: 4px;
+	margin-top: 1.2em;
+}
+
+.documentation .name-and-args {
+	width: 80%;
+	float: left;	
+}
+
+.documentation {
+	margin-right: 1em;
+	margin-left: 1em;
+	clear: both;
+	color: black;
+}
+
+.function {
+}
+
+.documentation .contents {
+	top: 10px;
+	position: relative;
+	clear: both;
+	margin-bottom: 1.8em;
+}
+
+.documentation-name {
+	font-weight: bold;
+	float: left;
+	padding-right: 0.1em;
+}
+
+.documentation-kind {
+	float: right;
+	font-style: italic;
+	color: gray;
+	padding-left: 10px;
+}
+
+.documentation-arguments {
+	float: left;
+	font-style: italic;
+	margin-left: 2em;
+	clear: both;
+	white-space: normal;
+}
+
+.documentation p {
+	clear: both;
+	margin-right: 1em;
+	margin-left: 1em;
+}
+
+.documentation .marker {
+	color: gray;
+	font-size: 90%;
+}
+
+.docs-group .name-and-args span {
+	float: left;
+	margin-right: 1em;
+	clear: right;
+}
+
+.docs-group .documentation-name  {
+	margin-right: 0em;
+	margin-left: -1.9em;
+	clear: right;
+}
+
+.functor .documentation-arguments {
+	white-space: pre;
+}
+
+/* @end */
 
 #header {
 		position:relative; /* Position is declared "relative" to gain control of stacking order (z-index). */
@@ -13,17 +98,10 @@
 	padding: 1mm 1mm 1mm 1em;
 }
 
-#footer {
+.footer {
 	font-size: small;
 	font-style: italic;
-	padding-top: 2mm;
-	padding-bottom: 2mm;
-	clear: both;
-}
-
-#buttons {
 	background-color: #ff9f07;
-	color: white;
      border-top: 2px solid;
      border-bottom: 2px solid;
 	border-color:#002244;
@@ -34,7 +112,7 @@
 	height: 04mm;
 }
 
-#footer-text {
+.footer-text {
 	color: black;
 	float: right;
     padding-top: 3em;
@@ -43,49 +121,24 @@
 	background: inherit;
 }
 
-#footer a:link {
+.footer a:link {
 	font-weight:bold;
-	color:#ffffff;
 	text-decoration:underline;
 	background: inherit;
 }
 
-#footer a:visited {
-	font-weight:bold;
-	color:#ffffff; 
+.footer a:visited {
+	font-weight:bold; 
 	text-decoration:underline;
 	background: inherit;
 }
 
-#footer a:hover { 
+.footer a:hover { 
 	font-weight:bold; 
 	color:#002244; 
 	text-decoration:underline;
 	background: inherit;
 }
-
-#timestamp {
-	float: right;
-	margin-right: 1em;
-	clear: none;
-}
-
-#footer h3 {
-	float: left;
-	margin-top: 2mm;
-	margin-bottom: 0;
-	margin-left: 1em;
-	clear: none;
-}
-
-#footer p {
-	margin-left: 1em;
-	float: left;
-	clear: left;
-}
-
-
-/* @end */
 
 .system-links {
 	list-style: url(http://common-lisp.net/project/cl-containers/images/lambda.png);
@@ -106,6 +159,11 @@
 	width: 80%;
 	padding-left: 0em;
 	float: right;
+}
+
+.system-description p, li, .documentation {
+	margin-right: 2em;
+	padding-right: 2em;
 }
 
 .check {
