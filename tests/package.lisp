@@ -8,7 +8,6 @@
                 #:defclass*
                 #:defcondition
                 #:ensure-list
-                #:find-or-create-class
                 #:length-at-most-p 
                 #:length-at-least-p
                 #:length-1-list-p
