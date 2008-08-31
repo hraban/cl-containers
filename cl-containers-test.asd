@@ -20,5 +20,6 @@
 			((static-file "notes.text")
 			 (:file "priority-queues")
 			 (:file "misc")
-			 (:file "trees"))))
+			 (:file "trees")
+			 (:file "dlist"))))
   :depends-on (:cl-containers :lift))

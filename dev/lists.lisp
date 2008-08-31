@@ -205,7 +205,7 @@ so it best for small containers."
 		 :type
 		 #+(or) 
 		 dlist-container-node)
-   (size nil ia))
+   (size 0 ia))
   (:documentation "A double-linked list"))
 
 (defmethod make-node-for-container ((container dlist-container) 
