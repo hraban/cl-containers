@@ -55,10 +55,9 @@
   (:default-initargs 
     :container-type 'binary-search-tree))
 
-;;; ---------------------------------------------------------------------------
-
-(defmethod initialize-instance :around ((object priority-queue-on-container) &rest args 
-                                        &key container-type &allow-other-keys)
+(defmethod initialize-instance :around
+    ((object priority-queue-on-container) &rest args 
+     &key container-type &allow-other-keys)
   (remf args :container-type)
   (remf args :initial-contents)
   (setf (slot-value object 'container)
