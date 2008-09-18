@@ -29,11 +29,6 @@ be instantiated using make-container."))
 
 ;;; ---------------------------------------------------------------------------
 
-(defclass* list-container (contents-as-list-mixin concrete-container)
-  ())
-
-;;; ---------------------------------------------------------------------------
-
 (defclass* parent-node-mixin (container-node-mixin)
   ((parent nil ia))
   (:documentation "A mixin for nodes with parent pointers"))
@@ -460,6 +455,8 @@ classified-container-mixin, and the classifier returns one of :TOP-LEFT,
   (declare (ignore args))
   (values nil))
 
+(defclass* list-container (contents-as-list-mixin concrete-container)
+  ())
 
 ;;; ---------------------------------------------------------------------------
 ;;; contents-as-hashtable-mixin

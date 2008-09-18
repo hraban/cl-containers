@@ -43,7 +43,7 @@ instructions."))
      (:file "stacks"
 	    :depends-on ("package" "basic-operations"))
      (:file "trees"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("package" "basic-operations" "vectors"))
      (:file "lists"
 	    :depends-on ("package" "basic-operations"))
      (:file "bags-and-sets"
