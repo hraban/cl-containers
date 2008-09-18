@@ -177,9 +177,10 @@
 
 ;;; ---------------------------------------------------------------------------
 
-(defmethod item-at! :before ((container flexible-vector-container) value &rest indices)
+(defmethod item-at! :before 
+    ((container flexible-vector-container) value &rest indices)
   (declare (ignore value)
-           (dynamic-extent indicies))
+           (dynamic-extent indices))
   (resize-vector container (1+ (first indices))))
 
 ;;; ---------------------------------------------------------------------------
