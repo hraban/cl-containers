@@ -1,9 +1,5 @@
 (in-package #:common-lisp-user)
 
-#+(or)
-(unless (find-symbol (symbol-name :next-element) (find-package :metatilities))
-  (intern (symbol-name :next-element) (find-package :metatilities)))
-
 (defpackage #:metabang.cl-containers
   (:use #:common-lisp)
   (:nicknames #:cl-containers #:containers)

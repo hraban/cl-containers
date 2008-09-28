@@ -135,21 +135,15 @@ instructions."))
   ("immutable-containers" :depends-on ("conditions"))
   :system containers)
 
-;;; ---------------------------------------------------------------------------
-
 (define-eksl-module :container-tables 
   ((("table-container"
      "file-backed-table-container")))
   :system containers
   :depends-on (containers moptilities))
 
-;;; ---------------------------------------------------------------------------
-
 (define-eksl-module :r-tree
   ("r-tree")
   :system :containers)
-
-;;; ---------------------------------------------------------------------------
 
 (define-eksl-module :container-thread-safe 
   ((("container-thread-safe")))

@@ -375,8 +375,6 @@ element returns current-element and allows for side-effects
 (defclass* basic-generator (forward-iterator)
   ())
 
-;;; ---------------------------------------------------------------------------
-
 (defclass* arithmetic-sequence-generator (basic-generator)
   ((start 0 ir)
    (by 1 ir)
@@ -386,8 +384,8 @@ element returns current-element and allows for side-effects
     :after ((object arithmetic-sequence-generator) &key)
   (setf (slot-value object 'element) (start object)))
 
-
-(defmethod move ((iterator arithmetic-sequence-generator) (direction (eql :forward)))
+(defmethod move ((iterator arithmetic-sequence-generator)
+		 (direction (eql :forward)))
   (incf (slot-value iterator 'element) (by iterator)))
 
 (defmethod move-p ((iterator arithmetic-sequence-generator)
@@ -401,7 +399,6 @@ element returns current-element and allows for side-effects
     (arithmetic-sequence-generator)
   ((end 0 ir)))
 
-
 (defmethod move-p ((iterator finite-arithmetic-sequence-generator)
 		   (direction (eql :forward)))
   (<= (current-element iterator) (end iterator)))
@@ -414,7 +411,7 @@ element returns current-element and allows for side-effects
  (make-generator :end 10 :start 5))
 
 (collect-elements
- (make-iterator '(1 2 3)))
+ (make-iterator '(1 2 3) :iterator-class 'list-iterator))
 
 (collect-items
  (make-iterator '(1 2 3)))
@@ -462,27 +459,3 @@ element returns current-element and allows for side-effects
          ,@body)
        (when ,var (finish ,var)))))
 
-
-#| Old, non iterator version
-(defun map-containers (fn &rest containers)
-  (apply #'mapc fn
-         (mapcar #'listify containers)))
-
-(defun collect-containers (fn &rest containers)
-  (apply #'mapcar fn
-         (mapcar #'listify containers)))
-
-(defgeneric listify (container)
-  (:method ((container list)) (values container))
-  (:method ((container list-container)) (values (contents container))))
-
-|#
-
-#|
-(let ((i (make-iterator #(1 2 3))))
-  (loop repeat 10 do 
-        (let ((e (u:next-element i)))
-          (print e)
-          (if (= e 3)
-            (reset i)))))
-|#
