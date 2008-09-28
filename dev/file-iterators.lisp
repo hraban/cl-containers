@@ -22,7 +22,7 @@ stemming
   
   (advance object)
   ;; if garbage collected close the stream
-  (apply-if-exists 'care-when-finalized 'mopu object))
+  (funcall-if-exists 'care-when-finalized 'mopu object))
 
 (defmethod finish ((iterator basic-stream-iterator))
   (when (and (close? iterator)

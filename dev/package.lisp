@@ -18,6 +18,7 @@
                 #:samep
                 #:set-equal
                 #:apply-if-exists
+		#:funcall-if-exists
 
                 #:*samep-test*
                 #:parent
