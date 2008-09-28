@@ -96,7 +96,7 @@ instructions."))
 (asdf:defsystem-connection containers-moptilities
   :requires (cl-containers moptilities)
   :components ((:module "dev"
-                        :components ((:file "moptilities")))))
+                        :components ((:file "containers-moptilities")))))
 
 #+asdf-system-connections
 (asdf:defsystem-connection containers-and-utilities
