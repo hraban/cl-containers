@@ -85,7 +85,7 @@ instructions."))
                     (describe 
 		     (funcall (intern (symbol-name '#:run-tests) :lift) 
 			      :config :generic)))
-  :depends-on (:metatilities-base))
+  :depends-on ((:version :metatilities-base "0.6.6")))
 
 (defmethod operation-done-p 
            ((o test-op) (c (eql (find-system 'cl-containers))))
