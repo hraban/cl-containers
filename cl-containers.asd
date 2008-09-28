@@ -74,8 +74,6 @@ instructions."))
 	    :depends-on ("iterator-api" "basic-operations"))
      (:file "file-iterators"
 	    :depends-on ("iterators"))
-     (:file "dynamic-classes"
-	    :depends-on ("iterators"))
      #+(or digitool openmcl)
      (:file "containers-readtable"
 	    :depends-on ("containers"))))
@@ -87,9 +85,7 @@ instructions."))
                     (describe 
 		     (funcall (intern (symbol-name '#:run-tests) :lift) 
 			      :config :generic)))
-  :depends-on (:asdf-system-connections
-               :metatilities-base 
-               :dynamic-classes))
+  :depends-on (:metatilities-base))
 
 (defmethod operation-done-p 
            ((o test-op) (c (eql (find-system 'cl-containers))))
@@ -122,6 +118,15 @@ instructions."))
   :requires (cl-containers metacopy)
   :components ((:module "dev"
                         :components ((:file "copying")))))
+
+
+#+asdf-system-connections
+(asdf:defsystem-connection containers-and-dynamic-classes
+  :requires (cl-containers dynamic-classes)
+  :components ((:module 
+		"dev"
+		:components ((:file "dynamic-classes")))))
+
 
 
 #|

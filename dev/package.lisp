@@ -5,7 +5,7 @@
   (intern (symbol-name :next-element) (find-package :metatilities)))
 
 (defpackage #:metabang.cl-containers
-  (:use #:common-lisp #:dynamic-classes)
+  (:use #:common-lisp)
   (:nicknames #:cl-containers #:containers)
   (:documentation
    "A library of container classes and algorithms for Common Lisp.")
@@ -340,12 +340,3 @@
   (:export #:packages
            #:present-symbols-only-p
            #:exported-symbols-only-p))
-
-#|
-                #:add-parameter->dynamic-class
-                #:add-dynamic-class-for-parameters
-                #:determine-dynamic-class
-                #:existing-subclass
-                #:find-existing-subclass
-                #:include-class-dependencies
-|#                

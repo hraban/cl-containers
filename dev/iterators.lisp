@@ -338,19 +338,14 @@ element returns current-element and allows for side-effects
 ;;; make-iterator
 ;;; ---------------------------------------------------------------------------
 
-(defvar *current-iteratee* nil)
-
-(defun determine-iterator-class (iteratee iterator-class &rest parameters)
-  (let ((*current-iteratee* iteratee))
-    (apply #'determine-dynamic-class 
-           :iterator 
-           iterator-class
-           parameters)))
-
 (defmethod make-iterator
     (iteratee &rest args &key (iterator-class nil) &allow-other-keys)
   (apply #'make-instance 
-	 (apply #'determine-iterator-class iteratee iterator-class args)
+	 (or 
+	  (metatilities:apply-if-exists
+	   'determine-iterator-class 'cl-containers
+	   iteratee iterator-class args)
+	  iterator-class)
          :container iteratee
          args))
 
@@ -361,44 +356,16 @@ element returns current-element and allows for side-effects
 	  iteratee args))
   iteratee)
 
-(defmethod class-for-contents-as ((contents t) (as t))
-  (values nil))
-  
-(defmethod include-class-dependencies
-    ((class-type (eql :iterator)) 
-     dynamic-class class-list &rest parameters
-     &key treat-contents-as &allow-other-keys)
-  (declare (ignore dynamic-class parameters))
-  (append class-list 
-          (list
-           (or
-            (and treat-contents-as
-                 (class-for-contents-as *current-iteratee* treat-contents-as))
-            (base-class-for-iteratee *current-iteratee*)))))
-
-(defmethod base-class-for-iteratee ((container list))
-  'list-iterator)
-
-(defmethod base-class-for-iteratee ((container array))
-  'array-iterator)
-
-(defmethod base-class-for-iteratee ((container hash-table))
-  'hash-table-iterator)
-
-(defmethod base-class-for-iteratee ((container uses-contents-mixin))
-  (base-class-for-iteratee (contents container)))
-
-
 ;;; ---------------------------------------------------------------------------
 ;;; some generators
 ;;; ---------------------------------------------------------------------------
 
-(defun determine-generator-class (generator-class &rest parameters)
-  (apply #'determine-dynamic-class :generator generator-class parameters))
-
 (defun make-generator (&rest args &key (generator-class nil) &allow-other-keys)
   (apply #'make-instance 
-         (apply #'determine-generator-class generator-class args) args))
+	 (or
+	  (apply-if-exists 'determine-generator-class 'cl-containers
+			   generator-class args)
+	  generator-class) args))
 
 
 ;;; ---------------------------------------------------------------------------
