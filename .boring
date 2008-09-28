@@ -37,3 +37,6 @@
 (^|/)two words($|/)
 (^|/)test-results($|/)
 \.dribble
+\.drb
+(^|/)make($|/)
+
