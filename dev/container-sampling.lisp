@@ -5,27 +5,23 @@
   (use-package (find-package 'cl-variates) 
                (find-package 'cl-containers)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-item ((container t) 
                         (generator variates:random-number-generation-mixin))
   (sample-item container (variates:random-number-generator generator)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-item ((container iteratable-container-mixin) 
                         (generator variates:basic-random-number-generator))
   (let ((index (variates:integer-random generator 0 (1- (size container)))))
     (nth-item container index)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-item ((container sequence) 
                         (generator variates:basic-random-number-generator))
   (declare (inline sample-element))
   (sample-element container generator))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod nth-item ((container iteratable-container-mixin) index)
   ;; possibly slow but servicable method
@@ -36,33 +32,28 @@
        (return-from nth-item elt))))
   (error "Index ~D out of range for container ~A" index container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-element ((container t) 
                            (generator variates:random-number-generation-mixin))
   (sample-element container (variates:random-number-generator generator)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-element ((container (eql nil)) 
                            (generator variates:basic-random-number-generator))
   (values nil))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-element ((container iteratable-container-mixin) 
                            (generator variates:basic-random-number-generator))
   (let ((element (variates:integer-random generator 0 (1- (size container)))))
     (nth-element container element)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-element ((container sequence) 
                            (generator variates:basic-random-number-generator))
   (let ((element (variates:integer-random generator 0 (1- (size container)))))
     (nth-element container element)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-unique-elements ((container t) 
                                    (generator variates:random-number-generation-mixin)
@@ -80,7 +71,6 @@
         unless (zerop bit) collect
         (nth-element container index)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-unique-elements ((container list) 
                                    (generator variates:basic-random-number-generator)
@@ -92,7 +82,6 @@
         unless (zerop bit) collect
         (nth-element container index)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-unique-elements ((container array) 
                                    (generator variates:basic-random-number-generator)
@@ -104,7 +93,6 @@
         unless (zerop bit) collect
         (nth-element container index)))
 
-;;; ---------------------------------------------------------------------------
 
 #+SLOWER
 ;;?? Gary King 2005-11-04: intuitively, this should win because it bails out 
@@ -135,14 +123,12 @@
           (loop repeat 1000 do
                 (sample-unique-elements l *random-generator* 10))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-elements ((container t) 
                            (generator variates:random-number-generation-mixin)
                            (count integer))
   (sample-elements container (variates:random-number-generator generator) count))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-elements ((container iteratable-container-mixin) 
                             (generator variates:basic-random-number-generator)
@@ -150,7 +136,6 @@
   (loop repeat count collect
         (sample-element container generator)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sample-elements ((container list) 
                             (generator variates:basic-random-number-generator)
@@ -158,7 +143,6 @@
   (loop repeat count collect
         (sample-element container generator)))
 
-;;; ---------------------------------------------------------------------------
 
 (defun safe-sample-unique-elements (container generator count)
   (if (length-at-most-p container count)
@@ -177,7 +161,6 @@
               (setf (item-at c i j) (* (1+ i) (1+ j)))))
   (containers::sample-unique-elements c variates:*random-generator* 5))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod variates:shuffle-elements! ((container abstract-container)
                                        &key (generator variates:*random-generator*) 
@@ -187,7 +170,6 @@
       (rotatef (nth-element container (variates:integer-random generator 0 size))
                (nth-element container (variates:integer-random generator 0 size))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod variates:shuffle-elements! ((container uses-contents-mixin)
                                        &rest args)

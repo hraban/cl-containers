@@ -5,5 +5,4 @@
               (subtypep class 'concrete-container))
             (subclasses (find-class root)))))
 
-;;; ---------------------------------------------------------------------------
 

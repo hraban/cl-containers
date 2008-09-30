@@ -1,6 +1,5 @@
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; Ring Buffers
 ;;;
 ;;; Code adapted from ANSI Common Lisp by Paul Graham (chapter 7)
@@ -8,7 +7,6 @@
 ;;; A ring buffer is a bounded queue. It supports:
 ;;;   item-at (setf item-at)
 ;;;   insert-item, dequeue, empty!, empty-p, size, total-size, first-element
-;;; ---------------------------------------------------------------------------
 
 (defclass* ring-buffer (abstract-queue
                           bounded-container-mixin
@@ -33,7 +31,6 @@
      (remf args :total-size)
      (make-ring-buffer total-size)))
 
-;;; ---------------------------------------------------------------------------
 
 ;;?? the (first indexes) is odd...
 (defmethod item-at ((container ring-buffer) &rest indexes)
@@ -47,7 +44,6 @@
                 (mod (first indexes) (total-size container)))
          value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod increment-end ((container ring-buffer))
    (with-slots (buffer-end buffer-start) container
@@ -56,25 +52,21 @@
        (incf buffer-start))
      (incf buffer-end)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod next-item ((container ring-buffer))
   (increment-end container)
   (current-item container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod current-item ((container ring-buffer))
   (item-at container (buffer-end container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((container ring-buffer) item)
    (prog1
      (setf (item-at container (buffer-end container)) item)
      (increment-end container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-first ((container ring-buffer))
    (with-slots (buffer-start) container
@@ -82,7 +74,6 @@
        (item-at container buffer-start)
        (incf buffer-start))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((container ring-buffer))
    (with-slots (buffer-end buffer-start)
@@ -92,28 +83,23 @@
 
    (values))
 
-;;; ---------------------------------------------------------------------------
 
 #+Ignore
 (defmethod total-size ((container ring-buffer))
    (total-size container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod size ((container ring-buffer))
    (- (buffer-end container) (buffer-start container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod first-element ((container ring-buffer))
    (item-at container (buffer-start container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container ring-buffer))
    (setf (item-at container (buffer-start container)) value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((container ring-buffer) fn)
    (loop for index from (buffer-start container) to (1- (buffer-end container)) do

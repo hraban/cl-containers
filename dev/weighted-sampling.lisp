@@ -10,7 +10,6 @@ you set up and then sample repeatedly. More like a random 'element' generator.
   (export '(weighted-sampling-container
             weight)))
 
-;;; ---------------------------------------------------------------------------
 
 (defclass* weighted-sampling-container (priority-queue-on-container)
   ((total-weight 0d0 a)
@@ -18,7 +17,6 @@ you set up and then sample repeatedly. More like a random 'element' generator.
   (:default-initargs
     :random-number-generator variates:*random-generator*))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod initialize-instance :around ((object weighted-sampling-container) &rest args
                                         &key random-number-generator)
@@ -27,40 +25,33 @@ you set up and then sample repeatedly. More like a random 'element' generator.
   (remf args :random-number-generator)
   (apply #'call-next-method object args))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod element-weight ((container weighted-sampling-container) thing)
   (funcall (key container) thing))
 
-;;; ---------------------------------------------------------------------------
 
 #+Wait
 (defmethod element-weight ((container weighted-sampling-container) 
                            (thing container-node-mixin))
   (element-weight container (element thing)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item :after ((container weighted-sampling-container) thing)
   (incf (total-weight container) (element-weight container thing)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item :after ((container weighted-sampling-container) thing)
   (decf (total-weight container) (element-weight container thing)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-node :after ((container weighted-sampling-container) 
                                (node container-node-mixin))
   (decf (total-weight container) (element-weight container (element node))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-first ((container weighted-sampling-container))
   (delete-item container (variates:next-element container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod variates:next-element ((container weighted-sampling-container))
   (let* ((target-weight (variates:uniform-random (random-number-generator container)

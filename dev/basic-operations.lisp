@@ -1,9 +1,7 @@
 
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; stuff and nonsense
-;;; ---------------------------------------------------------------------------
 
 (defgeneric make-container (class &rest args)
   (:documentation "Creates a new container of type class using the additional
@@ -16,37 +14,31 @@ arguments (args).")
   (:method ((container t))
            (zerop (size container))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-elements ((container abstract-container) fn)
   (iterate-nodes container fn))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-elements ((container container-uses-nodes-mixin) fn) 
   (iterate-nodes container
                      (lambda (x)
                        (funcall fn (element x)))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-element ((container container-uses-nodes-mixin) (thing t))
   (let ((node (find-node container thing)))
     (when node (element node))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((container container-uses-nodes-mixin) (item t))
   (let ((it (search-for-node container item)))
     (when it
       (delete-item container it))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-element ((container container-uses-nodes-mixin) (thing t))
   (delete-item container thing))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-container ((container iteratable-container-mixin) 
                             &optional (stream *standard-output*))
@@ -55,7 +47,6 @@ arguments (args).")
                         (print item stream)))
   (values container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod nth-element :around ((container t) (index integer))
   (if (< -1 index (size container))
@@ -63,7 +54,6 @@ arguments (args).")
     (error 'index-out-of-range-error :container container
            :index index)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod nth-element ((container iteratable-container-mixin) (index integer))
   ;; possibly slow but servicable method
@@ -74,19 +64,16 @@ arguments (args).")
        (return-from nth-element elt))))
   (error "Index ~D out of range for container ~A" index container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-nodes ((container iteratable-container-mixin) 
                           &key filter transform)
   (collector-internal container #'iterate-nodes filter transform))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-elements ((container iteratable-container-mixin) 
                              &key filter transform)
   (collector-internal container #'iterate-elements filter transform))
 
-;;; ---------------------------------------------------------------------------
 
 (defun collector-internal (container iterate-fn filter-fn transform-fn)
   (let ((result nil))
@@ -99,25 +86,21 @@ arguments (args).")
                          item) result))))
     (nreverse result)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-item ((container iteratable-container-mixin) item &key
                             (test (test container)) (key 'identity))
   (%search-in-container container 'iterate-elements item test key))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-element ((container iteratable-container-mixin) item &key
                                (test (test container)) (key 'identity))
   (%search-in-container container 'iterate-elements item test key))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-node ((container iteratable-container-mixin) item &key
                             (test (test container)) (key 'identity))
   (%search-in-container container 'iterate-nodes item test key))
 
-;;; ---------------------------------------------------------------------------
 
 (defun %search-in-container (container iterator item test key)
   (funcall iterator container
@@ -126,13 +109,11 @@ arguments (args).")
                (return-from %search-in-container (values x t)))))
   (values nil nil))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-match ((container iteratable-container-mixin) 
                              predicate &key (key 'identity))
   (%search-for-match container predicate key))
 
-;;; ---------------------------------------------------------------------------
 
 (defun %search-for-match (container predicate key)
   (iterate-elements container
@@ -141,7 +122,6 @@ arguments (args).")
                         (return-from %search-for-match element))))
   nil)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-matching-node ((container iteratable-container-mixin) 
                                      predicate &key (key 'identity))
@@ -151,7 +131,6 @@ arguments (args).")
                          (return-from search-for-matching-node element))))
   nil)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-node ((container container-uses-nodes-mixin) 
                             (item t) &key
@@ -161,7 +140,6 @@ arguments (args).")
                       (when (funcall test item (funcall key (element node)))
                         (return-from search-for-node (values node t))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-node ((container container-uses-nodes-mixin)
                             (item container-node-mixin) &key
@@ -172,7 +150,6 @@ arguments (args).")
                          (return-from search-for-node (values node t)))))
   (values nil nil))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-node* ((container container-uses-nodes-mixin) 
                              (item t) &key
@@ -180,7 +157,6 @@ arguments (args).")
   (search-for-node container (make-node-for-container container item)
                    :test test :key key))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-node* ((container container-uses-nodes-mixin)
                              (item container-node-mixin) &key
@@ -191,33 +167,27 @@ arguments (args).")
                          (return-from search-for-node* (values element t)))))
   (values nil nil))
 
-;;; ---------------------------------------------------------------------------
 ;;; best-item and its friends, argmax and argmin
-;;; ---------------------------------------------------------------------------
 
 (defmethod best-item ((container iteratable-container-mixin) function 
                         &key (key 'identity) (test '>) (filter nil))
   (%best-helper container #'iterate-elements function key test filter))
 
-;;; ---------------------------------------------------------------------------
  
 (defmethod best-item ((items list) function &key (key 'identity) (test '>)
                       (filter 'identity))
   (%best-helper items #'iterate-elements function key test filter))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod best-node (container function 
                                 &key (key 'identity) (test '>) (filter nil))
   (%best-helper container #'iterate-nodes function key test filter))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod best-element (container function 
                                    &key (key 'identity) (test '>) (filter nil))
   (%best-helper container #'iterate-elements function key test filter))
 
-;;; ---------------------------------------------------------------------------
 
 (defun %best-helper (container iterator function key test filter)
   (if (empty-p container)
@@ -238,13 +208,11 @@ arguments (args).")
                              result-found? t))))))
       (values result max-value t))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod argmax ((items t) function &rest args &key key filter)
   (declare (ignore key filter))
   (apply #'best-item items function :test #'> args))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod argmin ((items t) function &rest args &key key filter)
   (declare (ignore key filter))
@@ -267,7 +235,6 @@ arguments (args).")
   (argmin (make-container 'list-container :initial-contents '(1 0 -2 3 -4))
             (lambda (x) (* x x))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod reduce-container ((container iteratable-container-mixin)
                              function
@@ -279,7 +246,6 @@ arguments (args).")
            (ignore key initial-value initial-value-supplied-p start end))
   (apply #'reduce-elements container function args))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod reduce-elements ((container iteratable-container-mixin)
                             function
@@ -290,7 +256,6 @@ arguments (args).")
    container #'iterate-elements function key initial-value
    initial-value-supplied-p start end))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod reduce-nodes ((container iteratable-container-mixin)
                          function
@@ -301,7 +266,6 @@ arguments (args).")
    container #'iterate-nodes function key initial-value 
    initial-value-supplied-p start end))
 
-;;; ---------------------------------------------------------------------------
 
 #+NotYet
 (defmethod reduce-key-value ((container iteratable-container-mixin)
@@ -312,7 +276,6 @@ arguments (args).")
    container #'iterate-nodes function key initial-value
    initial-value-supplied-p start end))
 
-;;; ---------------------------------------------------------------------------
 
 (defun reduce-internal (container iterator function key initial-value supplied-p
                                   start end)
@@ -349,7 +312,6 @@ arguments (args).")
   (reduce-container (make-container 'list-container :initial-contents '(5 0 1 -2 3 -4)) 'max
                     :initial-value 7 :key '1+))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item-if ((container iteratable-container-mixin) test)
   (iterate-elements container
@@ -358,7 +320,6 @@ arguments (args).")
                         (delete-item container item))))
   (values container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod first-element ((container iteratable-container-mixin))
   (iterate-nodes
@@ -366,36 +327,30 @@ arguments (args).")
    (lambda (item)
      (return-from first-element item))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container iteratable-container-mixin))
   (declare (ignore value))
   (error "Don't know how to set the first element of ~A" container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item :after ((container container-uses-nodes-mixin)
                                (item i-know-my-node-mixin))
   (setf (my-node item) nil))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Default (and not necessary efficient generic implementations)
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-list ((container non-associative-container-mixin) list)
   (dolist (item list)
     (delete-item container item))
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-list ((container non-associative-container-mixin) list)
   (dolist (item list)
     (insert-item container item))
   container)
 
-;;; ---------------------------------------------------------------------------
 
 ;;?? :start :end :test?
 (defmethod insert-sequence ((container ordered-container-mixin) (sequence array))
@@ -403,21 +358,18 @@ arguments (args).")
         (insert-item container item))
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-sequence ((container ordered-container-mixin) (sequence list))
   (loop for item in sequence do
         (insert-item container item))
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-sequence ((container ordered-container-mixin) 
                             (sequence iteratable-container-mixin))
   (iterate-elements sequence (lambda (element) (insert-item container element)))
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-new-item ((container searchable-container-mixin) item
                             &key (test (test container)) (key (key container)))
@@ -442,28 +394,22 @@ arguments (args).")
 	     :element element))
     (funcall operation container element)))
 
-;;; ---------------------------------------------------------------------------
 ;;; contents-as-sequence-mixin
-;;; ---------------------------------------------------------------------------
 
 (defmethod size ((container contents-as-sequence-mixin))
   (length (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty-p ((container contents-as-sequence-mixin))
   (= (size container) 0))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sort-elements ((container contents-as-sequence-mixin) sorter
                            &key (key 'identity))
   (setf (slot-value container 'contents) 
         (sort (contents container) sorter :key key)))
 
-;;; ---------------------------------------------------------------------------
 ;;; contents-as-array-mixin
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((container contents-as-array-mixin))
   (setf (contents container)
@@ -523,49 +469,40 @@ arguments (args).")
   (values nil))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; contents-as-list-mixin
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((container contents-as-list-mixin) item)
   (push item (slot-value container 'contents))
   (values item))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod append-item ((container contents-as-list-mixin) item)
   (setf (contents container) (nreverse (contents container)))
   (push item (contents container))
   (setf (contents container) (nreverse (contents container))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod append-new-item ((container contents-as-list-mixin) item
                             &key (test 'eq) (key 'identity))
   (unless (member item (contents container) :test test :key key)
     (append-item container item)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty-p ((container contents-as-list-mixin))
   (null (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((container contents-as-list-mixin))
   (setf (slot-value container 'contents) nil)
   (values))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod search-for-item ((container contents-as-list-mixin) item &key
                             (test (test container)) (key 'identity))
   (find item (contents container) :test test :key key))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; contents-as-hashtable-mixin
-;;; ---------------------------------------------------------------------------
 
 #+Remove
 ;; Gary King 2006-05-14: redundent with the definition for uses-contents-mixin
@@ -587,7 +524,6 @@ arguments (args).")
   (clrhash (contents container))
   (values))
 
-;;; ---------------------------------------------------------------------------
 
 ;;?? same as method for bag/set-container
 (defmethod search-for-item ((container contents-as-hashtable-mixin) item &key
@@ -598,14 +534,12 @@ arguments (args).")
                (return-from search-for-item (values k t))))
            (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((container contents-as-hashtable-mixin) fn)
   (iterate-key-value container (lambda (k v)
                                  (declare (ignore k))
                                  (funcall fn v))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-keys ((container contents-as-hashtable-mixin) function)
   (maphash (lambda (k v)
@@ -613,7 +547,6 @@ arguments (args).")
              (funcall function k))
            (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-key-value ((container key-value-iteratable-container-mixin) 
                               &rest args &key filter transform)
@@ -621,7 +554,6 @@ arguments (args).")
            (ignore filter transform))
   (apply #'%collect-key-value container args))
 
-;;; ---------------------------------------------------------------------------
 
 (defun %collect-key-value (container &key filter transform)
   (let ((result nil))
@@ -634,12 +566,10 @@ arguments (args).")
     (nreverse result)))
 
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-item ((container contents-as-hashtable-mixin) item)
   (values (gethash item (contents container))))
 
-;;; ---------------------------------------------------------------------------
 
 ;; slow, but works
 (defmethod reverse-find ((container contents-as-hashtable-mixin) 
@@ -650,7 +580,6 @@ arguments (args).")
                          (return-from reverse-find k))))
   nil)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-value ((container contents-as-hashtable-mixin) item)
   (multiple-value-bind (value found?)
@@ -659,9 +588,7 @@ arguments (args).")
       value)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; stable-associative-container
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at! ((object stable-associative-container) value &rest indexes)
   (multiple-value-bind 
@@ -675,7 +602,6 @@ arguments (args).")
     (setf (apply #'item-at (slot-value object 'associative-container) indexes) 
           value)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod add-default-item ((object stable-associative-container) &rest indexes)
   (when (has-initial-element-p (slot-value object 'associative-container))
@@ -683,7 +609,6 @@ arguments (args).")
                    (incf (slot-value object 'counter)))
           (if (length-1-list-p indexes) (first indexes) indexes))))
            
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((object stable-associative-container) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -694,22 +619,18 @@ arguments (args).")
       (apply #'add-default-item object indexes))
     o))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod size ((container stable-associative-container))
   (size (slot-value container 'numbered-container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-keys ((container stable-associative-container) fn)
   (iterate-keys (slot-value container 'associative-container) fn))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((container stable-associative-container) fn)
   (iterate-nodes (slot-value container 'associative-container) fn))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-elements-stably ((container stable-associative-container) fn)
   (iterate-key-value-stably container
@@ -717,12 +638,10 @@ arguments (args).")
                               (declare (ignore k))
                               (funcall fn v))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-key-value ((container stable-associative-container) fn)
   (iterate-key-value (slot-value container 'associative-container) fn))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-keys ((container stable-associative-container)
                          &rest args &key filter transform)
@@ -731,7 +650,6 @@ arguments (args).")
   (apply #'collect-keys (slot-value container 'associative-container)
          args))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-key-value-stably ((container stable-associative-container) fn)
   (loop for i from 1 to (size (slot-value container 'numbered-container))
@@ -740,7 +658,6 @@ arguments (args).")
          fn key (apply #'item-at (slot-value container 'associative-container) 
                        (ensure-list key)))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-key-value-stably ((container stable-associative-container))
   (let ((result nil))
@@ -750,13 +667,11 @@ arguments (args).")
        (push (cons k v) result)))
     (nreverse result)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-elements-stably ((container iteratable-container-mixin) 
                                     &key filter transform)
   (collector-internal container #'iterate-elements-stably filter transform))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty! ((container stable-associative-container))
   (setf (slot-value container 'counter) 0)
@@ -764,9 +679,7 @@ arguments (args).")
   (empty! (slot-value container 'numbered-container)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; associative-array
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at! ((container associative-array) value &rest indexes)
   (setf (apply #'item-at
@@ -776,7 +689,6 @@ arguments (args).")
                      (tuple-index container i index)))
         value))
 
-;;; ---------------------------------------------------------------------------
 
 (defun tuple-index (container dim index)
   (with-slots (dim-container num-container) container
@@ -787,7 +699,6 @@ arguments (args).")
               (setf result (incf (item-at num-container dim)))))
       result)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((container associative-array) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -797,7 +708,6 @@ arguments (args).")
                  for dim = 0 then (1+ dim) collect
                  (item-at (item-at dim-container dim) index)))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((container associative-array) fn)
   (with-slots (row-container col-container) container
@@ -805,20 +715,17 @@ arguments (args).")
           (loop for j from 0 to (1- (size col-container)) do
                 (funcall fn (item-at (array-data container) i j))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod container-dimension ((container associative-array) dimension)
   (with-slots (dim-container) container
     (size (item-at dim-container dimension))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod dimensions ((container associative-array))
   (with-slots (dimensions dim-container) container
     (loop for dim from 0 to (1- dimensions) collect
           (size (item-at dim-container dim)))))
 
-;;; ---------------------------------------------------------------------------
 
 #+Example
 (let ((c (make-container 'associative-array :test #'equal :dimensions 2)))
@@ -831,14 +738,11 @@ arguments (args).")
   (print (item-at c "two" "B"))
   c)
 
-;;; ---------------------------------------------------------------------------
 ;;; some high level helpers
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-item ((container container-uses-nodes-mixin) (item t))
   (find-item container (make-node-for-container container item)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((container container-uses-nodes-mixin) (item t))
   (let ((node (make-node-for-container container item)))
@@ -846,9 +750,7 @@ arguments (args).")
             node)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Odd (in a non-prejoritive sense) methods
-;;; ---------------------------------------------------------------------------
 
 ;;?? Gary King 2003-04-06: cute but probably not cuddly
 (defun collect-using (map-fn filter &rest args)
@@ -867,7 +769,6 @@ the map-fn signature has the function to be applied as its last argument."
     
     (nreverse result)))
 
-;;; ---------------------------------------------------------------------------
 
 (defun count-using (map-fn filter &rest args)
   "Counts stuff by applying the map-fn to the arguments. Assumes that
@@ -880,7 +781,6 @@ the map-fn signature has the function to be applied as its last argument."
     
     (values result)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod container-difference (c1 c2 &key (key1 'identity)
                                     (key2 'identity))
@@ -889,7 +789,6 @@ the map-fn signature has the function to be applied as its last argument."
                                  (let ((real-e (funcall key1 e)))
                                    (not (search-for-item c2 real-e :key key2))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defun associative-container-p (container)
   "Returns true if the container is associative. Tries to work for native Lisp
@@ -900,19 +799,16 @@ containers too."
     (abstract-container (values nil t))
     (t (values nil nil))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod add-initial-contents ((object initial-contents-mixin) 
                                  (initial-contents list))
   (add-initial-contents-internal object initial-contents))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod add-initial-contents ((object initial-contents-mixin) 
                                  (initial-contents iteratable-container-mixin))
   (add-initial-contents-internal object initial-contents))
 
-;;; ---------------------------------------------------------------------------
 
 (defun add-initial-contents-internal (object initial-contents)
   ;; not necessarily the fastest, but should work as a good default
@@ -920,7 +816,6 @@ containers too."
                     (lambda (element)
                       (insert-item object element))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod add-initial-contents ((object initial-contents-key-value-mixin)
                                  initial-contents)
@@ -930,7 +825,6 @@ containers too."
         (setf (item-at object (first contents)) (second contents))
         (setf contents (rest contents))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod element-position ((container iteratable-container-mixin) element
                              &key (test 'eq) (key 'identity))
@@ -943,13 +837,11 @@ containers too."
        (incf position)))
     (values nil)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod element-position ((container contents-as-sequence-mixin) element
                              &key (test 'eq) (key 'identity))
   (position element (contents container) :test test :key key))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod samep ((l1 list-container) 
                   (l2 list-container))
@@ -966,7 +858,6 @@ containers too."
 (defmethod samep ((l1 list) (l2 list))
   (set-equal l1 l2))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod reverse-container ((container ordered-container-mixin))
   ;; expensive generic method

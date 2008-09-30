@@ -1,13 +1,11 @@
 
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric copy-container (abstract-container)
   (:method ((container abstract-container))
            (metacopy:copy-thing container)))
 
-;;; ---------------------------------------------------------------------------
 
 (metacopy:defcopy-methods container-node-mixin :copy-all t)
 

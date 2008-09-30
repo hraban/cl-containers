@@ -1,8 +1,6 @@
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; heap-container
-;;; ---------------------------------------------------------------------------
 
 (defclass* heap-container (sorted-container-mixin
                            vector-container
@@ -12,48 +10,39 @@
     :sorter #'>
     :initial-size 0))
 
-;;; ---------------------------------------------------------------------------
 
 (defclass* heap-node (container-node-mixin)
   ((index nil ia)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-object ((node heap-node) stream)
   (print-unreadable-object (node stream :type t :identity nil)
     (format stream "~A" (element node))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod l-child ((node heap-node) (heap heap-container))
   (item-at heap (l-child-index node)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod r-child ((node heap-node) (heap heap-container))
   (item-at heap (r-child-index node)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod heap-node-parent ((node heap-node) (heap heap-container))
   (item-at heap (node-parent-index node)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod l-child-index ((node heap-node))
    (1+ (ash (index node) 1)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod r-child-index ((node heap-node))
    (ash (1+ (index node)) 1))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod node-parent-index ((node heap-node))
   (ash (index node) -1))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod exchange-heap-nodes ((n1 heap-node) (n2 heap-node) (heap heap-container))
    (item-at! heap n2 (index n1))
@@ -62,7 +51,6 @@
      (setf (index n2) (index n1))
      (setf (index n1) index)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod make-node-for-container ((heap heap-container) (element t) &key)
   (when element
@@ -70,10 +58,8 @@
       :element element
       :index 0)))
 
-;;; ---------------------------------------------------------------------------
 ;;; Float the 'node' down the tree so the subtree
 ;;; rooted at 'node' obeys the heap property
-;;; ---------------------------------------------------------------------------
 
 (defmethod heapify ((heap heap-container) (node heap-node))
   (let ((largest (index node)))
@@ -93,19 +79,16 @@
       (heapify heap (item-at heap largest))))
   heap)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod initialize-instance :after ((heap heap-container) &key)
    (loop for i from (floor (/  (size heap) 2)) downto 1 do
          (heapify heap (item-at heap (1- i)))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod biggest-item ((heap heap-container))
   (unless (empty-p heap)
     (element (first-item heap))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-biggest-item ((heap heap-container))
   (when (> (size heap) 0)
@@ -116,7 +99,6 @@
       (setf (index max) nil)
       (element max))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((heap heap-container) (node heap-node))
   (labels ((sift (node)
@@ -141,7 +123,6 @@
          (t (heapify heap last))))))
   (element node))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((heap heap-container) (node heap-node))
   (let ((sorter (sorter heap))
@@ -160,9 +141,7 @@
     (values heap node)))
 
   
-;;; ---------------------------------------------------------------------------
 ;;; k-best-heap-container
-;;; --------------------------------------------------------------------------
 
 (defclass* k-best-heap-container (bounded-container-mixin heap-container)
   ((k :initform 1
@@ -175,7 +154,6 @@ items to be the largest items, make sure sorter is '<'.")
     :sorter #'>
     :k 1))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item :around ((heap k-best-heap-container) item)
   (if (< (size heap) (k-best-number heap))

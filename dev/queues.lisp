@@ -2,12 +2,10 @@
 
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; Abstract Queue interface
 ;;;
 ;;; supports: enqueue (insert-item), dequeue (delete-first), empty!, 
 ;;; size, empty-p, first-element
-;;; ---------------------------------------------------------------------------
 
 (defclass* abstract-queue (initial-contents-mixin ordered-container-mixin)
   ())
@@ -38,13 +36,11 @@
     (error message rest)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Priority Queues on 'arbitrary' containers
 ;;;
 ;;; The underlying container must support: insert-item, first-element
 ;;; delete-item, empty-p, empty!, size, find-item,
 ;;; delete-item and delete-item-if
-;;; ---------------------------------------------------------------------------
 
 (defclass* priority-queue-on-container (iteratable-container-mixin
                                           sorted-container-mixin
@@ -117,9 +113,7 @@
   (iterate-elements (container q) fn))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Standard no frills queue
-;;; ---------------------------------------------------------------------------
 
 (defclass* basic-queue (abstract-queue iteratable-container-mixin 
                                          concrete-container)

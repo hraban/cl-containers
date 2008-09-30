@@ -4,9 +4,7 @@
 
 #|
 
-;;; ---------------------------------------------------------------------------
 ;;; stack with a list
-;;; ---------------------------------------------------------------------------
 
 (defclass* stack-using-list (abstract-stack contents-as-list-mixin)
    ((contents
@@ -21,13 +19,11 @@
    (pop (contents stack)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; bag-list
 
 (defclass* bag-list (bag-container-abstract contents-as-list-mixin)
    ())
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((container bag-list) item)
    (setf (contents container)
@@ -35,13 +31,11 @@
    item)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; bag-hash
 
 (defclass* bag-hash (bag-container-abstract contents-as-hashtable-mixin)
    ())
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((container bag-hash) item)
    (remhash item (contents container))
@@ -118,7 +112,6 @@ first-item (settable)
 pop-item
 push-item
 
-;;; ---------------------------------------------------------------------------
 
 test (in bst, make part of searchable; make keyed part of searchable?)
 height (of a tree)

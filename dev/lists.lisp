@@ -1,24 +1,19 @@
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; List Container
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-list ((container list-container) list)
   (setf (contents container) (append (contents container) list))
   (values list))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod first-element ((container list-container))
   (first-element (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container list-container))
   (setf (first-element (contents container)) value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((container list-container) item)
   (setf (slot-value container 'contents)
@@ -27,52 +22,43 @@
                 :test (test container)))
   (values item))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod find-item ((container list-container) item)
   (warn "find-item for list-containers is obsolete, use the semantically
 slower 'search-for-item' instead.")
   (search-for-item container item))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-first ((container list-container))
   (prog1
     (first (contents container))
     (setf (slot-value container 'contents) (rest (contents container)))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod nth-element ((container list-container) (index integer))
   (nth index (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((container list-container) &rest indexes)
   (declare (dynamic-extent indexes))
   (elt (contents container) (first indexes)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-container ((container list-container) &optional 
                             (stream *standard-output*))
   (prin1 (contents container) stream)
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod last-element ((container list-container))
   (last-element (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf last-element) (value (container list-container))
   (setf (last-element (contents container)) value))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; sorted-list-container
-;;; ---------------------------------------------------------------------------
 
 (defclass* sorted-list-container (sorted-container-mixin
                                     list-container concrete-container)
@@ -83,12 +69,10 @@ so it best for small containers."
   (:export-slots stable?)
   (:export-p t))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod set-dirty-flag ((container sorted-list-container) flag)
   (setf (slot-value container 'dirty?) flag))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod clean-up ((container sorted-list-container))
   (when (dirty? container)
@@ -98,51 +82,43 @@ so it best for small containers."
             (stable-sort (contents container) (sorter container) :key (key container))
             (sort (contents container) (sorter container) :key (key container))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-list ((container sorted-list-container) (list t))
   (set-dirty-flag container t)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((container sorted-list-container) (item t))
   (set-dirty-flag container t)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((container sorted-list-container) (item t))
   (set-dirty-flag container t)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod first-element ((container sorted-list-container))
   (clean-up container)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container sorted-list-container))
   (declare (ignore value))
   (clean-up container)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-first ((container sorted-list-container)) 
   (clean-up container)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((container sorted-list-container) &rest indexes)
   (declare (dynamic-extent indexes))
   (clean-up container)
   (elt (contents container) (first indexes)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-container ((container sorted-list-container) &optional 
                             (stream *standard-output*))
@@ -150,14 +126,12 @@ so it best for small containers."
   (clean-up container)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes ((container sorted-list-container) fn) 
   (declare (ignore fn))
   (clean-up container)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-elements ((container sorted-list-container)
                              &key filter transform) 
@@ -165,7 +139,6 @@ so it best for small containers."
   (clean-up container)
   (call-next-method))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod ensure-sorted ((container sorted-list-container))
   (clean-up container)
@@ -176,9 +149,7 @@ so it best for small containers."
   container)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; dlist-container :: doubly-linked-list container
-;;; ---------------------------------------------------------------------------
 
 (defclass* dlist-container-node (container-node-mixin)
   ((next-item nil ia)
@@ -378,9 +349,7 @@ so it best for small containers."
                         (node dlist-container-node))
   (previous-item node))
 
-;;; ---------------------------------------------------------------------------
 ;;; sorted-dlist-container
-;;; ---------------------------------------------------------------------------
 
 (defclass* sorted-dlist-container (sorted-container-mixin dlist-container)
   ()
@@ -389,7 +358,6 @@ so it best for small containers."
     :size 0)
   (:export-p t))
 
-;;; ---------------------------------------------------------------------------
   
 (defmethod iterate-nodes-about-node ((list sorted-list-container)
                                          (node dlist-container-node) 
@@ -397,14 +365,12 @@ so it best for small containers."
   (iterate-left-nodes list node left-fn)
   (iterate-right-nodes list node right-fn))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes-about-node ((list sorted-list-container)
                                          (item i-know-my-node-mixin) 
                                          left-fn right-fn)
   (iterate-nodes-about-node list (my-node item) left-fn right-fn))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-nodes-about-node ((list sorted-list-container)
                                          (item t) left-fn right-fn)
@@ -412,13 +378,11 @@ so it best for small containers."
     (when it
       (iterate-nodes-about-node list it left-fn right-fn))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((list sorted-dlist-container)
 			(node dlist-container-node))
   (insert-item-ordered list node))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item-ordered-about-node ((list sorted-dlist-container) 
                                            (node dlist-container-node)
@@ -563,7 +527,6 @@ so it best for small containers."
          list 
          (next-item node))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod force-sort ((list sorted-dlist-container))
   list)
@@ -571,7 +534,6 @@ so it best for small containers."
 (defmethod ensure-sorted ((list sorted-dlist-container))
   list)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod left-node-for-item ((list sorted-dlist-container) (item t))
   (with-slots (key sorter test) list
@@ -639,7 +601,6 @@ so it best for small containers."
                       (values (previous-item n) n))))))
              (values (last-element list) nil))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-left-nodes ((list sorted-dlist-container)
                                (item dlist-container-node) fn)
@@ -673,7 +634,6 @@ so it best for small containers."
     (when it
       (iterate-right-nodes list it fn))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-left ((list sorted-dlist-container)
                          (item dlist-container-node) fn &optional (inclusive? nil))
@@ -715,7 +675,6 @@ so it best for small containers."
     (when it
       (iterate-right list it fn inclusive?)))) 
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod sort-update-left ((list sorted-dlist-container)
                              (node dlist-container-node))

@@ -154,9 +154,7 @@ element returns current-element and allows for side-effects
         (move-forward iterator)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; transforming-iterator-mixin
-;;; ---------------------------------------------------------------------------
 
 (defclass* transforming-iterator-mixin ()
   ((transform nil ir)
@@ -176,9 +174,7 @@ element returns current-element and allows for side-effects
   (setf (slot-value iterator 'compute-element?) t))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; filtered-iterator-mixin
-;;; ---------------------------------------------------------------------------
 
 (defclass* basic-filtered-iterator-mixin ()
   ())
@@ -206,9 +202,7 @@ element returns current-element and allows for side-effects
         (move iterator :forward)))
         
 
-;;; ---------------------------------------------------------------------------
 ;;; unique-value-iterator-mixin
-;;; ---------------------------------------------------------------------------
 
 (defclass* unique-value-iterator-mixin (basic-filtered-iterator-mixin 
                                           test-container-mixin)
@@ -244,9 +238,7 @@ element returns current-element and allows for side-effects
   (values))
 |#
 
-;;; ---------------------------------------------------------------------------
 ;;; circular iterators -- they just don't stop
-;;; ---------------------------------------------------------------------------
 
 (defclass* circular-iterator-mixin ()
   ())
@@ -270,9 +262,7 @@ element returns current-element and allows for side-effects
   (loop repeat 10 do
         (print (next-element i))))
 
-;;; ---------------------------------------------------------------------------
 ;;; list-iterator
-;;; ---------------------------------------------------------------------------
 
 (defclass* list-iterator (forward-iterator)
   ())
@@ -293,9 +283,7 @@ element returns current-element and allows for side-effects
   (not (null (iterating-container iterator))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; arrays
-;;; ---------------------------------------------------------------------------
 
 (defclass* array-iterator (forward-iterator)
   ((index 0 ir)))
@@ -318,9 +306,7 @@ element returns current-element and allows for side-effects
 (defmethod move-p ((iterator array-iterator ) (direction (eql :forward)))
   (< (index iterator) (size (iterating-container iterator))))
 
-;;; ---------------------------------------------------------------------------
 ;;; hash-table-iterator
-;;; ---------------------------------------------------------------------------
 
 (defclass* hash-table-iterator (list-iterator)
   ())
@@ -334,9 +320,7 @@ element returns current-element and allows for side-effects
   iterator)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; make-iterator
-;;; ---------------------------------------------------------------------------
 
 (defmethod make-iterator
     (iteratee &rest args &key (iterator-class nil) &allow-other-keys)
@@ -356,9 +340,7 @@ element returns current-element and allows for side-effects
 	  iteratee args))
   iteratee)
 
-;;; ---------------------------------------------------------------------------
 ;;; some generators
-;;; ---------------------------------------------------------------------------
 
 (defun make-generator (&rest args &key (generator-class nil) &allow-other-keys)
   (apply #'make-instance 
@@ -368,9 +350,7 @@ element returns current-element and allows for side-effects
 	  generator-class) args))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; sequences
-;;; ---------------------------------------------------------------------------
 
 (defclass* basic-generator (forward-iterator)
   ())
@@ -433,9 +413,7 @@ element returns current-element and allows for side-effects
    abstract-generator))
 |#
 
-;;; ---------------------------------------------------------------------------
 ;;; map-containers
-;;; ---------------------------------------------------------------------------
 
 ;;?? very consy
 (defun map-containers (fn &rest containers)

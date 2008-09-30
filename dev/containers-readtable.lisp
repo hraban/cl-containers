@@ -25,7 +25,6 @@ BB on DB with strong ontology
 (defvar *container-print-association-separator* "; "
   "Specify the string used to separate <key value> pairs when printing the contents of an associative-container.")
 
-;;; ---------------------------------------------------------------------------
 
 (set-macro-character
    #\[
@@ -34,7 +33,6 @@ BB on DB with strong ontology
        (read-container-element stream #\]))
    nil *container-readtable*)
 
-;;; ---------------------------------------------------------------------------
   
 (set-macro-character 
  #\]
@@ -42,7 +40,6 @@ BB on DB with strong ontology
      (warn "Ignoring extra \"~c\" on ~s ." ch stream))
  nil *container-readtable*)
 
-;;; ---------------------------------------------------------------------------
 
 #+MCL
 ;;?? Gary King 2005-11-17: need to port
@@ -58,7 +55,6 @@ BB on DB with strong ontology
         (rplacd tail (setq tail (cons form nil)))))
     (cdr head)))
 
-;;; ---------------------------------------------------------------------------
 
 #+MCL
 ;;?? Gary King 2005-11-17: need to port
@@ -74,7 +70,6 @@ BB on DB with strong ontology
         (rplacd tail (setq tail (cons form nil)))))
     (cdr head)))
 
-;;; ---------------------------------------------------------------------------
 
 #+MCL
 ;;?? Gary King 2005-11-17: need to port
@@ -87,7 +82,6 @@ BB on DB with strong ontology
     (destructuring-bind (type &rest data) (ccl::read-list stream t #\])
       (make-container type :initial-contents data)))))
 
-;;; ---------------------------------------------------------------------------
 
 #+MCL
 ;;?? Gary King 2005-11-17: need to port
@@ -101,12 +95,10 @@ BB on DB with strong ontology
      (print-unreadable-object (container stream :type t :identity t)
        (print-container-summary container stream)))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-container-summary ((container abstract-container) stream)
   (format stream "~D" (size container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-container-contents ((container abstract-container) stream)
   (let* ((base-print-fn (lambda (element)
@@ -123,7 +115,6 @@ BB on DB with strong ontology
             base-print-fn)))
     (iterate-elements container print-fn)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-container-contents ((container associative-container-mixin) stream)
   (let* ((first? t)
@@ -146,7 +137,6 @@ BB on DB with strong ontology
             base-print-fn)))
     (iterate-key-value container print-fn)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-container-contents ((container array-container-abstract) stream)
   (princ "..." stream))
@@ -171,9 +161,7 @@ BB on DB with strong ontology
   (print c)
   (values))
 
-;;; ---------------------------------------------------------------------------
 ;;; container-printing-mixin
-;;; ---------------------------------------------------------------------------
 
 (defclass* container-printing-mixin ()
   ((print-representation :unbound ia)
@@ -186,7 +174,6 @@ BB on DB with strong ontology
     :print-association-string " -> "
     :print-association-separator ";"))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-object :around ((container container-printing-mixin) stream)
   (declare (ignorable stream))

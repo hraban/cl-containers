@@ -1,9 +1,7 @@
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; Heap based queue using EKSL priority-queue
 ;;?? Needs a better name
-;;; ---------------------------------------------------------------------------
 
 #+EKSL-PRIORITY-QUEUE
 (progn

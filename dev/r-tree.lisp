@@ -73,9 +73,7 @@ of just points.
           insert-item
           delete-item))
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree
-;;; ---------------------------------------------------------------------------
 (defclass* r-tree (test-container-mixin container-uses-nodes-mixin)
   ((root-node :accessor r-tree-root-node
               :initarg :root-node
@@ -109,15 +107,11 @@ can keep before it needs to be split.  min-node-size, likewise, is the minimum
 number of records required in a node.")
   :copy-slots)
 
-;;; ---------------------------------------------------------------------------
 ;;; make-container :: 'r-tree -> ... -> r-tree
-;;; ---------------------------------------------------------------------------
 (defmethod make-container ((class (eql 'r-tree)) &rest args)
   (apply #'make-r-tree args))
 
-;;; ---------------------------------------------------------------------------
 ;;; make-r-tree :: fixnum -> fixnum -> r-tree
-;;; ---------------------------------------------------------------------------
 (defun make-r-tree (&key (max-node-size 5) (dimensions 2)
                          (min-node-size (max (floor (/ max-node-size 2)) 2))
                          (node-splitting-fn #'r-tree-quadratic-split))
@@ -140,9 +134,7 @@ number of records required in a node.")
     (format stream "~A" (r-tree-root-node r-tree))
     (format stream "()")))
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-depth :: r-tree -> fixnum
-;;; ---------------------------------------------------------------------------
 #+WAIT
 (defmethod r-tree-depth ((r-tree r-tree))
   (1- (ceiling (log (size r-tree) (r-tree-min-node-size r-tree)))))
@@ -152,9 +144,7 @@ number of records required in a node.")
        (r-tree-node-depth it)
        0))
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-node
-;;; ---------------------------------------------------------------------------
 
 ;;?? GWK make this a mixin and fix it
 (defclass* r-tree-node (vector-container)
@@ -183,15 +173,11 @@ number of records required in a node.")
   (r-tree-node-depth (r-tree-next-node (first-item node)) (1+ depth)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-root-node? :: r-tree-node -> boolean
-;;; ---------------------------------------------------------------------------
 (defmethod r-tree-root-node? ((node r-tree-node))
   (null (r-tree-parent-node node)))
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-leaf-node
-;;; ---------------------------------------------------------------------------
 (defclass* r-tree-leaf-node (r-tree-node)
   ()
   (:documentation "r-tree-leaf-nodes contain only r-tree-items"))
@@ -218,9 +204,7 @@ number of records required in a node.")
 (defmethod r-tree-node-depth ((node r-tree-leaf-node) &optional (depth 1))
   depth)
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-internal-node
-;;; ---------------------------------------------------------------------------
 (defclass* r-tree-internal-node (r-tree-node)
   ()
   (:documentation "An internal node"))
@@ -248,9 +232,7 @@ number of records required in a node.")
   (format stream "(~{~A~})" (mapcar #'r-tree-next-node 
                                     (collect-elements node))))
 
-;;; ---------------------------------------------------------------------------
 ;;; mbr
-;;; ---------------------------------------------------------------------------
 (defclass* mbr (array-container)
   ()
   (:documentation "mbr is a minimum-bounding-rectangle in n-dimensions.  The
@@ -282,47 +264,35 @@ minimum bound; the second is the maximum bound."))
 (defmethod max-point ((mbr mbr) (dimension number))
   (item-at mbr 1 dimension))
 
-;;; ---------------------------------------------------------------------------
 ;;; iterate-mbrs :: mbr -> mbr -> fn -> t
-;;; ---------------------------------------------------------------------------
 (defmethod iterate-mbrs ((mbr1 mbr) (mbr2 mbr) fn)
   (loop for i from 0 to (1- (/ (size mbr1) 2)) do
         (funcall fn
                  (item-at mbr1 0 i) (item-at mbr1 1 i)
                  (item-at mbr2 0 i) (item-at mbr2 1 i))))
 
-;;; ---------------------------------------------------------------------------
 ;;; mbr-dimension-increase :: mbr -> mbr -> fixnum
-;;; ---------------------------------------------------------------------------
 ;;; this method measures the total amount in dimension 'mbr1' needs to be
 ;;; increased to enclose 'mbr2' completely.
-;;; ---------------------------------------------------------------------------
 (defmethod mbr-size-increase ((mbr1 mbr) (mbr2 mbr))
   (loop for i from 0 to (1- (/ (size mbr1) 2)) sum
         (+ (max 0 (- (item-at mbr1 0 i) (item-at mbr2 0 i)))
            (max 0 (- (item-at mbr2 1 i) (item-at mbr1 1 i))))))
 
-;;; ---------------------------------------------------------------------------
 ;;; mbr-area-increase :: mbr -> mbr -> fixnum
-;;; ---------------------------------------------------------------------------
 ;;; reports the total area mbr1 would be increased so that it completely
 ;;; encloses mbr2
-;;; ---------------------------------------------------------------------------
 (defmethod mbr-area-increase ((mbr1 mbr) (mbr2 mbr))
   (- (mbr-area (add-mbrs mbr1 mbr2)) (mbr-area mbr1)))
 
-;;; ---------------------------------------------------------------------------
 ;;; mbr-area :: mbr -> fixnum
-;;; ---------------------------------------------------------------------------
 (defmethod mbr-area ((mbr mbr))
   (loop for i from 0 to (1- (/ (size mbr) 2))
         with total-area = 1 do
         (setf total-area (* total-area (- (item-at mbr 1 i) (item-at mbr 0 i))))
         finally (return total-area)))
 
-;;; ---------------------------------------------------------------------------
 ;;; add-mbr :: mbr -> mbr -> mbr-mixin
-;;; ---------------------------------------------------------------------------
 (defmethod add-mbrs ((mbr mbr) &rest mbrs)
   (let ((result (make-container 'mbr :dimensions (list 2 (/ (size mbr) 2))))
         (mbrs (push mbr mbrs)))
@@ -335,12 +305,9 @@ minimum bound; the second is the maximum bound."))
                                                         i) mbrs)) 1 i))
     result))
 
-;;; ---------------------------------------------------------------------------
 ;;; overlap-mbr? :: mbr -> mbr -> boolean
-;;; ---------------------------------------------------------------------------
 ;;; if mbr1 overlaps mbr2, then return true, otherwise return false
 ;;; overlap means that mbr1 completely contains mbr2
-;;; ---------------------------------------------------------------------------
 (defmethod overlap-mbr? ((mbr1 mbr) (mbr2 mbr))
   (iterate-mbrs mbr1 mbr2 #'(lambda (min1 max1 min2 max2)
                               (when (or (< min2 min1) (> max2 max1))
@@ -348,9 +315,7 @@ minimum bound; the second is the maximum bound."))
   t)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; record-mixin
-;;; ---------------------------------------------------------------------------
 (defclass* record-mixin (copyable-mixin)
   ((mbr :accessor mbr
         :initarg :mbr
@@ -359,9 +324,7 @@ minimum bound; the second is the maximum bound."))
 we need to abstract out their equivalence.")
   :copy-slots)
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-record
-;;; ---------------------------------------------------------------------------
 (defclass* r-tree-record (record-mixin container-node-mixin)
   ((next :accessor r-tree-next-node
          :initarg :next))
@@ -380,18 +343,14 @@ and the minimum-bounding-rectangle of those nodes.")
   (setf (r-tree-parent-record (r-tree-next-node item)) item))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; label-mixin
-;;; ---------------------------------------------------------------------------
 (defclass* label-mixin (copyable-mixin)
   ((label :accessor label
           :initarg :label))
   (:documentation "provides a label slot")
   :copy-slots)
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-item
-;;; ---------------------------------------------------------------------------
 (defclass* r-tree-item (record-mixin)
   ((spatial-object :accessor spatial-object
                    :initarg :spatial-object
@@ -425,9 +384,7 @@ minimum-bounding-rectangle.")
     (format stream "~A" (spatial-object item))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-labelled-item
-;;; ---------------------------------------------------------------------------
 (defclass* r-tree-labelled-item (r-tree-item label-mixin)
   ()
   (:documentation "When using r-trees for nearest-neighbor classification it is
@@ -446,25 +403,18 @@ such a label.")
     :test test
     :mbr mbr))
 
-;;; ---------------------------------------------------------------------------
 ;;; insert-item :: r-tree -> (fixnum) -> r-tree
-;;; ---------------------------------------------------------------------------
 (defmethod insert-item ((r-tree r-tree) (item list))
   (insert-item r-tree (make-container 'r-tree-item item)))
 
-;;; ---------------------------------------------------------------------------
 ;;; insert-item :: r-tree -> record record-mixin -> r-tree
-;;; ---------------------------------------------------------------------------
 ;;; insert-item* inserts the record in the r-tree, but we also need to record
 ;;; the the size increase, hence the incf
-;;; ---------------------------------------------------------------------------
 (defmethod insert-item ((r-tree r-tree) (record record-mixin))
   (incf (size r-tree))
   (insert-item* r-tree record))
 
-;;; ---------------------------------------------------------------------------
 ;;; insert-item* :: r-tree -> record-mixin -> r-tree
-;;; ---------------------------------------------------------------------------
 (defmethod insert-item* ((r-tree r-tree) (record record-mixin))
   (let ((node (choose-r-tree-node r-tree record)))
     (insert-item node record)
@@ -472,15 +422,11 @@ such a label.")
                                                  r-tree node)))
   r-tree)
 
-;;; ---------------------------------------------------------------------------
 ;;; delete-item :: r-tree -> (t) -> r-tree
-;;; ---------------------------------------------------------------------------
 (defmethod delete-item ((r-tree r-tree) (item list))
   (delete-item r-tree (make-container 'r-tree-item item)))
 
-;;; ---------------------------------------------------------------------------
 ;;; delete-item :: r-tree -> r-tree-item -> r-tree
-;;; ---------------------------------------------------------------------------
 (defmethod delete-item ((r-tree r-tree) (item r-tree-item))
   (multiple-value-bind (node record) (find-leaf-node r-tree item)
     (when node
@@ -496,16 +442,12 @@ such a label.")
   r-tree)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; find-leaf-node :: r-tree -> r-tree-item -> r-tree-leaf-node
-;;; ---------------------------------------------------------------------------
 (defmethod find-leaf-node ((r-tree r-tree) (item r-tree-item))
   (awhen (r-tree-root-node r-tree)
     (find-leaf-node it item)))
 
-;;; ---------------------------------------------------------------------------
 ;;; find-leaf-node :: r-tree-internal-node -> r-tree-item -> r-tree-leaf-node
-;;; ---------------------------------------------------------------------------
 (defmethod find-leaf-node ((node r-tree-internal-node) (item r-tree-item)) 
   (iterate-container node 
                      #'(lambda (record) 
@@ -528,9 +470,7 @@ such a label.")
 
 
 
-;;; ---------------------------------------------------------------------------
 ;;; find-leaf-node :: r-tree-leaf-node -> r-tree-item -> r-tree-leaf-node
-;;; ---------------------------------------------------------------------------
 (defmethod find-leaf-node ((node r-tree-leaf-node) (item r-tree-item))
   (iterate-container node #'(lambda (record)
                               (when (and (overlap-mbr? (mbr record) (mbr item))
@@ -541,9 +481,7 @@ such a label.")
                                                              node record)))))
   nil)
 
-;;; ---------------------------------------------------------------------------
 ;;; condense-r-tree :: r-tree -> r-tree-node -> (t) ->
-;;; ---------------------------------------------------------------------------
 (defmethod condense-r-tree ((r-tree r-tree) (node r-tree-node) 
                             &optional (records nil))
   (if (r-tree-root-node? node)
@@ -563,20 +501,15 @@ such a label.")
 
 
 
-;;; ---------------------------------------------------------------------------
 ;;; choose-r-tree-node :: r-tree -> r-tree-item -> r-tree-leaf-node
-;;; ---------------------------------------------------------------------------
 ;;; Invoked from the top of the tree, calls choose-leaf with the root node
-;;; ---------------------------------------------------------------------------
 (defmethod choose-r-tree-node ((r-tree r-tree) (item r-tree-item))
   (aif (r-tree-root-node r-tree)
        (choose-r-tree-node it item)
        (setf (r-tree-root-node r-tree)
              (make-container 'r-tree-leaf-node))))
 
-;;; ---------------------------------------------------------------------------
 ;;; choose-r-tree-node :: r-tree -> r-tree-record -> r-tree-internal-node
-;;; ---------------------------------------------------------------------------
 ;;; This finds
 (defmethod choose-r-tree-node ((r-tree r-tree) (record r-tree-record))
   (let ((tree-depth (r-tree-depth r-tree)))
@@ -593,28 +526,21 @@ such a label.")
                            1
                            (r-tree-node-depth (r-tree-next-node record))))))
 
-;;; ---------------------------------------------------------------------------
 ;;; choose-r-tree-node :: r-tree-leaf-node -> r-tree-item -> r-tree-leaf-node
-;;; ---------------------------------------------------------------------------
 (defmethod choose-r-tree-node ((node r-tree-leaf-node) (item r-tree-item))
   (declare (ignore item))
   node)
 
-;;; ---------------------------------------------------------------------------
 ;;; choose-r-tree-node :: r-tree-internal-node -> r-tree-item -> r-tree-leaf-node
-;;; ---------------------------------------------------------------------------
 (defmethod choose-r-tree-node ((node r-tree-internal-node) (item r-tree-item))
   (choose-r-tree-node (r-tree-next-node (choose-best-fit node item)) item))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; choose-best-fit :: r-tree-internal-node -> record-mixin -> r-tree-node
-;;; ---------------------------------------------------------------------------
 ;;; choose-best-fit finds the node record that requires the least expansion
 ;;; of it's minimum-bounding-rectangle to insert the record.  When ties
 ;;; occur, the record with the least area is favored.  If the areas are
 ;;; identical, then choose arbitrarily.
-;;; ---------------------------------------------------------------------------
 (defmethod choose-best-fit ((node r-tree-internal-node) (record record-mixin))
   (loop for i from 1 to (1- (size node))
         with best-fit = (first-item node)
@@ -632,17 +558,13 @@ such a label.")
               (setf best-fit-area area))))
         finally (return best-fit)))
 
-;;; ---------------------------------------------------------------------------
 ;;; split-r-tree-node :: r-tree -> r-tree-node -> r-tree-node r-tree-node
-;;; ---------------------------------------------------------------------------
 (defmethod split-r-tree-node ((r-tree r-tree) (node r-tree-node))
   (if (> (size node) (r-tree-max-node-size r-tree))
     (funcall (node-splitting-fn r-tree) r-tree node)
     node))
 
-;;; ---------------------------------------------------------------------------
 ;;; r-tree-quadratic-split :: r-tree -> r-tree-node -> r-tree-node r-tree-node
-;;; ---------------------------------------------------------------------------
 (defmethod r-tree-quadratic-split ((r-tree r-tree) (node r-tree-node))
   (let ((left (make-r-tree-node-like node
                                      :parent-node (r-tree-parent-node node)
@@ -659,12 +581,9 @@ such a label.")
       (insert-item right rec2))
     (pick-remaining-nodes r-tree node left right)))
 
-;;; ---------------------------------------------------------------------------
 ;;; pick-node-seeds :: r-tree-node -> r-tree-record r-tree-record
-;;; ---------------------------------------------------------------------------
 ;;; return the pair of records r1 and r2 that maximize:
 ;;;   area(mbr(r1),mbr(r2)) - area(mbr(r1)) - area(mbr(r2))
-;;; ---------------------------------------------------------------------------
 (defmethod pick-node-seeds ((node r-tree-node))
   (flet ((area-fn (rec1 rec2)
            (- (mbr-area (add-mbrs (mbr rec1) (mbr rec2)))
@@ -683,9 +602,7 @@ such a label.")
                     (setf seed2 record2))))
           finally (return (values seed1 seed2)))))
 
-;;; ---------------------------------------------------------------------------
 ;;; pick-and-insert-next-node :: r-tree-node -> r-tree-node -> r-tree-node
-;;; ---------------------------------------------------------------------------
 (defmethod pick-and-insert-next-node ((node r-tree-node) (left r-tree-node)
                                       (right r-tree-node))
   (loop for i from 1 to (1- (size node))
@@ -711,10 +628,8 @@ such a label.")
                     (insert-item right record)))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; pick-remaining-node :: r-tree -> r-tree-node -> r-tree-node ->
 ;;;                        r-tree-node -> r-tree-node r-tree-node
-;;; ---------------------------------------------------------------------------
 (defmethod pick-remaining-nodes ((r-tree r-tree) (node r-tree-node)
                                  (left r-tree-node) (right r-tree-node))
   (cond
@@ -723,10 +638,8 @@ such a label.")
       (pick-remaining-nodes r-tree node left right))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; finished-quadratic-split? :: r-tree -> r-tree-node -> r-tree-node ->
 ;;;                              r-tree-node -> boolean
-;;; ---------------------------------------------------------------------------
 (defmethod finished-quadratic-split? ((r-tree r-tree) (node r-tree-node)
                                       (left r-tree-node) (right r-tree-node))
   (cond
@@ -741,9 +654,7 @@ such a label.")
     t)
    (t nil)))
 
-;;; ---------------------------------------------------------------------------
 ;;; adjust-r-tree :: r-tree -> r-tree-node -> r-tree-node -> r-tree
-;;; ---------------------------------------------------------------------------
 (defmethod adjust-r-tree ((r-tree r-tree) (left r-tree-node) &optional right)
   (if (r-tree-root-node? left)
     (if right
@@ -775,28 +686,22 @@ such a label.")
 
 
 
-;;; ---------------------------------------------------------------------------
 ;;;
 ;;;                     NEAREST-NEIGHBOR
 ;;;
-;;; ---------------------------------------------------------------------------
 
 (defparameter *nnscount* 0)
 (defparameter *promise-pruning* t)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbor-node-mixin
-;;; ---------------------------------------------------------------------------
 (defclass* nearest-neighbor-node-mixin (copyable-mixin)
   ((neighbor-distance :accessor neighbor-distance
              :initarg :neighbor-distance))
   (:documentation "Base class of nearest-neighbor nodes and promises")
   :copy-slots)
 
-;;; ---------------------------------------------------------------------------
 ;;; promise 
-;;; ---------------------------------------------------------------------------
 (defclass* promise (nearest-neighbor-node-mixin)
   ()
   (:documentation "Promises are placed holders in the kbest heap"))
@@ -812,9 +717,7 @@ such a label.")
   (print-unreadable-object (n stream :type t :identity t)
     (format stream "~A" (neighbor-distance n))))
 
-;;; ---------------------------------------------------------------------------
 ;;; promise-record 
-;;; ---------------------------------------------------------------------------
 
 (defclass* promise-record (r-tree-record)
   ((promise :accessor promise
@@ -837,9 +740,7 @@ that stores a pointer to a promise.")
 
 (defmethod promise-record? ((obj t)) nil)
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbor-node
-;;; ---------------------------------------------------------------------------
 (defclass* nearest-neighbor-node (nearest-neighbor-node-mixin)
   ((spatial-object :accessor spatial-object
                    :initarg :spatial-object
@@ -870,9 +771,7 @@ search information when doing a recursive descent of an r-tree.")
   (print-unreadable-object (n stream :type t :identity t)
     (format stream "~A ~A" (neighbor-distance n) (spatial-object n))))
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbor-node
-;;; ---------------------------------------------------------------------------
 (defclass* labelled-nearest-neighbor-node (nearest-neighbor-node label-mixin)
   ()
   (:documentation "An analagous nearest-neighbor-node class for 
@@ -898,24 +797,18 @@ labelled items."))
 
 
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbor-node-sorter :: nearest-nighbor-node ->
 ;;;                                 nearest-neighbor-node -> boolean
-;;; ---------------------------------------------------------------------------
 (defmethod nearest-neighbor-sorter ((nn1 nearest-neighbor-node-mixin)
                                     (nn2 nearest-neighbor-node-mixin))
   (> (neighbor-distance nn1) (neighbor-distance nn2)))
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbors :: (t) -> fixnum -> (t)
-;;; ---------------------------------------------------------------------------
 (defmethod nearest-neighbors ((r-tree r-tree) (item list) k &key (promise-pruning t))
   (nearest-neighbors r-tree (make-container 'r-tree-item item) k
                      :promise-pruning promise-pruning))
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbors :: r-tree -> r-tree-item -> fixnum -> (t)
-;;; ---------------------------------------------------------------------------
 ;;; Some explanation on the 'sort' call here:
 ;;; Since heaps are just vectors, and collect-items iterates through
 ;;; the vector, we won't get the nearest-neighbor items in their sorted order.
@@ -925,7 +818,6 @@ labelled items."))
 ;;; then pop the biggest item off the top.  This seems a bit too much work
 ;;; for something we don't guarentee of collect-items anyway, so using
 ;;; sort is a workable and clean solution
-;;; ---------------------------------------------------------------------------
 (defmethod nearest-neighbors ((r-tree r-tree) (item r-tree-item) k
                               &key (promise-pruning t))
   (setf *promise-pruning* promise-pruning)
@@ -958,9 +850,7 @@ labelled items."))
           *nnscount*))
        (values nil 0)))
 
-;;; ---------------------------------------------------------------------------
 ;;; minimum-distance-metric :: r-tree-item -> mbr -> fixnum
-;;; ---------------------------------------------------------------------------
 (defmethod minimum-distance-metric ((item r-tree-item) (mbr mbr))
   (loop for i from 0 to (1- (/ (size mbr) 2))
         for p in (spatial-object item) sum
@@ -971,22 +861,16 @@ labelled items."))
            ((> p max) (euclidean-distance* p max))
            (t 0.0)))))
 
-;;; ---------------------------------------------------------------------------
 ;;; minimum-distance-metric :: r-tree-item -> r-tree-record -> fixnum
-;;; ---------------------------------------------------------------------------
 (defmethod minimum-distance-metric ((item r-tree-item) (record r-tree-record))
   (minimum-distance-metric item (mbr record)))
 
-;;; ---------------------------------------------------------------------------
 ;;; min-maximum-distance-metric :: r-tree-item -> r-tree-record -> fixnum
-;;; ---------------------------------------------------------------------------
 (defmethod min-maximum-distance-metric ((item r-tree-item) (record 
                                                             r-tree-record))
   (min-maximum-distance-metric item (mbr record)))
 
-;;; ---------------------------------------------------------------------------
 ;;; min-maximum-distance-metric :: r-tree-item -> mbr -> fixnum
-;;; ---------------------------------------------------------------------------
 (defmethod min-maximum-distance-metric ((item r-tree-item) (mbr mbr))
   (flet ((closest-hyperplane (p min max)
            (if (<= p (/ (+ min max) 2.0)) min max))
@@ -1006,76 +890,54 @@ labelled items."))
                                             (max-point mbr i))) 2)))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; euclidean-distance :: r-tree-item -> r-tree-item -> float
-;;; ---------------------------------------------------------------------------
 (defmethod euclidean-distance ((item r-tree-item) (item2 r-tree-item))
   (sqrt (euclidean-distance* item item2)))
 
-;;; ---------------------------------------------------------------------------
 ;;; euclidean-distance :: (float) -> (float) -> float
-;;; ---------------------------------------------------------------------------
 (defmethod euclidean-distance ((pt-0 list) (pt-1 list))
   (sqrt (euclidean-distance* pt-0 pt-1)))
 
-;;; ---------------------------------------------------------------------------
 ;;; euclidean-distance* :: number -> number -> float
-;;; ---------------------------------------------------------------------------
 (defmethod euclidean-distance* ((pt-0 number) (pt-1 number))
   (expt (- pt-1 pt-0) 2))
 
-;;; ---------------------------------------------------------------------------
 ;;; euclidean-distance :: number -> number -> float
-;;; ---------------------------------------------------------------------------
 (defmethod euclidean-distance ((pt-0 number) (pt-1 number))
   (sqrt (euclidean-distance* pt-0 pt-1)))
 
-;;; ---------------------------------------------------------------------------
 ;;; euclidean-distance* :: r-tree-item -> r-tree-item -> float
-;;; ---------------------------------------------------------------------------
 ;;; Just like euclidean-distance but without the square root
-;;; ---------------------------------------------------------------------------
 (defmethod euclidean-distance* ((item r-tree-item) (item2 r-tree-item))
   (euclidean-distance* (spatial-object item) (spatial-object item2)))
 
-;;; ---------------------------------------------------------------------------
 ;;; euclidean-distance* :: (fixnum) -> (fixnum) -> float
-;;; ---------------------------------------------------------------------------
 ;;; Just like euclidean-distance but without the square root
-;;; ---------------------------------------------------------------------------
 (defmethod euclidean-distance* ((pt-0 list) (pt-1 list))
   (loop for x in pt-0
         for y in pt-1 sum
         (expt (- x y) 2)))
 
-;;; ---------------------------------------------------------------------------
 ;;; euclidean-distance* :: r-tree-item -> (fixnum) -> float
-;;; ---------------------------------------------------------------------------
 (defmethod euclidean-distance* ((item r-tree-item) (item2 list))
   (euclidean-distance* (spatial-object item) item2))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod euclidean-distance* ((item list) (item2 r-tree-item))
   (euclidean-distance* item (spatial-object item2)))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; sort-branch-list :: (r-tree-records) -> r-tree-item -> fn -> (r-tree-records)
-;;; ---------------------------------------------------------------------------
 (defmethod sort-branch-list ((records list) (item r-tree-item)
                              &key (key (curry #'minimum-distance-metric item)))
   (sort records #'< :key key))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbor-search :: r-tree-leaf-node -> r-tree-item ->
 ;;;                            heap-container -> number -> nil
-;;; ---------------------------------------------------------------------------
 ;;; When we reach a leaf node, we add the spatial object is it is better than
 ;;; our worst nearest-neighbor estimates so far, or if we don't have enough
 ;;; nearest-neighbor estimates yet.
-;;; ---------------------------------------------------------------------------
 (defmethod nearest-neighbor-search ((node r-tree-leaf-node) (item r-tree-item)
                                     (neighbors heap-container) k)
   (incf *nnscount*)
@@ -1096,10 +958,8 @@ labelled items."))
   nil)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbor-search :: r-tree-internal-node -> r-tree-item ->
 ;;;                            heap-container -> number -> nil
-;;; ---------------------------------------------------------------------------
 (defmethod nearest-neighbor-search ((node r-tree-internal-node) (item r-tree-item)
                                     (neighbors heap-container) k)
   (incf *nnscount*)
@@ -1119,9 +979,7 @@ labelled items."))
                (sort-branch-list (collect-elements node) item) item neighbors k))
       (helper (sort-branch-list (collect-elements node) item)))))
 
-;;; ---------------------------------------------------------------------------
 ;;; apply-promise-pruning
-;;; ---------------------------------------------------------------------------
 (defmethod apply-promise-pruning ((records list) (item r-tree-item)
                                   (neighbors heap-container) k)
   (cons (first records)
@@ -1144,7 +1002,6 @@ labelled items."))
 
 OLD STUFF FOR ORIGINAL 1995 ALGORITHM...
 
-;;; ---------------------------------------------------------------------------
 ;;; nearest-neighbor-search :: r-tree-internal-node -> r-tree-item ->
 ;;;                            heap-container -> number -> nil
 ;;; ---------------------------------------------------------------------------\
@@ -1163,10 +1020,8 @@ OLD STUFF FOR ORIGINAL 1995 ALGORITHM...
              neighbors k))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; prune-down-branch-list :: (r-tree-record) -> r-tree-item ->
 ;;;                           heap-container -> number -> (r-tree-record)
-;;; ---------------------------------------------------------------------------
 (defmethod prune-down-branch-list ((records list) (item r-tree-item)
                                    (neighbors heap-container) k)
   (cond
@@ -1174,24 +1029,19 @@ OLD STUFF FOR ORIGINAL 1995 ALGORITHM...
    (t (prune-down-branches records item neighbors))))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; prune-up-branch-list :: (r-tree-record) -> r-tree-item ->
 ;;;                         heap-container -> number -> (r-tree-record)
-;;; ---------------------------------------------------------------------------
 (defmethod prune-up-branch-list ((records list) (item r-tree-item)
                                  (neighbors heap-container) k)
   (cond
    ((/= k (size neighbors)) records)
    (t (prune-up-branches records item neighbors))))
 
-;;; ---------------------------------------------------------------------------
 ;;; prune-down-branches :: (r-tree-record) -> r-tree-item -> heap-container ->
 ;;;                        (r-tree-record)
-;;; ---------------------------------------------------------------------------
 ;;; prune records from our list that have min-distance greater than
 ;;; min-max-distance of some other record, if that min-distance is greater
 ;;; than the distance of the farthest node
-;;; ---------------------------------------------------------------------------
 (defmethod prune-down-branches ((records list) (item r-tree-item)
                                 (neighbors heap-container))
   (let ((min-minmax (apply #'min (mapcar
@@ -1203,10 +1053,8 @@ OLD STUFF FOR ORIGINAL 1995 ALGORITHM...
                           (> min (neighbor-distance (biggest-item neighbors))))))
                records)))
 
-;;; ---------------------------------------------------------------------------
 ;;; prune-up-branches :: (r-tree-record) -> r-tree-item -> heap-container ->
 ;;;                      (r-tree-record)
-;;; ---------------------------------------------------------------------------
 (defmethod prune-up-branches ((records list) (item r-tree-item)
                               (neighbors heap-container))
   (let ((min-dist (neighbor-distance (biggest-item neighbors))))

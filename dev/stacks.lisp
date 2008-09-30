@@ -1,6 +1,5 @@
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; Abstract Stack interface
 ;;;
 ;;; Basic and much loved first-in-last-out container.
@@ -8,7 +7,6 @@
 ;;; Supports:
 ;;; insert-item, size, empty-p, empty!, first-element,
 ;;; pop-item, push-item (= insert-item)
-;;; ---------------------------------------------------------------------------
 
 (defclass* abstract-stack (initial-contents-mixin
                            iteratable-container-mixin
@@ -24,9 +22,7 @@
   (insert-item stack item))
 
 
-;;; ---------------------------------------------------------------------------
 ;;; Stack
-;;; ---------------------------------------------------------------------------
 
 (defclass* stack-container (uses-contents-mixin abstract-stack concrete-container)
   ((contents :unbound r)
@@ -34,23 +30,19 @@
   (:default-initargs
     :container-type 'list-container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod make-container-for-contents ((container stack-container)
                                         &rest args)
   (apply #'make-container (container-type container) args))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod first-element ((container stack-container))
   (first-element (contents container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container stack-container))
   (setf (first-element (contents container)) value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod pop-item ((container stack-container))
   (delete-first (contents container)))

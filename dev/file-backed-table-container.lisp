@@ -9,7 +9,6 @@
 table on disk. It doesn't support updating.")
   (:export-p t))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod save-row (column-names row out)
   (format out "~&\(~{~S ~}\)" 
@@ -18,7 +17,6 @@ table on disk. It doesn't support updating.")
            :transform (lambda (name)
                         (slot-value row name)))))
 
-;;; ---------------------------------------------------------------------------
   
 (defmethod save-table-header ((container file-backed-table-container) 
                               stream)
@@ -26,21 +24,18 @@ table on disk. It doesn't support updating.")
           (class-name (prototype container))
           (column-names container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod load-table-header ((container file-backed-table-container) 
                               line)
   ;;?? STUB
   (values t))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod check-table-header ((container file-backed-table-container) 
                                line)
   ;;?? STUB
   (values t))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod save-changes ((container file-backed-table-container)) 
   (let ((column-names (column-names container))
@@ -62,20 +57,17 @@ table on disk. It doesn't support updating.")
            (save-row column-names row out))))))
   (empty! (require-write container)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-record ((table file-backed-table-container) object)
   (insert-item (require-write table) object)
   (incf (size table))
   (maybe-save-changes table))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod maybe-save-changes ((table file-backed-table-container))
   (when (> (size (require-write table)) 10)
     (save-changes table)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-container ((container file-backed-table-container) fn)
   (save-changes container)
@@ -91,7 +83,6 @@ table on disk. It doesn't support updating.")
          (funcall fn (create-record container column-names line))))
      (pathspec container))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod create-record ((container file-backed-table-container) 
                           (column-names list) (line string))

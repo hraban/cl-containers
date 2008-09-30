@@ -5,7 +5,6 @@
    (key-filter nil ia))
   (:export-slots element-filter))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-elements :around ((container filtered-container-mixin) fn)
   (let ((filter (element-filter container)))
@@ -16,7 +15,6 @@
                             (funcall fn element))))
       (call-next-method container fn))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod collect-elements :around ((container filtered-container-mixin)
                                      &key filter transform)
@@ -29,7 +27,6 @@
                         :transform transform)
       (call-next-method container))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-key-value :around ((container filtered-container-mixin) fn)
   (let ((element-filter (element-filter container))

@@ -1,9 +1,7 @@
 (in-package #:containers)
 
 
-;;; ---------------------------------------------------------------------------
 ;;; quad-tree
-;;; ---------------------------------------------------------------------------
 
 (defclass* quad-tree (initial-contents-mixin
                         classified-container-mixin
@@ -29,14 +27,12 @@
    (bottom-right-child :initform nil
                        :accessor bottom-right-child)))
 
-;;; ---------------------------------------------------------------------------
 
 (defclass* quad-tree-node (four-child-node)
   ((tree :initform nil
          :initarg :tree
          :accessor tree)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod make-node-for-container ((tree quad-tree) (item t) &key)
   (if item
@@ -45,18 +41,15 @@
       :tree tree)
     nil))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod node-empty-p ((node quad-tree-node))
   (null (element node)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod print-object ((o quad-tree-node) stream)
   (print-unreadable-object (o stream :type t)
     (format stream "~A" (element o))))
 
-;;; ---------------------------------------------------------------------------
 
 (defgeneric notify-element-of-child-status (element status)
   (:documentation "This is called to allow the element to know its
@@ -67,7 +60,6 @@ relative to its parent could be relevant to the element. Status is one of:
   (:method ((element t) (status t))
            (values nil)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((tree quad-tree) (item quad-tree-node))
   (loop with key = (key tree)
@@ -109,7 +101,6 @@ relative to its parent could be relevant to the element. Status is one of:
   (incf (size tree))
   (values tree))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod empty-p ((tree quad-tree))
   (node-empty-p (root tree)))
@@ -119,7 +110,6 @@ relative to its parent could be relevant to the element. Status is one of:
   (setf (size tree) 0) 
   (values tree))
 
-;;; ---------------------------------------------------------------------------
 
 ;; find-item needs to operate a bit differently -- it must find the
 ;; node in the tree that minimizes the test (e.g. minimal overlap);

@@ -7,7 +7,6 @@
   (:export-p t)
   :export-slots)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at! :around ((container immutable-keys-mixin) 
                              value &rest indexes)

@@ -1,9 +1,7 @@
 
 (in-package #:containers)
 
-;;; ---------------------------------------------------------------------------
 ;;; vector-container-mixin
-;;; ---------------------------------------------------------------------------
 
 (defclass* vector-container-mixin (contents-as-array-mixin
                                      initial-contents-mixin
@@ -12,61 +10,49 @@
                                      abstract-container)
   ((contents)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at ((container vector-container-mixin) &rest indices)
   (declare (dynamic-extent indices))
   (aref (contents container) (first indices)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at! ((container vector-container-mixin) value &rest indices)
   (declare (dynamic-extent indices))
   (setf (aref (contents container) (first indices))
         value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod nth-element ((container vector-container-mixin) (index integer))
   (aref (contents container) index))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod first-element ((container vector-container-mixin))
   (item-at container 0))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf first-element) (value (container vector-container-mixin))
   (setf (item-at container 0) value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod last-element ((v vector-container-mixin))
   (item-at v (1- (size v))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf last-element) (value (v vector-container-mixin))
   (setf (item-at v (1- (size v))) value))
 
-;;; ---------------------------------------------------------------------------
 ;;; basic-vector-container
-;;; ---------------------------------------------------------------------------
 
 (defclass* basic-vector-container (vector-container-mixin)
   ())
 
 
-;;; ---------------------------------------------------------------------------
 ;;; bounded-vector-container
-;;; ---------------------------------------------------------------------------
 
 (defclass* bounded-vector-container (basic-vector-container
                                        concrete-container)
   ())
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod initialize-instance :around ((object bounded-vector-container) &rest args
                                         &key size initial-size)
@@ -75,9 +61,7 @@
 
 
 
-;;; ---------------------------------------------------------------------------
 ;;; vector-container
-;;; ---------------------------------------------------------------------------
 
 ;; implements size, empty-p, empty!,
 ;;            insert-item, delete-item,
@@ -89,13 +73,11 @@
 			     concrete-container)
   ())
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item ((container vector-container) item)
   (vector-push-extend item (contents container))
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod insert-item-at ((container vector-container) item index)
   (resize-vector container (max (1+ (size container))
@@ -108,7 +90,6 @@
   
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item-at ((container vector-container) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -120,7 +101,6 @@
     (decf (fill-pointer (contents container))))
   container)
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-item ((container vector-container) item)
   ;;; removes the first instance of item in the-vector
@@ -146,14 +126,12 @@
 	    (1- (length (contents container)))))
     container))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-first ((v vector-container))
   (prog1
     (item-at v 0)
     (delete-item-at v 0)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod delete-last ((v vector-container))
   (let ((index (1- (size v))))
@@ -161,21 +139,17 @@
       (item-at v index)
       (delete-item-at v index))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod size ((v vector-container))
   (length (contents v)))
 
 
 
-;;; ---------------------------------------------------------------------------
 ;;; flexible-vector-container
-;;; ---------------------------------------------------------------------------
 
 (defclass* flexible-vector-container (vector-container)
   ())
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod item-at! :before 
     ((container flexible-vector-container) value &rest indices)
@@ -183,7 +157,6 @@
            (dynamic-extent indices))
   (resize-vector container (1+ (first indices))))
 
-;;; ---------------------------------------------------------------------------
 
 #+Vector-Test
 (let ((vec (make-container 'vector-container)))
@@ -198,9 +171,7 @@
   (size vec)
   (delete-item-at vec 0))
 
-;;; ---------------------------------------------------------------------------
 ;;; utilities
-;;; ---------------------------------------------------------------------------
 
 (defun resize-vector (vector new-size)
   (unless (= (size vector) new-size)
@@ -211,7 +182,6 @@
                         (array-element-type (contents vector))
                         :fill-pointer (array-has-fill-pointer-p (contents vector))))))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod samep ((container-1 vector-container-mixin) 
                   (container-2 vector-container-mixin))

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>user-guide.md</string>
+	<string>source/user-guide.md</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -11,8 +11,6 @@
 			<string>source/user-guide.md</string>
 			<key>lastUsed</key>
 			<date>2008-09-28T22:30:10Z</date>
-			<key>selected</key>
-			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -35,7 +33,7 @@
 	<integer>206</integer>
 	<key>metaData</key>
 	<dict>
-		<key>index.md</key>
+		<key>source/index.md</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -49,7 +47,7 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>resources/footer.md</key>
+		<key>source/resources/footer.md</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -63,7 +61,7 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>resources/header.md</key>
+		<key>source/resources/header.md</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -93,21 +91,7 @@
 				<integer>18</integer>
 			</dict>
 		</dict>
-		<key>resources/shared-links.md</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>31</integer>
-				<key>line</key>
-				<integer>5</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>resources/ug-footer.md</key>
+		<key>source/resources/ug-footer.md</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -121,7 +105,7 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>resources/ug-header.md</key>
+		<key>source/resources/ug-header.md</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -135,7 +119,7 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>user-guide.md</key>
+		<key>source/user-guide.md</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -152,13 +136,12 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>index.md</string>
-		<string>user-guide.md</string>
-		<string>resources/ug-header.md</string>
-		<string>resources/ug-footer.md</string>
-		<string>resources/footer.md</string>
-		<string>resources/header.md</string>
-		<string>resources/shared-links.md</string>
+		<string>source/index.md</string>
+		<string>source/user-guide.md</string>
+		<string>source/resources/ug-header.md</string>
+		<string>source/resources/ug-footer.md</string>
+		<string>source/resources/footer.md</string>
+		<string>source/resources/header.md</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

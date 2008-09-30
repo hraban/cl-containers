@@ -8,18 +8,15 @@
    (present-symbols-only-p t ia)        ; :internal or :external
    ))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf packages) ((value symbol) (container package-container))
   (setf (packages container) (list value)))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod (setf packages) ((value cons) (container package-container))
   (assert (every-element-p value (lambda (e) (find-package e))))
   (setf (slot-value container 'packages) value))
 
-;;; ---------------------------------------------------------------------------
 
 (defmethod iterate-elements ((container package-container) fn)
   (block iterator
@@ -48,7 +45,6 @@
                  :exported-symbols-only-p nil)
  #'print) 
 
-;;; ---------------------------------------------------------------------------
 
 (defun bound-symbols-in-package (package)
   (iterate-elements
