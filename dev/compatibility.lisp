@@ -436,6 +436,8 @@
   (apply #'%collect-key-value container args))
 
 (defmethod collect-keys ((container list) &key filter (transform 'identity))
+  "If the list begins with an atom, then it is treated as a property list;
+otherwise, it is treated as an associative-list." 
   (if (atom (car container))
       ;; treat as property list
       (loop for current in container by #'cddr 
