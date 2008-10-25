@@ -3,20 +3,34 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>source/user-guide.md</string>
+	<string>source/index.md</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
 			<string>source/user-guide.md</string>
 			<key>lastUsed</key>
-			<date>2008-09-28T22:30:10Z</date>
+			<date>2008-10-12T17:02:00Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>source/resources/user-guide.css</string>
+			<key>lastUsed</key>
+			<date>2008-10-12T17:02:02Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../dev/container-api.lisp</string>
+			<key>lastUsed</key>
+			<date>2008-10-12T14:43:50Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>source/index.md</string>
 			<key>lastUsed</key>
-			<date>2008-09-28T22:27:18Z</date>
+			<date>2008-10-12T17:02:02Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>expanded</key>
@@ -30,9 +44,23 @@
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>206</integer>
+	<integer>224</integer>
 	<key>metaData</key>
 	<dict>
+		<key>../dev/container-api.lisp</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>160</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>123</integer>
+		</dict>
 		<key>source/index.md</key>
 		<dict>
 			<key>caret</key>
@@ -68,7 +96,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>18</integer>
+				<integer>1</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -81,14 +109,14 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>10</integer>
+				<integer>0</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>18</integer>
+				<integer>1</integer>
 			</dict>
 		</dict>
 		<key>source/resources/ug-footer.md</key>
@@ -110,42 +138,25 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>23</integer>
-				<key>line</key>
 				<integer>0</integer>
+				<key>line</key>
+				<integer>14</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-		</dict>
-		<key>source/user-guide.md</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>175</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>154</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>source/index.md</string>
-		<string>source/user-guide.md</string>
-		<string>source/resources/ug-header.md</string>
-		<string>source/resources/ug-footer.md</string>
-		<string>source/resources/footer.md</string>
 		<string>source/resources/header.md</string>
+		<string>../dev/container-api.lisp</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{507, 76}, {684, 778}}</string>
+	<string>{{239, 55}, {684, 778}}</string>
 </dict>
 </plist>

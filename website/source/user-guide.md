@@ -79,93 +79,37 @@ operations. For example, you can still pop and push into a
 
 ### Creating and inspecting
 
-{docs make-container}
-{docs size}
-{docs total-size}
-{docs empty!}
-{docs empty-p}
+{include user-guide/creation-and-inspection.mmd}
 
 ### General use: adding, deleting, finding
 
-{docs some-item-p}
-{docs every-item-p}
-{docs some-element-p}
-{docs every-element-p}
-{docs every-item-p}
-{docs every-key-value-p}
-{docs some-key-value-p}
+{include user-guide/editing.mmd}
 
-{docs iterate-nodes}
-{docs iterate-elements}
-{docs iterate-elements-stably}
-{docs iterate-keys}
-{docs iterate-key-value}
-{docs iterate-key-value-stably}
+### Some and Every
 
-{docs collect-items}
-{docs collect-nodes}
-{docs collect-elements}
-{docs collect-keys}
-{docs collect-key-value}
-{docs collect-elements-stably}
-{docs collect-key-value-stably}
+{include user-guide/querying.mmd}
 
-{docs count-elements}
-{docs count-items}
-{docs count-elements-if}
+### Counting, Collecting, and Canvasing
+
+{include user-guide/iteration-and-collection.mmd}
+
+### Finding and Searching
+
+{include user-guide/searching.mmd}
+
+### Miscellaneous
+
 {docs reduce-elements}
 {docs reduce-nodes}
-
-{docs delete-item}
-{docs delete-element}
-{docs delete-node}
-
-{docs nth-item}
-{docs nth-element}
-{docs item-at}
-{docs item-at-}1
-
-{docs find-item}
-{docs find-node}
-{docs find-element}
-
-{docs search-for-element}
-{docs search-for-key}
-{docs search-for-matching-node}
-{docs search-for-node}
-
 {docs dimensions}
-{docs enqueue}
-{docs dequeue}
-{docs push-item}
-{docs pop-item}
 
-{docs element}
-{docs has-children-p}
-{docs make-node-for-container}
+### Container taxonomy
+
+{include user-guide/taxonomy.mmd}
 
 ### Iterators
 
-{docs finish}
-{docs move-p}
-{docs element-passes-p}
-{docs move}
-{docs advance}
-{docs current-element}
-{docs current-element-p}
-{docs iterate-forward}
-{docs move-forward} }
-{docs move-forward-to-next-element}
-{docs next-element}
-{docs reset}
-
-{docs base-class-for-iteratee}
-{docs class-for-contents-as}
-{docs setup-initial-container}
-{docs make-internal-iterator}
-{docs move-internal}
-
-{docs open-file-for-iterator}
+{include user-guide/iteration.mmd}
 
 ## Indices
 

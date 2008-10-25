@@ -1,3 +1,5 @@
+/* @override http://common-lisp.net/project/cl-containers/shared/style-200.css */
+
 /* @override http://common-lisp.net/project/cl-containers/shared/style.css */
 
 /* @group toc */
@@ -143,6 +145,17 @@
 	padding: 1mm 1mm 1mm 1em;
 }
 
+.header {
+		position:relative; /* Position is declared "relative" to gain control of stacking order (z-index). */
+		width:auto;
+		min-width:120px;
+	font-size: medium;
+	background-color: #ff9f07;
+	color: white;
+	border: solid #995f04 4px;
+	padding: 1mm 1mm 1mm 1em;
+}
+
 .footer {
 	font-size: small;
 	font-style: italic;
@@ -164,6 +177,14 @@
 	padding-bottom: 2em;
 	padding-right: 1em;
 	background: inherit;
+}
+
+.footer h3 {
+	padding-top: 10px;
+	padding-left: 0.5in;
+	padding-right: 0.5in;
+	margin-top: 0.2em;
+	margin-bottom: 0.6em;
 }
 
 .footer a:link {
@@ -327,3 +348,4 @@ pre {
 .odd-row {
 	background: #f4e9d7;
 }
+
