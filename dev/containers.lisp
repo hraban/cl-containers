@@ -139,13 +139,6 @@ be instantiated using make-container."))
   ()
   (:export-p t))
 
-
-(defgeneric insert-initial-contents-p (container)
-  (:documentation "Returns true if this container type should rely on the default behavior of basic-initial-contents-mixin.")
-  (:method ((container basic-initial-contents-mixin))
-           (values t)))
-
-
 (defclass* initial-contents-key-value-mixin (basic-initial-contents-mixin)
   ())
 
@@ -201,20 +194,6 @@ be instantiated using make-container."))
 (defclass* key-value-iteratable-container-mixin (iteratable-container-mixin)
   ())
 
-
-(defgeneric iteratable-p (thing)
-  (:documentation "Returns true if thing knows how to iterate-nodes.")
-  (:method ((thing t))
-           (values nil))
-  (:method ((thing iteratable-container-mixin))
-           (values t)))
-
-(defgeneric key-value-iteratable-p (thing)
-  (:documentation "Returns true if thing knows how to iterate-nodes.")
-  (:method ((thing t))
-           (values nil))
-  (:method ((thing key-value-iteratable-container-mixin))
-           (values t)))
 
 ;;?? deprecate
 ;;?? backward compatibility
@@ -556,7 +535,13 @@ classified-container-mixin, and the classifier returns one of :TOP-LEFT,
           (make-container 'sparse-array-container 
                           :dimensions array-dimensions))))
 
+(defmethod insert-initial-contents-p
+    ((container basic-initial-contents-mixin))
+  (values t))
 
-;;; ***************************************************************************
-;;; *                              End of File                                *
-;;; ***************************************************************************
+(defmethod iteratable-p ((thing iteratable-container-mixin))
+  (values t))
+
+(defmethod key-value-iteratable-p
+    ((thing key-value-iteratable-container-mixin))
+  (values t))

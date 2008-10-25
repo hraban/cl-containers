@@ -151,7 +151,13 @@ the transform function."))
 
 
 (defgeneric collect-keys (container &key filter transform)
-  (:documentation ""))
+  (:documentation "Collects the `keys` of a container into a list.
+
+The `filter` and `transform` arguments should be `nil` or 
+functions of one argument. If `filter` is non-nil, then the 
+list returned will contain only `keys` that return true. If
+transform is non-nil, then it will be applied to each key
+that passes the filter."))
 
 
 (defgeneric iterate-value-key (container function))
@@ -310,11 +316,22 @@ key to match. Key defaults to identity and test defaults to eq."))
 (defgeneric dequeue (abstract-queue)
   (:documentation ""))
 
+
+#+(or)
+;; no, it's a slot
 (defgeneric dimensions (x)
   (:documentation ""))
 
+#+(or)
+;; no, it's a slot
 (defgeneric element (x)
   (:documentation ""))
+
+#+(or)
+;; no, it's a slot
+(defgeneric (setf element) (x y)
+  (:documentation ""))
+
 
 (defgeneric enqueue (abstract-queue item)
   (:documentation ""))
@@ -588,9 +605,6 @@ key to match. Key defaults to identity and test defaults to eq."))
 (defgeneric walk-tree-nodes (node walk-fn &optional mode)
   (:documentation ""))
 
-(defgeneric (setf element) (x y)
-  (:documentation ""))
-
 (defgeneric (setf packages) (value container)
   (:documentation ""))
 
@@ -599,3 +613,26 @@ key to match. Key defaults to identity and test defaults to eq."))
 
 (defgeneric current-item (container)
   (:documentation ""))
+
+(defgeneric iterate-children (node fn)
+  (:documentation "Calls `fn` on every child of `node`."))
+
+(defgeneric first-node (container)
+  (:documentation ""))
+
+(defgeneric %operate-after-finding (container element operation)
+  )
+
+(defgeneric insert-initial-contents-p (container)
+  (:documentation "Returns true if this container type should rely on the default behavior of basic-initial-contents-mixin."))
+
+(defgeneric iteratable-p (thing)
+  (:documentation "Returns true if thing knows how to iterate-nodes.")
+  (:method ((thing t))
+           (values nil)))
+
+(defgeneric key-value-iteratable-p (thing)
+  (:documentation "Returns true if thing knows how to iterate-nodes.")
+  (:method ((thing t))
+           (values nil)))
+

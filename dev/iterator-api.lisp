@@ -1,8 +1,11 @@
 (in-package #:containers)
 
-(defgeneric print-iterator (iterator stream)
+(defgeneric make-iterator 
+    (iteratee &rest args &key iterator-class &allow-other-keys)
   (:documentation ""))
 
+(defgeneric print-iterator (iterator stream)
+  (:documentation ""))
 
 (defgeneric finish (iterator)
   (:documentation "Tell Lisp that you are done with this iterator. Further calls to current-element, etc. will have unspecified behavior and may cause an error."))
