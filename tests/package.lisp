@@ -12,7 +12,6 @@
                 #:length-at-least-p
                 #:length-1-list-p
                 #:maparray
-                #:reset
                 #:samep
                 #:set-equal
 
