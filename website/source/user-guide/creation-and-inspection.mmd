@@ -1,0 +1,22 @@
+Containers can be created with {hs make-instance} or
+[make-container][]. The latter is exactly the same as the
+former unless [dynamic-classes][] is also loaded. In this
+case, `make-container` can take a list of superclasses and
+will find or create a container class to match.
+
+{docs make-container}
+
+Though specific container classes add to this list, every
+container shares a set of common operations:
+
+{docs size}
+{docs total-size}
+{docs empty!}
+{docs empty-p}
+
+Container nodes (i.e., instances of type
+[container-node-mixin][]) also share a set of operations:
+
+{docs element}
+{docs has-children-p}
+{docs make-node-for-container}
