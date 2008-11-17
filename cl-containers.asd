@@ -49,7 +49,7 @@ instructions."))
      (:file "bags-and-sets"
 	    :depends-on ("package" "basic-operations"))
      (:file "ring-buffers"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("package" "basic-operations" "queues"))
      (:file "miscellaneous"
 	    :depends-on ("package" "basic-operations"))
      (:file "associative"
@@ -59,7 +59,7 @@ instructions."))
      (:file "vectors"
 	    :depends-on ("package" "basic-operations"))
      (:file "quad-tree"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("package" "basic-operations" "trees"))
      (:file "heaps"
 	    :depends-on ("package" "basic-operations"))
      (:file "container-mixins"
