@@ -106,6 +106,7 @@
            
            find-item
            find-node
+	   find-successor-node
            find-element
            search-for-key
            search-for-item
