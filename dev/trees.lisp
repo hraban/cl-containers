@@ -664,7 +664,7 @@ test."
         (sorter (sorter tree))
         (node (root tree)))
        ((or (null node)
-	    (null (element node))))
+	    (node-empty-p node)))
     (let ((key-of-node (funcall (key tree) (element node))))
       (if (funcall test (first indexes) key-of-node)
         (return node)
