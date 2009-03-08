@@ -6,8 +6,8 @@
 (addtest (test-trees)
   insert-delete-consistency
   (ensure-cases (class)
-      '((binary-search-tree)
-	(red-black-tree))
+      '(binary-search-tree
+	red-black-tree)
     (let ((c (make-instance class)))
       (insert-item c 31)
       (ensure-same (size c) 1 :test '=)
@@ -18,8 +18,8 @@
 (addtest (test-trees)
   searching-and-deleting-keyed
   (ensure-cases (class)
-      '((binary-search-tree)
-	(red-black-tree))
+      '(binary-search-tree
+	red-black-tree)
     (let ((b (make-container class
 			     :key #'first
 			     :test #'equal)))
@@ -40,8 +40,8 @@
 (addtest (test-trees)
   find-on-nonexistant-item
   (ensure-cases (class)
-      '((binary-search-tree)
-	(red-black-tree))
+      '(binary-search-tree
+	red-black-tree)
     (let ((c (make-instance class)))
       (ensure-null (item-at c 1))
       (ensure-null (find-element c 1))
@@ -53,8 +53,8 @@
   find-on-nonexistant-item-nonempty
 
   (ensure-cases (class)
-      '((binary-search-tree)
-	(red-black-tree))
+      '(binary-search-tree
+	red-black-tree)
     (let ((c (make-instance class)))
       (insert-list c '(64 83 68 84 97))
       (ensure-null (item-at c 1))
@@ -66,8 +66,8 @@
 (addtest (test-trees)
   randomized-testing
   (ensure-cases (class)
-      '((binary-search-tree)
-	(red-black-tree))
+      '(binary-search-tree
+	red-black-tree)
     (let* ((count 20)
 	   (randlist (loop repeat count
 			   collect (random 100)))

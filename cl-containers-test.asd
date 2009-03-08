@@ -22,4 +22,5 @@
 			 (:file "misc")
 			 (:file "trees")
 			 (:file "dlist"))))
-  :depends-on (:cl-containers :lift))
+  :depends-on (:cl-containers 
+	       (:version :lift "1.7.0")))
