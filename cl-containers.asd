@@ -20,7 +20,7 @@ instructions."))
   (operate 'load-op 'asdf-system-connections))
 
 (defsystem cl-containers
-  :version "0.11.3"
+  :version "0.11.4"
   :author "Brendan Burns, Andrew Hannon, Brent Heeringa, Gary King, Joshua Moody, Charles Sutton, Louis Theran, David Westbrook, and other former students and staff of EKSL."
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
