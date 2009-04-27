@@ -128,6 +128,13 @@ instructions."))
 		:components ((:file "dynamic-classes")))))
 
 
+#-asdf-system-connections
+(defsystem container-dynamic-classes
+  :depends-on (:cl-containers :dynamic-classes)
+  :components ((:module 
+		"dev"
+		:components ((:file "dynamic-classes")))))
+
 
 #|
 
