@@ -151,7 +151,7 @@ element returns current-element and allows for side-effects
   (loop while (move-forward-p iterator) do
         (when (current-element-p iterator)
           (funcall function (element iterator)))
-        (move-forward iterator)))
+       (move-forward iterator)))
 
 
 ;;; transforming-iterator-mixin
