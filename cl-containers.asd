@@ -20,63 +20,68 @@ instructions."))
   (operate 'load-op 'asdf-system-connections))
 
 (defsystem cl-containers
-  :version "0.11.5"
+  :version "0.12.0"
   :author "Brendan Burns, Andrew Hannon, Brent Heeringa, Gary King, Joshua Moody, Charles Sutton, Louis Theran, David Westbrook, and other former students and staff of EKSL."
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
   :description "A generic container library for Common Lisp"
   :components 
   ((:module 
-    "dev"
+    "setup"
+    :pathname "dev/"
     :components
     ((:file "package")
      (:file "conditions"
 	    :depends-on ("package"))
-     (:file "container-api" 
-	    :depends-on ("conditions" "package"))
-     (:file "containers"
-	    :depends-on ("conditions" "package"))
+     ))
+   (:module 
+    "dev"
+    :depends-on ("setup")
+    :components
+    ((:file "container-api")
+     (:file "containers")
      (:file "basic-operations"
 	    :depends-on ("container-api" "containers"))
      (:file "queues"
 	    :depends-on ("basic-operations"))
      (:file "stacks"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "trees"
-	    :depends-on ("package" "basic-operations" "vectors"))
+	    :depends-on ("basic-operations" "vectors"))
      (:file "lists"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "bags-and-sets"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "ring-buffers"
-	    :depends-on ("package" "basic-operations" "queues"))
+	    :depends-on ("basic-operations" "queues"))
      (:file "miscellaneous"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "associative"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "compatibility" 
-	    :depends-on ("package" "basic-operations" "associative"))
+	    :depends-on ("basic-operations" "associative"))
      (:file "vectors"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "quad-tree"
-	    :depends-on ("package" "basic-operations" "trees"))
+	    :depends-on ("basic-operations" "trees"))
      (:file "heaps"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "container-mixins"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "union-find-container"
-	    :depends-on ("package" "basic-operations"))
+	    :depends-on ("basic-operations"))
      (:file "package-container"
-	    :depends-on ("package" "basic-operations"))
-     (:file "iterator-api"
-	    :depends-on ("package"))
+	    :depends-on ("basic-operations"))
+     (:file "iterator-api")
      (:file "iterators"
 	    :depends-on ("iterator-api" "basic-operations"))
      (:file "file-iterators"
 	    :depends-on ("iterators"))
      #+(or digitool openmcl)
      (:file "containers-readtable"
-	    :depends-on ("containers"))))
+	    :depends-on ("containers"))
+     (:file "dynamic-classes")
+     (:file "dynamic-class-defs" :depends-on ("dynamic-classes"))))
    (:module "website"
 	    :components ((:module "source"
 				  :components ((:static-file "index.md"))))))
@@ -120,41 +125,3 @@ instructions."))
                         :components ((:file "copying")))))
 
 
-#+asdf-system-connections
-(asdf:defsystem-connection containers-and-dynamic-classes
-  :requires (cl-containers dynamic-classes)
-  :components ((:module 
-		"dev"
-		:components ((:file "dynamic-classes")))))
-
-
-#-asdf-system-connections
-(defsystem container-dynamic-classes
-  :depends-on (:cl-containers :dynamic-classes)
-  :components ((:module 
-		"dev"
-		:components ((:file "dynamic-classes")))))
-
-
-#|
-
-(define-eksl-module :container-immutable 
-  ("immutable-containers" :depends-on ("conditions"))
-  :system containers)
-
-(define-eksl-module :container-tables 
-  ((("table-container"
-     "file-backed-table-container")))
-  :system containers
-  :depends-on (containers moptilities))
-
-(define-eksl-module :r-tree
-  ("r-tree")
-  :system :containers)
-
-(define-eksl-module :container-thread-safe 
-  ((("container-thread-safe")))
-  :system containers
-  :depends-on (containers))
-
-|#   

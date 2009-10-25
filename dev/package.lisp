@@ -336,4 +336,20 @@
   
   (:export #:packages
            #:present-symbols-only-p
-           #:exported-symbols-only-p))
+           #:exported-symbols-only-p)
+
+  (:export
+   #:existing-subclass
+   #:include-class-dependencies
+   #:add-parameter->dynamic-class
+   #:determine-dynamic-class
+   ;;??
+   #+(or)
+   #:add-dynamic-class-for-parameters
+   #:remove-parameter->dynamic-class
+   #:empty-add-parameter->dynamic-class
+   #:empty-all-add-parameter->dynamic-class
+   #:parameter->dynamic-class
+   #:find-existing-subclass
+   #:find-or-create-class)
+  )
