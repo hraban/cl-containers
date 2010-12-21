@@ -11,12 +11,14 @@ Brent Heeringa, Louis Theran
 (in-package #:containers-system)
 
 ;; try hard
-(unless (find-system 'asdf-system-connections nil)
+(unless (or (member :asdf-system-connections *features*)
+	    (find-system 'asdf-system-connections nil))
   (warn "The CL-Containers system would enjoy having ~
 asdf-system-connections around. See 
 http://www.cliki.net/asdf-system-connections for details and download
 instructions."))
-(when (find-system 'asdf-system-connections nil)
+(when (and (not (member :asdf-system-connections *features*))
+	   (find-system 'asdf-system-connections nil))
   (operate 'load-op 'asdf-system-connections))
 
 (defsystem cl-containers

@@ -23,20 +23,31 @@
 
 ### What it is
 
-Common Lisp ships with a set of powerful built in data structures including the venerable list, full featured arrays, and hash-tables. CL-containers enhances and builds on these structures in two ways:
+Common Lisp ships with a set of powerful built in data
+structures including the venerable list, full featured
+arrays, and hash-tables. CL-containers enhances and builds on
+these structures in two ways:
 
-1. By adding containers that are not available in native Lisp (for example: binary search trees, red-black trees, sparse arrays and so on). 
-2. By providing a standard interface so that they are simpler to use and so that changing design decisions becomes significantly easier.
+1. By adding containers that are not available in native Lisp
+(for example: binary search trees, red-black trees, sparse
+arrays and so on).
 
-Here is a slightly crazy picture of the class hierarchy for [containers][8] and for [generators. These are PDFs.][9]
+2. By providing a standard interface so that they are simpler
+to use and so that changing design decisions becomes
+significantly easier.
+
+Here is a slightly crazy picture of the class hierarchy for
+[containers][8] and for [generators. These are PDFs.][9]
 
    [8]: images/containers.pdf
    [9]: images/iterators.pdf
 
-[TINAA][10] documentation for CL-Containers is [available][11].
+{remark
+  [TINAA][10] documentation for CL-Containers is [available][11].
 
    [10]: http://common-lisp.net/project/tinaa/
    [11]: http://common-lisp.net/project/cl-containers/documentation/
+}
 
 {anchor mailing-lists}
 
@@ -50,11 +61,21 @@ Here is a slightly crazy picture of the class hierarchy for [containers][8] and 
 
 ### Where is it
 
-A [Darcs][15] repository is available (note that you'll also need to get [Metatilities][] and [Moptilities][] to get CL-Containers to work). The darcs command is listed below:
-    
-    darcs get http://common-lisp.net/project/cl-containers
+metabang.com is switching from [darcs][] to [git][]
+for source control; the current cl-containers repository is on
+[github][github-cl-containers] and you can clone it using:
 
-CL-Containers (and friends) should also be [ASDF installable][18]. Its CLiki home is right [where][19] you'd expect.
+    git clone git://github.com/gwkkwg/cl-containers
+
+
+(note that you'll also need to get [metatilities-base][] and
+[Moptilities][] to get CL-Containers to work). 
+
+    git clone git://github.com/gwkkwg/cl-containers
+
+CL-Containers (and friends) should also be [ASDF
+installable][18]. Its CLiki home is right [where][19] you'd
+expect.
 
    [18]: http://www.cliki.net/asdf-install
    [19]: http://www.cliki.net/cl-containers
@@ -66,6 +87,9 @@ There's also a handy [gzipped tar file][20].
 {anchor news}
 
 ### What is happening
+
+21 December 2010
+Moved to git. Minor cleanup. Absolutely nothing exciting. sigh.
 
 24 October 2007 
 Lots of little updates between then and now.
@@ -79,12 +103,20 @@ Wrote a mini tutorial and published it on [unCLog][22].
 Added links, tarball, etc.
 
 10 Nov 2005
-Small patches and corrections; links to the mailing list. Nothing exciting
+Small patches and corrections; links to the mailing list.
+Nothing exciting
 
 4 Nov 2005
-OK. I changed my mind aboust waiting for ASDF. CL-Containers is ready for a release. Things are pretty weak-around-the-knees however, so the release party planned on Carnival Cruise Lines has been canceled. Sorry.
+OK. I changed my mind aboust waiting for ASDF. CL-Containers
+is ready for a release. Things are pretty
+weak-around-the-knees however, so the release party planned
+on Carnival Cruise Lines has been canceled. Sorry.
 
-Today, I hope to add CLiki pages for CL-Containers and two other bits of code it relies on: Metatilities and Moptilities. I'll also finish with the darcs repositories, and have things ASDF installable. If I'm lucky, it'll actually work!
+Today, I hope to add CLiki pages for CL-Containers and two
+other bits of code it relies on: Metatilities and
+Moptilities. I'll also finish with the darcs repositories,
+and have things ASDF installable. If I'm lucky, it'll
+actually work!
 
 6 Oct 2005
 I've decided to get cl-containers out without worrying about ASDF. This means I should be able to stick what's needed up on the web site by the end of this week (oh, oh, I've almost made a commitment). This includes: 

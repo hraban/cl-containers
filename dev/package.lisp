@@ -31,7 +31,13 @@
                 #:root
                 #:next-element
                 #:total-size
-                #:element-type)
+                #:element-type
+
+		#:class-precedence-list
+		#:class-direct-subclasses
+		#:get-class
+		#:finalize-class-if-necessary
+		#:muffle-redefinition-warnings)
   
   (:export #:basic-queue
            #:ring-buffer
