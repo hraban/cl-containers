@@ -60,7 +60,7 @@
            parameters)))
 
 (defun determine-generator-class (generator-class &rest parameters)
-  (apply #':determine-dynamic-class
+  (apply #'determine-dynamic-class
 	 :generator generator-class parameters))
 
 (defmethod include-class-dependencies

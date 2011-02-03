@@ -83,7 +83,7 @@ instructions."))
      (:file "containers-readtable"
 	    :depends-on ("containers"))
      (:file "dynamic-classes")
-     (:file "dynamic-class-defs" :depends-on ("dynamic-classes"))))
+     (:file "dynamic-class-defs" :depends-on ("dynamic-classes" "containers"))))
    (:module "website"
 	    :components ((:module "source"
 				  :components ((:static-file "index.md"))))))
