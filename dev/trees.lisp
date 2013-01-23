@@ -123,65 +123,65 @@
                            (not (funcall test
                                          key-item
                                          (funcall key (element current)))))) do
-		 (if (funcall sorter key-item
-					  (funcall key (element current)))
-			 (setf current (left-child current))
-			 (setf current (right-child current))))
+         (if (funcall sorter key-item
+                      (funcall key (element current)))
+             (setf current (left-child current))
+             (setf current (right-child current))))
     (if (and (not (node-empty-p current)) (not not-found?))
-		current
-		nil)))
+        current
+        nil)))
 
 (defmethod find-successor-node ((tree binary-search-tree) (item t))
   (find-successor-node tree (make-node-for-container tree item)))
 (defmethod find-successor-node ((tree binary-search-tree)
-								(item bst-node))
+                                (item bst-node))
   "Find the item equal to or the next greater than item"
   (with-slots (key test sorter) tree
     (let ((key-item (funcall key (element item))))
       (labels ((%node-equal-p (current)
-				 (funcall test key-item
-						  (funcall key (element current))))
-			   (%compare-lt (current)	;compare-less-than?
-				 (funcall sorter key-item
-						  (funcall key (element current))))
-			   (%final-node (prior)
-				 (if (%compare-lt prior) prior
-					 (let ((s (successor tree prior)))
-					   (if (node-empty-p s) nil s))))
-			   (%find-successor (current prior)
-				 (cond ((node-empty-p current)
-						(when prior (%final-node prior)))
-					   ((%node-equal-p current) current)
-					   ((%compare-lt current)
-						(%find-successor (left-child current) current))
-					   (t (%find-successor (right-child current) current)))))
-		(%find-successor (root tree) nil)))))
+                 (funcall test key-item
+                          (funcall key (element current))))
+               (%compare-lt (current)   ;compare-less-than?
+                 (funcall sorter key-item
+                          (funcall key (element current))))
+               (%final-node (prior)
+                 (if (%compare-lt prior) prior
+                     (let ((s (successor tree prior)))
+                       (if (node-empty-p s) nil s))))
+               (%find-successor (current prior)
+                 (cond ((node-empty-p current)
+                        (when prior (%final-node prior)))
+                       ((%node-equal-p current) current)
+                       ((%compare-lt current)
+                        (%find-successor (left-child current) current))
+                       (t (%find-successor (right-child current) current)))))
+        (%find-successor (root tree) nil)))))
 
 (defmethod find-predecessor-node ((tree binary-search-tree) (item t))
   (find-predecessor-node tree (make-node-for-container tree item)))
 (defmethod find-predecessor-node ((tree binary-search-tree)
-								  (item bst-node))
+                                  (item bst-node))
   "Find the item equal to or the next less than item"
   (with-slots (key test sorter) tree
     (let ((key-item (funcall key (element item))))
       (labels ((%node-equal-p (current)
-				 (funcall test key-item
-						  (funcall key (element current))))
-			   (%compare-lt (current)
-				 (not (funcall sorter key-item
-						  (funcall key (element current)))))
-			   (%final-node (prior)
-				 (if (%compare-lt prior) prior
-					 (let ((s (successor tree prior)))
-					   (if (node-empty-p s) nil s))))
-			   (%find-successor (current prior)
-				 (cond ((node-empty-p current) 
-						(when prior (%final-node prior)))
-					   ((%node-equal-p current) current)
-					   ((%compare-lt current)
-						(%find-successor (left-child current) current))
-					   (t (%find-successor (right-child current) current)))))
-		(%find-successor (root tree) nil)))))
+                 (funcall test key-item
+                          (funcall key (element current))))
+               (%compare-lt (current)
+                 (not (funcall sorter key-item
+                          (funcall key (element current)))))
+               (%final-node (prior)
+                 (if (%compare-lt prior) prior
+                     (let ((s (successor tree prior)))
+                       (if (node-empty-p s) nil s))))
+               (%find-successor (current prior)
+                 (cond ((node-empty-p current) 
+                        (when prior (%final-node prior)))
+                       ((%node-equal-p current) current)
+                       ((%compare-lt current)
+                        (%find-successor (left-child current) current))
+                       (t (%find-successor (right-child current) current)))))
+        (%find-successor (root tree) nil)))))
 
 (defmethod find-successor-item ((tree binary-search-tree) (item bst-node))
   (element (find-successor-node tree item)))

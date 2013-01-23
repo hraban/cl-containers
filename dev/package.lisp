@@ -112,7 +112,6 @@
            
            find-item
            find-node
-	   find-successor-node
            find-element
            search-for-key
            search-for-item
@@ -123,7 +122,11 @@
            
            predecessor
            successor
-           
+		   find-successor-node
+		   find-predecessor-node
+		   find-successor-item
+		   find-predecessor-item
+
            copy-container
            container->list
            container->array
