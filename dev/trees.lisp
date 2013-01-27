@@ -110,8 +110,9 @@
 ;;; Search, max, min, etc.
 
 (defmethod find-node ((tree binary-search-tree) (item t))
-  (find-item tree (make-node-for-container tree item)))
-(defmethod find-item ((tree binary-search-tree) (item bst-node))
+  (find-node tree (make-node-for-container tree item)))
+
+(defmethod find-node ((tree binary-search-tree) (item bst-node))
   (let* ((key (key tree))
          (test (test tree))
          (sorter (sorter tree))
@@ -132,48 +133,55 @@
         current
         nil)))
 
-(defmethod find-successor-node ((tree binary-search-tree) (item t))
-  (find-successor-node tree (make-node-for-container tree item)))
-(defmethod find-successor-node ((tree binary-search-tree)
-                                (item bst-node))
-  "Find the item equal to or the next greater than item"
-  (with-slots (key test sorter) tree
-    (let ((key-item (funcall key (element item))))
-      (labels ((%node-equal-to-key-p (current)
-                 (funcall test key-item
-                          (funcall key (element current))))
-               (%node-less-than-key-p (current)
-                 (funcall sorter key-item
-                          (funcall key (element current))))
-               (%final-node (prior)
-                 (if (%node-less-than-key-p prior)
-					 prior
-                     (let ((s (successor tree prior)))
-                       (if (node-empty-p s) nil s))))
-               (%find-successor (current prior)
-                 (cond ((node-empty-p current)
-						(when prior (%final-node prior)))
-                       ((%node-equal-to-key-p current) current)
-                       ((%node-less-than-key-p current)
-                        (%find-successor (left-child current) current))
-                       (t (%find-successor (right-child current) current)))))
-        (%find-successor (root tree) nil)))))
+(defmethod find-item ((tree binary-search-tree) (item bst-node))
+  (find-element tree item))
 
-(defmethod find-predecessor-node ((tree binary-search-tree) (item t))
-  (find-predecessor-node tree (make-node-for-container tree item)))
-(defmethod find-predecessor-node ((tree binary-search-tree)
-                                  (item bst-node))
-  "Find the item equal to or the next less than item"
+(defgeneric find-successor-node (tree item &key strict))
+(defgeneric find-successor-item (tree item &key strict))
+(defgeneric find-predecessor-node (tree item &key strict))
+(defgeneric find-predecessor-item (tree item &key strict))
+
+(defmethod find-successor-node ((tree binary-search-tree) (item t) &key strict)
+  (find-successor-node tree (make-node-for-container tree item) :strict strict))
+
+(defmethod find-successor-node ((tree binary-search-tree) (item bst-node) &key strict)
+  "Find an item next greater than the item according to the sorter."
   (with-slots (key test sorter) tree
     (let ((key-item (funcall key (element item))))
       (labels ((%node-equal-to-key-p (current)
                  (funcall test key-item
                           (funcall key (element current))))
                (%node-more-than-key-p (current)
+                 (funcall sorter key-item
+                          (funcall key (element current))))
+               (%final-node (prior)
+                 (if (%node-more-than-key-p prior)
+					 prior
+                     (let ((s (successor tree prior)))
+                       (if (node-empty-p s) nil s))))
+               (%find-successor (current prior)
+                 (cond ((node-empty-p current)
+						(when prior (%final-node prior)))
+                       ((and (not strict) (%node-equal-to-key-p current))	current)
+                       ((%node-more-than-key-p current)
+                        (%find-successor (left-child current) current))
+                       (t (%find-successor (right-child current) current)))))
+        (%find-successor (root tree) nil)))))
+
+(defmethod find-predecessor-node ((tree binary-search-tree) (item t) &key strict)
+  (find-predecessor-node tree (make-node-for-container tree item) :strict strict))
+(defmethod find-predecessor-node ((tree binary-search-tree) (item bst-node) &key strict)
+  "Find an item next less than the item according to the sorter."
+  (with-slots (key test sorter) tree
+    (let ((key-item (funcall key (element item))))
+      (labels ((%node-equal-to-key-p (current)
+                 (funcall test key-item
+                          (funcall key (element current))))
+               (%node-less-than-key-p (current)
                  (funcall sorter (funcall key (element current))
 						  key-item))
                (%final-node (prior)
-                 (if (%node-more-than-key-p prior)
+                 (if (%node-less-than-key-p prior)
 					 prior
                      (let ((s (predecessor tree prior)))
                        (if (node-empty-p s) nil s))))
@@ -181,21 +189,27 @@
                  (cond ((node-empty-p current)
 						(when prior
 						  (%final-node prior)))
-                       ((%node-equal-to-key-p current) current)
-                       ((%node-more-than-key-p current)
+                       ((and (not strict) (%node-equal-to-key-p current)) current)
+                       ((%node-less-than-key-p current)
                         (%find-predecessor (right-child current) current))
                        (t (%find-predecessor (left-child current) current)))))
         (%find-predecessor (root tree) nil)))))
 
-(defmethod find-successor-item ((tree binary-search-tree) (item bst-node))
-  (element (find-successor-node tree item)))
-(defmethod find-successor-item ((tree binary-search-tree) (item t))
-  (find-successor-item tree (make-node-for-container tree item)))
+(defmethod find-successor-item ((tree binary-search-tree) (item bst-node) &key strict)
+  (let ((node? (find-successor-node tree item :strict strict)))
+	(when node?
+	  (element node?))))
+(defmethod find-successor-item ((tree binary-search-tree) (item t) &key strict)
+  (find-successor-item tree (make-node-for-container tree item) :strict strict))
 
-(defmethod find-predecessor-item ((tree binary-search-tree) (item bst-node))
-  (element (find-predecessor-node tree item)))
-(defmethod find-predecessor-item ((tree binary-search-tree) (item t))
-  (find-predecessor-item tree (make-node-for-container tree item)))
+(defmethod find-predecessor-item ((tree binary-search-tree) (item bst-node) &key strict)
+  (let ((node? (find-predecessor-node tree item :strict strict)))
+	(when node?
+	  (element node?))))
+(defmethod find-predecessor-item ((tree binary-search-tree) (item t) &key strict)
+  (find-predecessor-item tree (make-node-for-container tree item) :strict strict))
+
+
 
 (defmethod first-element ((node bst-node))
   (element (first-node node)))
