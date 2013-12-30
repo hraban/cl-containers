@@ -10,16 +10,15 @@
   :licence "MIT Style License"
   :description "Tests for CL-Containers"
   :components ((:module "setup"
-			:pathname "tests/" 
+			:pathname "tests/"
 			:components ((:file "package")
-				     (:file "test-containers" 
+				     (:file "test-containers"
 				      :depends-on ("package"))))
 	       (:module "tests"
 			:depends-on ("setup")
-			:components 
-			((static-file "notes.text")
-			 (:file "priority-queues")
+			:components
+			((:file "priority-queues")
 			 (:file "trees")
 			 (:file "dlist"))))
-  :depends-on (:cl-containers 
+  :depends-on (:cl-containers
 	       (:version :lift "1.7.0")))
