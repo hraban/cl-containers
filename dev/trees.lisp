@@ -370,22 +370,30 @@ test."
 (defconstant +rbt-color-red+ 1)
 
 
-(defvar *rbt-empty-node* nil)
-
+(defclass rbt-empty-node (red-black-node)
+  ()
+  (:documentation "Subclass the empty node so that it's possible to
+quickly determine if a node is empty using TYPEP."))
 
 (defclass* red-black-tree (binary-search-tree)
-  ()
+  ((empty-node :type red-black-node
+               :initarg :empty-node
+               :reader empty-node))
   (:default-initargs
     :key #'identity
     :test #'eq
-    :sorter #'<
-    :root *rbt-empty-node*))
+    :sorter #'<))
 
 
-(defmethod initialize-instance :after ((object red-black-tree) &key
-                                       (root *rbt-empty-node*))
-  (unless (eq root *rbt-empty-node*)
-    (setf (parent root) *rbt-empty-node*)))
+(defmethod initialize-instance :after ((object red-black-tree) &key)
+  (let ((e (make-instance 'rbt-empty-node
+                          :right-child nil
+                          :left-child nil
+                          :element nil
+                          :tree object
+                          :empty-p t)))
+    (setf (slot-value object 'empty-node) e)
+    (setf (slot-value object 'root) e)))
 
 
 (defclass* red-black-node (bst-node)
@@ -393,14 +401,20 @@ test."
           :initarg :rbt-color
           :accessor rbt-color)
    (right-child :initarg :right-child)          ; add initargs
-   (left-child :initarg :left-child))
-  (:default-initargs
-    :right-child *rbt-empty-node*
-    :left-child *rbt-empty-node*))
+   (left-child :initarg :left-child)))
 
+(defmethod initialize-instance :after ((node red-black-node) &key parent left-child right-child empty-p)
+  (let ((e (if empty-p
+               ;; This is the initialisation of the empty node itself
+               node
+               ;; ELSE: Find the empty node in the tree
+               (empty-node (tree node)))))
+    (setf (slot-value node 'parent) (or parent e))
+    (setf (slot-value node 'left-child) (or left-child e))
+    (setf (slot-value node 'right-child) (or right-child e))))
 
 (defmethod node-empty-p ((node red-black-node))
-  (eq node *rbt-empty-node*))
+  (typep node 'rbt-empty-node))
 
 
 (defmethod make-node-for-container ((tree red-black-tree) (item t) &key)
@@ -408,7 +422,7 @@ test."
      (make-instance 'red-black-node
        :element item
        :tree tree)
-     *rbt-empty-node*))
+     (empty-node tree)))
 
 
 (defmethod print-object ((o red-black-node) stream)
@@ -417,14 +431,8 @@ test."
            (element o)))
 
 
-(setf *rbt-empty-node* (make-instance 'red-black-node
-                         :right-child nil
-                         :left-child nil
-                         :element nil))
-
-
 (defmethod rotate-left ((tree binary-search-tree) (x two-child-node))
-   (assert (not (eq (right-child x) *rbt-empty-node*)))
+   (assert (not (eq (right-child x) (empty-node tree))))
 
    (let ((y (right-child x)))
      ;; turn y's left subtree into x's right subtree
@@ -448,7 +456,7 @@ test."
 
 
 (defmethod rotate-right ((tree binary-search-tree) (x two-child-node))
-   (assert (not (eq (left-child x) *rbt-empty-node*)))
+   (assert (not (eq (left-child x) (empty-node tree))))
 
    (let ((y (left-child x)))
      ;; turn y's right subtree into x's left subtree
@@ -517,19 +525,21 @@ test."
 
 
 (defmethod delete-node ((tree red-black-tree) (item red-black-node))
-   (let ((y nil) (x nil))
-     (if (or (eq (left-child item) *rbt-empty-node*)
-             (eq (right-child item) *rbt-empty-node*))
+   (let ((e (empty-node tree))
+         (y nil)
+         (x nil))
+     (if (or (eq (left-child item) e)
+             (eq (right-child item) e))
        (setf y item)
        (setf y (successor tree item)))
 
-     (if (eq (left-child y) *rbt-empty-node*)
+     (if (eq (left-child y) e)
        (setf x (right-child y))
        (setf x (left-child y)))
 
      (setf (parent x) (parent y))
 
-     (if (eq (parent y) *rbt-empty-node*)
+     (if (eq (parent y) e)
        (setf (root tree) x)
        (if (eq y (left-child (parent y)))
          (setf (left-child (parent y)) x)
@@ -625,12 +635,12 @@ test."
 
 ;;; Misc
 
-(defmethod walk-tree-nodes ((node (eql *rbt-empty-node*)) walk-fn 
+(defmethod walk-tree-nodes ((node rbt-empty-node) walk-fn 
 			    &optional (mode :inorder))
    "Special case..."
    (declare (ignore walk-fn mode)))
 
-(defmethod walk-tree ((node (eql *rbt-empty-node*)) walk-fn &optional 
+(defmethod walk-tree ((node rbt-empty-node) walk-fn &optional 
                       (mode :inorder))
   "Special case..."
   (declare (ignore walk-fn mode)))
