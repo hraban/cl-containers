@@ -1,10 +1,4 @@
-(in-package #:common-lisp-user)
-
-(defpackage #:cl-containers-test-system
-  (:use #:common-lisp #:asdf))
-(in-package #:cl-containers-test-system)
-
-(defsystem cl-containers-test
+(defsystem "cl-containers-test"
   :author "Gary King <gwking@metabang.com>"
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
@@ -20,5 +14,8 @@
 			((:file "priority-queues")
 			 (:file "trees")
 			 (:file "dlist"))))
-  :depends-on (:cl-containers
-	       (:version :lift "1.7.0")))
+  :depends-on ("cl-containers"
+	       (:version "lift" "1.7.0"))
+  :perform (test-op (op c)
+             (describe
+              (symbol-call :lift :run-tests :config :generic))))
