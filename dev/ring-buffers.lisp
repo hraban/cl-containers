@@ -44,6 +44,21 @@
                (mod (first indexes) (total-size container)))
         value))
 
+(defmethod lifo-index ((container ring-buffer) index)
+  "Return index converted to internal LIFO index, where items are ordered from newest to oldest."
+  (mod (1- (+ (buffer-start container)
+              (- (buffer-end container) (buffer-start container) index)))
+       (total-size container)))
+
+(defmethod lifo-ref ((container ring-buffer) index)
+  "Return value from contents by INDEX where 0 INDEX is most recent."
+  (svref (contents container) (lifo-index container index)))
+
+(defmethod recent-list ((container ring-buffer))
+  "Return list of items ordered by most recent."
+  (loop for index from 0 below (- (buffer-end container) (buffer-start container))
+        for item = (lifo-ref container index)
+        when item collect item))
 
 (defmethod increment-end ((container ring-buffer))
   (with-slots (buffer-end buffer-start) container
