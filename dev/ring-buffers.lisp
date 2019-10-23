@@ -67,6 +67,19 @@
       (incf buffer-start))
     (incf buffer-end)))
 
+(defmethod delete-item ((container ring-buffer) index)
+  "Delete item by LIFO-INDEX (ordered by most recent)."
+  (with-slots (buffer-end) container
+    (if (= index 0)
+        (setf (aref (contents container) (lifo-index container 0)) nil)
+        (loop :for i :from index :downto 1 do
+          (setf (aref (contents container)
+                      (lifo-index container i))
+                (aref (contents container)
+                      (lifo-index container (1- i))))))
+    (setf (aref (contents container) (lifo-index container 0)) nil)
+    (decf buffer-end)))
+
 
 (defmethod next-item ((container ring-buffer))
   (increment-end container)
