@@ -12,14 +12,14 @@
                         bounded-container-mixin
                         iteratable-container-mixin
                         concrete-container)
-  ((contents :initarg :contents
-             :reader contents)
-   (buffer-start :initform 0
-                 :reader buffer-start)
-   (buffer-end :initform 0
-               :reader buffer-end)
-   (total-size :initarg :total-size
-               :reader total-size)))
+  ((contents :reader contents
+             :initarg :contents)
+   (buffer-start :reader buffer-start
+                 :initform 0)
+   (buffer-end :reader buffer-end
+               :initform 0)
+   (total-size :reader total-size
+               :initarg :total-size)))
 
 (defun make-ring-buffer (size)
   (make-instance 'ring-buffer
