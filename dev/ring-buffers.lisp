@@ -12,7 +12,10 @@
                         bounded-container-mixin
                         iteratable-container-mixin
                         concrete-container)
-  ((contents :reader contents
+  ((last-in-first-out :reader last-in-first-out
+                      :initarg :last-in-first-out
+                      :documentation "Last-in-first-out flag, else data structure is first-in-first-out.")
+   (contents :reader contents
              :initarg :contents)
    (buffer-start :reader buffer-start
                  :initform 0)
@@ -21,15 +24,18 @@
    (total-size :reader total-size
                :initarg :total-size)))
 
-(defun make-ring-buffer (size)
+(defun make-ring-buffer (size last-in-first-out)
   (make-instance 'ring-buffer
                  :contents (make-array size)
-                 :total-size size))
+                 :total-size size
+                 :last-in-first-out last-in-first-out))
 
 (defmethod make-container ((class (eql 'ring-buffer)) &rest args)
-  (let ((total-size (getf args :total-size 1)))
+  (let ((total-size (getf args :total-size 1))
+        (last-in-first-out (getf args :last-in-first-out nil)))
     (remf args :total-size)
-    (make-ring-buffer total-size)))
+    (remf args :last-in-first-out)
+    (make-ring-buffer total-size last-in-first-out)))
 
 
 ;;?? the (first indexes) is odd...
