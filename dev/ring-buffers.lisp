@@ -12,10 +12,7 @@
                         bounded-container-mixin
                         iteratable-container-mixin
                         concrete-container)
-  ((last-in-first-out :reader last-in-first-out
-                      :initarg :last-in-first-out
-                      :documentation "Last-in-first-out flag, else data structure is first-in-first-out.")
-   (contents :reader contents
+  ((contents :reader contents
              :initarg :contents)
    (buffer-start :reader buffer-start
                  :initform 0)
@@ -24,11 +21,12 @@
    (total-size :reader total-size
                :initarg :total-size)))
 
+(defclass* ring-buffer-reverse (ring-buffer) ())
+
 (defun make-ring-buffer (size last-in-first-out)
-  (make-instance 'ring-buffer
+  (make-instance (if last-in-first-out 'ring-buffer-reverse 'ring-buffer)
                  :contents (make-array size)
-                 :total-size size
-                 :last-in-first-out last-in-first-out))
+                 :total-size size))
 
 (defmethod make-container ((class (eql 'ring-buffer)) &rest args)
   (let ((total-size (getf args :total-size 1))
@@ -44,26 +42,37 @@
   (svref (contents container)
          (mod (first indexes) (total-size container))))
 
+(defmethod item-at ((container ring-buffer-reverse) &rest indexes)
+  (declare (dynamic-extent indexes))
+  (let ((indexes (mapcar #'(lambda (index) (lifo-index container index))
+                         indexes)))
+    (svref (contents container)
+           (mod (first indexes) (total-size container)))))
+
 (defmethod item-at! ((container ring-buffer) value &rest indexes)
   (declare (dynamic-extent indexes))
   (setf (svref (contents container)
                (mod (first indexes) (total-size container)))
         value))
 
-(defmethod lifo-index ((container ring-buffer) index)
+(defmethod item-at! ((container ring-buffer-reverse) value &rest indexes)
+  (declare (dynamic-extent indexes))
+  (let ((indexes (mapcar #'(lambda (index) (lifo-index container index))
+                         indexes)))
+    (setf (svref (contents container)
+                 (mod (first indexes) (total-size container)))
+          value)))
+
+(defmethod lifo-index ((container ring-buffer-reverse) index)
   "Return index converted to internal LIFO index, where items are ordered from newest to oldest."
   (mod (1- (+ (buffer-start container)
               (- (buffer-end container) (buffer-start container) index)))
        (total-size container)))
 
-(defmethod lifo-ref ((container ring-buffer) index)
-  "Return value from contents by INDEX where 0 INDEX is most recent."
-  (svref (contents container) (lifo-index container index)))
-
-(defmethod recent-list ((container ring-buffer))
+(defmethod recent-list ((container ring-buffer-reverse))
   "Return list of items ordered by most recent."
   (loop for index from 0 below (- (buffer-end container) (buffer-start container))
-        for item = (lifo-ref container index)
+        for item = (item-at container index)
         when item collect item))
 
 (defmethod increment-end ((container ring-buffer))
@@ -73,28 +82,29 @@
       (incf buffer-start))
     (incf buffer-end)))
 
-(defmethod delete-item ((container ring-buffer) index)
-  "Delete item by LIFO-INDEX (ordered by most recent)."
-  (with-slots (buffer-end buffer-start) container
-    (if (= index 0)
-        (setf (aref (contents container) (lifo-index container 0)) nil)
-        (if (> index (/ (total-size container) 2))
-            (progn
-              (loop :for i :from index :downto 1 do
-                (setf (aref (contents container)
-                            (lifo-index container i))
-                      (aref (contents container)
-                            (lifo-index container (1- i)))))
-              (setf (aref (contents container) (lifo-index container 0)) nil)
-              (decf buffer-end))
-            (progn
-              (loop :for i :from index :to (1- (total-size container)) do
-                (setf (aref (contents container)
-                            (lifo-index container i))
-                      (aref (contents container)
-                            (lifo-index container (1+ i)))))
-              (setf (aref (contents container) (lifo-index container (1- (total-size container)))) nil)
-              (incf buffer-start))))))
+(defmethod delete-item-at ((container ring-buffer-reverse) &rest indexes)
+  "Delete item by LIFO-INDEX ([0, size-1] where 0 is most recent)."
+  (let ((index (car indexes)))
+    (with-slots (buffer-end buffer-start) container
+      (if (= index 0)
+          (setf (aref (contents container) (lifo-index container 0)) nil)
+          (if (> index (/ (total-size container) 2))
+              (progn
+                (loop :for i :from index :downto 1 do
+                  (setf (aref (contents container)
+                              (lifo-index container i))
+                        (aref (contents container)
+                              (lifo-index container (1- i)))))
+                (setf (aref (contents container) (lifo-index container 0)) nil)
+                (decf buffer-end))
+              (progn
+                (loop :for i :from index :to (1- (total-size container)) do
+                  (setf (aref (contents container)
+                              (lifo-index container i))
+                        (aref (contents container)
+                              (lifo-index container (1+ i)))))
+                (setf (aref (contents container) (lifo-index container (1- (total-size container)))) nil)
+                (incf buffer-start)))))))
 
 
 (defmethod next-item ((container ring-buffer))
