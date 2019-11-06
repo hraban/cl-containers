@@ -23,7 +23,7 @@
 
 (defclass* ring-buffer-reverse (ring-buffer) ())
 
-(defun make-ring-buffer (size last-in-first-out)
+(defun make-ring-buffer (size &optional last-in-first-out)
   (make-instance (if last-in-first-out 'ring-buffer-reverse 'ring-buffer)
                  :contents (make-array size)
                  :total-size size))
@@ -84,27 +84,29 @@
 
 (defmethod delete-item-at ((container ring-buffer-reverse) &rest indexes)
   "Delete item by LIFO-INDEX ([0, size-1] where 0 is most recent)."
-  (let ((index (car indexes)))
+  (let ((index (car indexes))
+        (item-count (- (buffer-end container)
+                       (buffer-start container))))
     (with-slots (buffer-end buffer-start) container
-      (if (= index 0)
-          (setf (aref (contents container) (lifo-index container 0)) nil)
-          (if (> index (/ (total-size container) 2))
-              (progn
-                (loop :for i :from index :downto 1 do
-                  (setf (aref (contents container)
-                              (lifo-index container i))
-                        (aref (contents container)
-                              (lifo-index container (1- i)))))
-                (setf (aref (contents container) (lifo-index container 0)) nil)
-                (decf buffer-end))
-              (progn
-                (loop :for i :from index :to (1- (total-size container)) do
-                  (setf (aref (contents container)
-                              (lifo-index container i))
-                        (aref (contents container)
-                              (lifo-index container (1+ i)))))
-                (setf (aref (contents container) (lifo-index container (1- (total-size container)))) nil)
-                (incf buffer-start)))))))
+      (cond ((= index 0)
+             (setf (item-at container 0) nil)
+             (decf buffer-end))
+            ((= index (1- item-count))
+             (setf (item-at container (1- item-count)) nil)
+             (incf buffer-start))
+            (t (if (< index (/ item-count 2))
+                   (progn
+                     (loop :for i :from index :downto 0 do
+                       (setf (item-at container i)
+                             (item-at container (1- i))))
+                     (setf (item-at container 0) nil)
+                     (decf buffer-end))
+                   (progn
+                     (loop :for i :from index :to (- item-count 2) do
+                       (setf (item-at container i)
+                             (item-at container (1+ i))))
+                     (setf (item-at container (1- item-count)) nil)
+                     (incf buffer-start))))))))
 
 
 (defmethod next-item ((container ring-buffer))
@@ -118,7 +120,8 @@
 
 (defmethod insert-item ((container ring-buffer) item)
   (prog1
-      (setf (item-at container (buffer-end container)) item)
+      (setf (svref (contents container)
+                   (mod (buffer-end container) (total-size container))) item)
     (increment-end container)))
 
 
