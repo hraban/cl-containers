@@ -39,8 +39,10 @@
 ;;?? the (first indexes) is odd...
 (defmethod item-at ((container ring-buffer) &rest indexes)
   (declare (dynamic-extent indexes))
-  (svref (contents container)
-         (mod (first indexes) (total-size container))))
+  (let ((indexes (mapcar #'(lambda (index) (fifo-index container index))
+                         indexes)))
+    (svref (contents container)
+           (mod (first indexes) (total-size container)))))
 
 (defmethod item-at ((container ring-buffer-reverse) &rest indexes)
   (declare (dynamic-extent indexes))
@@ -49,11 +51,13 @@
     (svref (contents container)
            (mod (first indexes) (total-size container)))))
 
-(defmethod item-at! ((container ring-buffer) value &rest indexes)
+(defmethod item-at! ((container ring-buffer-reverse) value &rest indexes)
   (declare (dynamic-extent indexes))
-  (setf (svref (contents container)
-               (mod (first indexes) (total-size container)))
-        value))
+  (let ((indexes (mapcar #'(lambda (index) (fifo-index container index))
+                         indexes)))
+    (setf (svref (contents container)
+                 (mod (first indexes) (total-size container)))
+          value)))
 
 (defmethod item-at! ((container ring-buffer-reverse) value &rest indexes)
   (declare (dynamic-extent indexes))
@@ -69,6 +73,11 @@
               (- (buffer-end container) (buffer-start container) index)))
        (total-size container)))
 
+(defmethod fifo-index ((container ring-buffer) index)
+  "Return index converted to internal FIFO index, where items are ordered from oldest to newest."
+  (mod (+ (buffer-start container) index)
+       (total-size container)))
+
 (defmethod recent-list ((container ring-buffer-reverse))
   "Return list of items ordered by most recent."
   (loop for index from 0 below (- (buffer-end container) (buffer-start container))
@@ -82,31 +91,37 @@
       (incf buffer-start))
     (incf buffer-end)))
 
+(defmethod delete-item-at ((container ring-buffer) &rest indexes)
+  "Delete item using FIFO index for ring-buffer."
+  (delete-item-internal container (mapcar #'(lambda (x) (fifo-index container x)) indexes)))
+
 (defmethod delete-item-at ((container ring-buffer-reverse) &rest indexes)
-  "Delete item by LIFO-INDEX ([0, size-1] where 0 is most recent)."
-  (let ((index (car indexes))
-        (item-count (- (buffer-end container)
-                       (buffer-start container))))
-    (with-slots (buffer-end buffer-start) container
-      (cond ((= index 0)
-             (setf (item-at container 0) nil)
+  "Delete item using LIFO index for ring-buffer-reverse.."
+  (delete-item-internal container (mapcar #'(lambda (x) (lifo-index container x)) indexes)))
+
+(defmethod delete-item-internal ((container ring-buffer) &rest indexes)
+  "Delete item using internal index (not meant to be used directly)."
+  (let ((index (car indexes)))
+    (with-slots (buffer-end buffer-start contents total-size) container
+      (cond ((= (mod index total-size) (1- buffer-end))
+             (setf (svref contents (mod (1- buffer-end) total-size)) nil)
              (decf buffer-end))
-            ((= index (1- item-count))
-             (setf (item-at container (1- item-count)) nil)
+            ((= (mod index total-size) buffer-start)
+             (setf (svref contents (mod buffer-start total-size)) nil)
              (incf buffer-start))
-            (t (if (< index (/ item-count 2))
-                   (progn
-                     (loop :for i :from index :downto 0 do
-                       (setf (item-at container i)
-                             (item-at container (1- i))))
-                     (setf (item-at container 0) nil)
-                     (decf buffer-end))
-                   (progn
-                     (loop :for i :from index :to (- item-count 2) do
-                       (setf (item-at container i)
-                             (item-at container (1+ i))))
-                     (setf (item-at container (1- item-count)) nil)
-                     (incf buffer-start))))))))
+            ((if (< (- index buffer-start) (/ total-size 2))
+                 (progn
+                   (loop :for i :from (1- index) :downto buffer-start do
+                     (setf (svref contents (mod i total-size))
+                           (svref contents (mod (1- i) total-size))))
+                   (setf (svref contents (mod buffer-start total-size)) nil)
+                   (incf buffer-start))
+                 (progn
+                   (loop :for i :from index :to (- buffer-end 2) do
+                     (setf (svref contents (mod i total-size))
+                           (svref contents (mod (1+ i) total-size))))
+                   (setf (svref contents (mod (1- buffer-end) total-size)) nil)
+                   (decf buffer-end))))))))
 
 
 (defmethod next-item ((container ring-buffer))
