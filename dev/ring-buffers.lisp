@@ -83,34 +83,26 @@ oldest to newest."
     (incf buffer-end)))
 
 (defmethod delete-item-at ((container ring-buffer) &rest indexes)
-  "Delete item using FIFO or LIFO index for ring-buffer."
-  (delete-item-internal container (mapcar #'(lambda (x) (%index container x)) indexes)))
-
-(defmethod %delete-item ((container ring-buffer) &rest indexes)
-  "Delete item using internal index (not meant to be used directly)."
-  (loop for index in indexes
-    (with-slots (buffer-end buffer-start contents total-size) container
-      (cond
-        ((= (mod index total-size) (1- buffer-end))
-         (setf (svref contents (mod (1- buffer-end) total-size)) nil)
-         (decf buffer-end))
-        ((= (mod index total-size) buffer-start)
-         (setf (svref contents (mod buffer-start total-size)) nil)
-         (incf buffer-start))
-        ((if (< (- index buffer-start) (/ total-size 2))
-             (progn
-               (loop :for i :from (1- index) :downto buffer-start do
-                 (setf (svref contents (mod i total-size))
-                       (svref contents (mod (1- i) total-size))))
-               (setf (svref contents (mod buffer-start total-size)) nil)
-               (incf buffer-start))
-             (progn
-               (loop :for i :from index :to (- buffer-end 2) do
-                 (setf (svref contents (mod i total-size))
-                       (svref contents (mod (1+ i) total-size))))
-               (setf (svref contents (mod (1- buffer-end) total-size)) nil)
-               (decf buffer-end))))))))
-
+  "Delete item using FIFO or LIFO index for ring-buffer.
+Warning: Only the first element of INDEXES is used."
+  (let* ((index (first indexes))
+         (first-half? (< index (/ (size container) 2)))
+         (end (if first-half?
+                  0
+                  (size container)))
+         (next-index (if first-half? #'1- #'1+))
+         (shift-value (lambda (i) (item-at! container
+                                            (item-at container
+                                                     (funcall next-index i))
+                                            i))))
+    (if first-half?
+        (loop :for i :from index :above end
+              :do (funcall shift-value i))
+        (loop :for i :from index :below end
+              :do (funcall shift-value i)))
+    (if first-half?
+        (delete-first container)
+        (delete-last container))))
 
 (defmethod next-item ((container ring-buffer))
   (increment-end container)
