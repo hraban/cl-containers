@@ -41,6 +41,7 @@
   
   (:export #:basic-queue
            #:ring-buffer
+           #:make-ring-buffer
            #:vector-container
            #:bounded-vector-container
            #:flexible-vector-container
