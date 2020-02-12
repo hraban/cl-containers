@@ -38,6 +38,10 @@
 
 ;;?? the (first indexes) is odd...
 (defmethod item-at ((container ring-buffer) &rest indexes)
+  "Return the ring-buffer element corresponding to the given index.
+The indexing is from oldest to newest with a `ring-buffer' and from newest to
+oldest with a `ring-buffer-reverse'.
+Warning: Only the first element of INDEXES is used."
   (declare (dynamic-extent indexes))
   (let ((indexes (mapcar #'(lambda (index) (%index container index))
                          indexes)))
@@ -53,13 +57,15 @@
           value)))
 
 (defmethod %index ((container ring-buffer-reverse) index)
-  "Return index converted to internal LIFO index, where items are ordered from newest to oldest."
+  "Return index converted to internal LIFO index, where items are ordered from
+newest to oldest."
   (mod (1- (+ (buffer-start container)
               (- (buffer-end container) (buffer-start container) index)))
        (total-size container)))
 
 (defmethod %index ((container ring-buffer) index)
-  "Return index converted to internal FIFO index, where items are ordered from oldest to newest."
+  "Return index converted to internal FIFO index, where items are ordered from
+oldest to newest."
   (mod (+ (buffer-start container) index)
        (total-size container)))
 
@@ -118,7 +124,8 @@
 (defmethod insert-item ((container ring-buffer) item)
   (prog1
       (setf (svref (contents container)
-                   (mod (buffer-end container) (total-size container))) item)
+                   (mod (buffer-end container) (total-size container)))
+            item)
     (increment-end container)))
 
 
