@@ -110,7 +110,10 @@ Warning: Only the first element of INDEXES is used."
 
 
 (defmethod current-item ((container ring-buffer))
-  (item-at container (buffer-end container)))
+  "Last item in the ordered container.
+For `ring-buffer', it's the newest item.
+For `ring-buffer-reverse', it's the oldest item."
+  (item-at container (1- (size container))))
 
 
 (defmethod insert-item ((container ring-buffer) item)
@@ -122,10 +125,7 @@ Warning: Only the first element of INDEXES is used."
 
 
 (defmethod delete-first ((container ring-buffer))
-  (with-slots (buffer-start) container
-    (prog1
-        (item-at container buffer-start)
-      (incf buffer-start))))
+  (delete-item-at container 0))
 
 
 (defmethod empty! ((container ring-buffer))
@@ -147,16 +147,16 @@ Warning: Only the first element of INDEXES is used."
 
 
 (defmethod first-element ((container ring-buffer))
-  (item-at container (buffer-start container)))
+  (item-at container 0))
 
 
 (defmethod (setf first-element) (value (container ring-buffer))
-  (setf (item-at container (buffer-start container)) value))
+  (setf (item-at container 0) value))
 
 
 (defmethod iterate-nodes ((container ring-buffer) fn)
-  (loop for index from (buffer-start container) to (1- (buffer-end container)) do
-    (funcall fn (item-at container index))))
+  (loop for index from 0 below (size container)
+        do (funcall fn (item-at container index))))
 
 #+No
 ;; screws with the buffer pointers
