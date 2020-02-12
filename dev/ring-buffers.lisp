@@ -71,7 +71,7 @@ oldest to newest."
 
 (defmethod recent-list ((container ring-buffer-reverse))
   "Return list of items ordered by most recent."
-  (loop for index from 0 below (- (buffer-end container) (buffer-start container))
+  (loop for index from 0 below (size container)
         for item = (item-at container index)
         when item collect item))
 
