@@ -43,31 +43,31 @@ The indexing is from oldest to newest with a `ring-buffer' and from newest to
 oldest with a `ring-buffer-reverse'.
 Warning: Only the first element of INDEXES is used."
   (declare (dynamic-extent indexes))
-  (let ((indexes (mapcar #'(lambda (index) (%index container index))
-                         indexes)))
+  (let ((index (%index container (first indexes))))
     (svref (contents container)
-           (mod (first indexes) (total-size container)))))
+           (mod index (total-size container)))))
 
 (defmethod item-at! ((container ring-buffer) value &rest indexes)
   (declare (dynamic-extent indexes))
-  (let ((indexes (mapcar #'(lambda (index) (%index container index))
-                         indexes)))
+  (let ((index (%index container (first indexes))))
     (setf (svref (contents container)
-                 (mod (first indexes) (total-size container)))
+                 (mod index (total-size container)))
           value)))
 
 (defmethod %index ((container ring-buffer-reverse) index)
   "Return index converted to internal LIFO index, where items are ordered from
 newest to oldest."
-  (mod (1- (+ (buffer-start container)
-              (- (buffer-end container) (buffer-start container) index)))
-       (total-size container)))
+  (if (empty-p container)
+      (error "Tried to index empty ring-buffer")
+      (1- (+ (buffer-start container)
+             (- (size container) (mod index (size container)))))))
 
 (defmethod %index ((container ring-buffer) index)
   "Return index converted to internal FIFO index, where items are ordered from
 oldest to newest."
-  (mod (+ (buffer-start container) index)
-       (total-size container)))
+  (if (empty-p container)
+      (error "Tried to index empty ring-buffer")
+      (+ (buffer-start container) (mod index (size container)))))
 
 (defmethod container->list ((container ring-buffer))
   "Return list of items.
