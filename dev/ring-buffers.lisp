@@ -127,7 +127,20 @@ For `ring-buffer-reverse', it's the oldest item."
 
 
 (defmethod delete-first ((container ring-buffer))
-  (delete-item-at container 0))
+  (unless (empty-p container)
+    (incf (slot-value container 'buffer-start))))
+
+(defmethod delete-last ((container ring-buffer))
+  (unless (empty-p container)
+    (decf (slot-value container 'buffer-end))))
+
+(defmethod delete-first ((container ring-buffer-reverse))
+  (unless (empty-p container)
+    (decf (slot-value container 'buffer-end))))
+
+(defmethod delete-last ((container ring-buffer-reverse))
+  (unless (empty-p container)
+    (incf (slot-value container 'buffer-start))))
 
 
 (defmethod empty! ((container ring-buffer))
