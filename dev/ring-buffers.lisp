@@ -5,8 +5,15 @@
 ;;; Code adapted from ANSI Common Lisp by Paul Graham (chapter 7)
 ;;;
 ;;; A ring buffer is a bounded queue. It supports:
-;;;   item-at (setf item-at)
-;;;   insert-item, dequeue, empty!, empty-p, size, total-size, first-element
+;;;   item-at
+;;;   item-at! (setf item-at)
+;;;   insert-item, empty!, empty-p, size, total-size,
+;;;   dequeue (delete-first)
+;;;   delete-last
+;;;   first-item (first-element)
+;;;   last-item (last-element)
+;;;   container->list
+;;;   iterate-nodes
 
 (defclass* ring-buffer (abstract-queue
                         bounded-container-mixin
@@ -128,19 +135,27 @@ For `ring-buffer-reverse', it's the oldest item."
 
 (defmethod delete-first ((container ring-buffer))
   (unless (empty-p container)
-    (incf (slot-value container 'buffer-start))))
+    (prog1
+        (first-item container)
+      (incf (slot-value container 'buffer-start)))))
 
 (defmethod delete-last ((container ring-buffer))
   (unless (empty-p container)
-    (decf (slot-value container 'buffer-end))))
+    (prog1
+        (last-item container)
+      (decf (slot-value container 'buffer-end)))))
 
 (defmethod delete-first ((container ring-buffer-reverse))
   (unless (empty-p container)
-    (decf (slot-value container 'buffer-end))))
+    (prog1
+        (first-item container)
+      (decf (slot-value container 'buffer-end)))))
 
 (defmethod delete-last ((container ring-buffer-reverse))
   (unless (empty-p container)
-    (incf (slot-value container 'buffer-start))))
+    (prog1
+        (last-item container)
+      (incf (slot-value container 'buffer-start)))))
 
 
 (defmethod empty! ((container ring-buffer))
