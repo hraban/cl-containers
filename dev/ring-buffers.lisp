@@ -10,10 +10,13 @@
 ;;;   insert-item, empty!, empty-p, size, total-size,
 ;;;   dequeue (delete-first)
 ;;;   delete-last
+;;;   delete-item
+;;;   delete-item-if
 ;;;   first-item (first-element)
 ;;;   last-item (last-element)
 ;;;   container->list
 ;;;   iterate-nodes
+;;;   element-position
 
 (defclass* ring-buffer (abstract-queue
                         bounded-container-mixin
@@ -112,6 +115,10 @@ Warning: Only the first element of INDEXES is used."
     (if first-half?
         (delete-first container)
         (delete-last container))))
+
+(defmethod delete-item ((container ring-buffer) item)
+  (let ((pos (element-position container item)))
+    (when pos (delete-item-at container pos))))
 
 (defmethod next-item ((container ring-buffer))
   (increment-end container)
