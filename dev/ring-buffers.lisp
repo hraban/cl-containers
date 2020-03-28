@@ -160,14 +160,19 @@ For `ring-buffer-reverse', it's the oldest item."
 (defmethod size ((container ring-buffer))
   (- (buffer-end container) (buffer-start container)))
 
-
 (defmethod first-element ((container ring-buffer))
+  "Equivalent to `first-item'."
   (item-at container 0))
-
 
 (defmethod (setf first-element) (value (container ring-buffer))
   (setf (item-at container 0) value))
 
+(defmethod last-element ((container ring-buffer))
+  "Equivalent to `last-item'."
+  (item-at container (1- (size container))))
+
+(defmethod (setf last-element) (value (container ring-buffer))
+  (setf (item-at container (1- (size container))) value))
 
 (defmethod iterate-nodes ((container ring-buffer) fn)
   (loop for index from 0 below (size container)
