@@ -3,6 +3,7 @@
   :maintainer "Gary Warren King <gwking@metabang.com>"
   :licence "MIT Style License"
   :description "Documentation for CL-Containers"
+  :defsystem-depends-on ("docudown")
   :components ((:module "setup"
 			:pathname "docs/"
 			:components ((:file "package")
@@ -18,4 +19,4 @@
 		 #+(or)
 		 (:docudown-wild "shared:**:*.*"
 				 :output "../output/shared/"))))
-  :depends-on ("cl-containers" "docudown"))
+  :depends-on ("cl-containers"))
