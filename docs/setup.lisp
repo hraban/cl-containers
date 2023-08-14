@@ -1,8 +1,13 @@
 (in-package #:cl-containers-documentation)
 
-(defmethod additional-markdown-extensions-for-system 
+;; NB: This method is not right to put here, rightfully causes an ASDF warning,
+;; and should be moved to some file that depends on both
+;; cl-containers-documentation and lift-documentation.
+#|
+(defmethod additional-markdown-extensions-for-system
     append ((system (eql (asdf:find-system 'lift-documentation))))
   '(clcl))
+|#
 
 (defsimple-extension clcl
   "*CL-Containers*")
@@ -15,7 +20,7 @@
      ;; could syntax check here
      )
     (:render
-     (format *output-stream* "~s ~s" root filter))))
+     (format *standard-output* "~s ~s" root filter))))
 
 #|
 
