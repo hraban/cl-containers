@@ -2,8 +2,7 @@
 (in-package #:containers)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (use-package (find-package 'cl-variates) 
-               (find-package 'cl-containers)))
+  (use-package (find-package 'cl-containers)))
 
 
 (defmethod sample-item ((container t) 
